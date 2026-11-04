@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = process.cwd();
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hfxgmeykdxnoapqdspzn.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_cx0IDgIzs4N6hIbhcklc2A_SEh2yPrQ';
@@ -15,9 +17,36 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos del proyecto (logo, banner, etc.)
+// Servir archivos estáticos del proyecto desde múltiples ubicaciones (raíz, __dirname y public)
+app.use(express.static(rootDir));
+app.use(express.static(path.join(rootDir, 'public')));
 app.use(express.static(__dirname));
-app.use('/assets', express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/assets', express.static(rootDir));
+app.use('/assets', express.static(path.join(rootDir, 'public')));
+
+// Función para obtener index.html de forma segura y tolerante a fallos
+let cachedHtml = null;
+function getIndexHtml() {
+  if (cachedHtml) return cachedHtml;
+  const candidates = [
+    path.join(rootDir, 'index.html'),
+    path.join(rootDir, 'public', 'index.html'),
+    path.join(__dirname, 'index.html'),
+    path.join(__dirname, 'public', 'index.html')
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      try {
+        cachedHtml = fs.readFileSync(candidate, 'utf-8');
+        return cachedHtml;
+      } catch (e) {
+        console.warn('Lectura fallida en candidato:', candidate, e);
+      }
+    }
+  }
+  return null;
+}
 
 // Endpoint de verificación
 app.get('/api/health', (req, res) => {
@@ -148,9 +177,31 @@ app.delete('/api/attendees/:id', async (req, res) => {
   }
 });
 
-// Todas las demás peticiones van a index.html
+// Todas las demás peticiones van a index.html (servido de forma segura)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  const html = getIndexHtml();
+  if (html) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(html);
+  }
+  
+  // Fallback con sendFile
+  try {
+    res.sendFile(path.join(rootDir, 'index.html'));
+  } catch (e) {
+    res.status(200).send('<!DOCTYPE html><html><body><h1>INGELAB EVOLUTION</h1><p>Cargando portal...</p><script>window.location.reload();</script></body></html>');
+  }
+});
+
+// Manejador global de errores para garantizar 0 fallas no controladas (evita 500 FUNCTION_INVOCATION_FAILED)
+app.use((err, req, res, next) => {
+  console.error('Unhandled Server Error:', err);
+  const html = getIndexHtml();
+  if (html && req.method === 'GET' && !req.path.startsWith('/api')) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(html);
+  }
+  res.status(500).json({ success: false, error: err.message || 'Internal Server Error' });
 });
 
 // Solo iniciar el servidor HTTP si se ejecuta directamente y no está en Vercel

@@ -24,6 +24,9 @@
   <!-- QRCode.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
+  <!-- SheetJS (XLSX) CDN para exportación nativa de Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -236,23 +239,23 @@
   <div id="app-container" class="flex-1 flex flex-col opacity-0 transition-opacity duration-500">
 
     <!-- ============================================================ -->
-    <!-- HEADER VIDRIO ESMERILADO                                     -->
+    <!-- HEADER CON LOGO OFICIAL INVITACION.PNG                       -->
     <!-- ============================================================ -->
     <header class="sticky top-0 z-40 glass-panel border-b border-white/60 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-24 flex items-center justify-between">
         
-        <!-- Logo Ingelab HD -->
-        <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-2">
-          <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-12 sm:h-16 md:h-18 w-auto object-contain logo-sharp">
+        <!-- Logo Ingelab Evolution (de INVITACION.png) Arriba a la Izquierda -->
+        <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-2 group">
+          <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-12 sm:h-16 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
         </a>
 
         <!-- Navegación: Vista Pública vs Administrador -->
         <div class="flex items-center gap-3">
           
-          <!-- Estado Público: Badge y Botón de Acceso Admin -->
+          <!-- Estado Público: Botón Ver Invitación y Acceso Admin -->
           <div id="public-nav-group" class="flex items-center gap-2">
-            <button onclick="openInvitationModal()" title="Ver Invitación Oficial" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-ingelab-navy hover:bg-slate-50 text-[11px] font-mono font-bold tracking-wider transition-all shadow-xs">
-              <i data-lucide="image" class="w-3.5 h-3.5 text-ingelab-green"></i>
+            <button onclick="openInvitationModal()" title="Ver Invitación Oficial" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-ingelab-navy hover:bg-slate-50 text-xs font-mono font-bold tracking-wider transition-all shadow-xs">
+              <i data-lucide="image" class="w-4 h-4 text-ingelab-green"></i>
               <span>VER INVITACIÓN</span>
             </button>
 
@@ -297,7 +300,7 @@
       
       <div class="max-w-3xl mx-auto space-y-8">
         
-        <!-- HERO CARD: INGELAB EVOLUTION -->
+        <!-- HERO CARD: INGELAB EVOLUTION CON TIPOGRAFÍA GRANDE -->
         <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-10 shadow-xl overflow-hidden relative">
           
           <!-- Banner Logo Ingelab Evolution Oficial -->
@@ -305,8 +308,8 @@
             <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="w-full max-w-sm sm:max-w-md mx-auto h-auto object-contain logo-sharp">
           </div>
 
-          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] font-mono tracking-widest uppercase text-arch-subtle mb-3">
-            <span class="px-3 py-1 rounded-md bg-ingelab-green text-white font-bold">
+          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-mono tracking-widest uppercase text-arch-subtle mb-3">
+            <span class="px-3.5 py-1 rounded-md bg-ingelab-green text-white font-bold">
               EVENTO EXCLUSIVO
             </span>
             <span class="font-bold text-slate-700">EDICIÓN 2026</span>
@@ -318,73 +321,82 @@
             Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
           </p>
 
-          <!-- Ficha Técnica del Evento: Hilton Colón & 17:00 -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
-            <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
-              <div class="w-10 h-10 rounded-xl bg-ingelab-green-light text-ingelab-green flex items-center justify-center shrink-0">
-                <i data-lucide="calendar" class="w-5 h-5"></i>
+          <!-- ============================================================ -->
+          <!-- FICHA TÉCNICA DEL EVENTO CON TIPOGRAFÍA DESTACADA Y GRANDE   -->
+          <!-- ============================================================ -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            
+            <!-- 01 / FECHA -->
+            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-green transition-colors">
+              <div class="w-12 h-12 rounded-2xl bg-ingelab-green-light text-ingelab-green flex items-center justify-center shrink-0">
+                <i data-lucide="calendar" class="w-6 h-6"></i>
               </div>
               <div>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">01 / FECHA</span>
-                <span class="text-xs font-bold text-arch-black block">Viernes, 13 Nov 2026</span>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-slate-400 block mb-1">01 / FECHA</span>
+                <span class="text-base sm:text-lg font-bold text-arch-black block leading-snug">Viernes, 13 Nov 2026</span>
               </div>
             </div>
 
-            <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
-              <div class="w-10 h-10 rounded-xl bg-ingelab-navy-light text-ingelab-navy flex items-center justify-center shrink-0">
-                <i data-lucide="clock" class="w-5 h-5"></i>
+            <!-- 02 / HORARIO -->
+            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-navy transition-colors">
+              <div class="w-12 h-12 rounded-2xl bg-ingelab-navy-light text-ingelab-navy flex items-center justify-center shrink-0">
+                <i data-lucide="clock" class="w-6 h-6"></i>
               </div>
               <div>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">02 / HORARIO</span>
-                <span class="text-xs font-bold text-arch-black block">17:00</span>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-slate-400 block mb-1">02 / HORARIO</span>
+                <span class="text-2xl sm:text-3xl font-bold font-mono text-ingelab-navy block leading-none">17:00</span>
               </div>
             </div>
 
-            <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
-              <div class="w-10 h-10 rounded-xl bg-slate-100 text-ingelab-blue flex items-center justify-center shrink-0">
-                <i data-lucide="map-pin" class="w-5 h-5"></i>
+            <!-- 03 / LUGAR -->
+            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-blue transition-colors">
+              <div class="w-12 h-12 rounded-2xl bg-slate-100 text-ingelab-blue flex items-center justify-center shrink-0">
+                <i data-lucide="map-pin" class="w-6 h-6"></i>
               </div>
               <div>
-                <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">03 / LUGAR</span>
-                <span class="text-xs font-bold text-arch-black block">HOTEL HILTON COLÓN</span>
-                <span class="text-[10px] text-slate-500 font-mono block">Av. Amazonas N19-14 y Av. Patria</span>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-slate-400 block mb-1">03 / LUGAR</span>
+                <span class="text-base sm:text-lg font-bold text-arch-black block leading-tight">HOTEL HILTON COLÓN</span>
+                <span class="text-xs sm:text-sm text-slate-600 font-mono block mt-1">Av. Amazonas N19-14 y Av. Patria</span>
               </div>
             </div>
+
           </div>
 
-          <!-- Reloj de Cuenta Regresiva ajustado a las 17:00 -->
-          <div class="bg-white/80 rounded-2xl border border-slate-200/80 p-5 shadow-sm">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3 text-xs font-mono">
-              <span class="text-arch-subtle uppercase tracking-widest flex items-center gap-2">
-                <i data-lucide="timer" class="w-4 h-4 text-ingelab-green"></i>
+          <!-- ============================================================ -->
+          <!-- RELOJ DE CUENTA REGRESIVA CON NÚMEROS GRANDES Y VISIBLES     -->
+          <!-- ============================================================ -->
+          <div class="bg-white/95 rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4 text-xs font-mono">
+              <span class="text-slate-600 uppercase tracking-widest flex items-center gap-2.5 font-bold text-xs sm:text-sm">
+                <i data-lucide="timer" class="w-5 h-5 text-ingelab-green"></i>
                 CUENTA REGRESIVA HASTA LA APERTURA
               </span>
-              <span class="text-ingelab-green font-bold">13.11.2026 • 17:00</span>
+              <span class="text-ingelab-green font-bold text-sm sm:text-base font-mono">13.11.2026 • 17:00</span>
             </div>
 
-            <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center" id="countdown-timer">
-              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
-                <div id="days" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
-                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">DÍAS</div>
+            <div class="grid grid-cols-4 gap-3 sm:gap-4 text-center" id="countdown-timer">
+              <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-200/70">
+                <div id="days" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-arch-black tracking-tight">00</div>
+                <div class="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-slate-500 mt-2">DÍAS</div>
               </div>
-              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
-                <div id="hours" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
-                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">HORAS</div>
+              <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-200/70">
+                <div id="hours" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-arch-black tracking-tight">00</div>
+                <div class="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-slate-500 mt-2">HORAS</div>
               </div>
-              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
-                <div id="minutes" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
-                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">MINUTOS</div>
+              <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-200/70">
+                <div id="minutes" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-arch-black tracking-tight">00</div>
+                <div class="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-slate-500 mt-2">MINUTOS</div>
               </div>
-              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
-                <div id="seconds" class="text-2xl sm:text-3xl font-mono font-bold text-ingelab-green">00</div>
-                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">SEGUNDOS</div>
+              <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-200/70">
+                <div id="seconds" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-ingelab-green tracking-tight">00</div>
+                <div class="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-slate-500 mt-2">SEGUNDOS</div>
               </div>
             </div>
           </div>
 
         </div>
 
-        <!-- BANNER ILUSTRATIVO DE QUITO ARTÍSTICO (DE LA INVITACIÓN) -->
+        <!-- BANNER ILUSTRATIVO DE QUITO ARTÍSTICO -->
         <div class="rounded-3xl overflow-hidden border border-white/80 shadow-lg bg-white/70">
           <img src="quito_skyline_banner.png" alt="Quito - Ingelab Evolution" class="w-full h-auto object-cover max-h-48 sm:max-h-60">
         </div>
@@ -561,7 +573,7 @@
             <i data-lucide="check" class="w-10 h-10 stroke-[2.5]"></i>
           </div>
 
-          <span class="px-3 py-1 rounded-md bg-ingelab-green text-white text-[11px] font-mono font-bold tracking-widest uppercase inline-block mb-3">
+          <span class="px-3.5 py-1 rounded-md bg-ingelab-green text-white text-xs font-mono font-bold tracking-widest uppercase inline-block mb-3">
             ASISTENCIA CONFIRMADA
           </span>
 
@@ -573,12 +585,12 @@
             Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
           </p>
 
-          <!-- Comprobante Digital Oficial con QR -->
+          <!-- Comprobante Digital Oficial con QR (SIN CÓDIGO DE ACREDITACIÓN) -->
           <div class="bg-white rounded-2xl border border-slate-200/90 p-6 text-left shadow-md space-y-5" id="printable-credential">
             
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-              <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-10 w-auto object-contain logo-sharp">
-              <div class="text-right font-mono text-[11px]">
+              <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-10 sm:h-12 w-auto object-contain logo-sharp">
+              <div class="text-right font-mono text-xs">
                 <span class="text-slate-400 block text-[10px] uppercase">EVENTO OFICIAL</span>
                 <span class="font-bold text-ingelab-navy">INGELAB EVOLUTION</span>
               </div>
@@ -612,17 +624,17 @@
               </div>
             </div>
 
-            <!-- Código QR y Datos del Evento -->
-            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
-              <div class="shrink-0 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center">
+            <!-- Código QR y Datos del Evento (CÓDIGO OMITIDO) -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
+              <div class="shrink-0 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center">
                 <canvas id="success-qr-canvas" class="rounded-lg"></canvas>
               </div>
-              <div class="space-y-2 text-xs font-mono text-center sm:text-left flex-1">
-                <div>
-                  <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Código de Acreditación:</span>
-                  <span id="success-display-code" class="text-xl font-bold text-ingelab-navy">05802</span>
+              <div class="space-y-2.5 text-xs sm:text-sm font-mono text-center sm:text-left flex-1">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+                  <span class="w-2 h-2 rounded-full bg-ingelab-green animate-pulse"></span>
+                  PASE DIGITAL CONFIRMADO
                 </div>
-                <div class="pt-1.5 border-t border-slate-200 text-[11px] text-slate-600 space-y-0.5">
+                <div class="text-xs sm:text-sm text-slate-700 space-y-1 font-mono pt-1">
                   <div><strong>Fecha:</strong> Viernes, 13 de Noviembre 2026</div>
                   <div><strong>Hora:</strong> 17:00</div>
                   <div><strong>Lugar:</strong> HOTEL HILTON COLÓN (Av. Amazonas N19-14 y Av. Patria)</div>
@@ -680,9 +692,10 @@
               <span>ACTUALIZAR</span>
             </button>
 
-            <button onclick="exportToCsv()" class="px-4 py-2 bg-ingelab-green hover:bg-ingelab-green-dark text-white rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-2 transition-all shadow-md">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i>
-              <span>EXPORTAR EXCEL (CSV)</span>
+            <!-- Exportar Excel NATIVO .XLSX -->
+            <button onclick="exportToExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-2 transition-all shadow-md">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+              <span>EXPORTAR EXCEL (.XLSX)</span>
             </button>
 
             <button onclick="openSupabaseModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition-all">
@@ -717,7 +730,7 @@
 
         </div>
 
-        <!-- TABLA ADMINISTRATIVA CON GESTIÓN CRUD -->
+        <!-- TABLA ADMINISTRATIVA (SIN COLUMNA DE CÓDIGO) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -737,7 +750,6 @@
                   <th class="py-4 px-6 font-semibold">INFORMACIÓN DE CONTACTO</th>
                   <th class="py-4 px-6 font-semibold">INSTITUCIÓN / CARGO</th>
                   <th class="py-4 px-4 font-semibold text-center">ESTADO</th>
-                  <th class="py-4 px-4 font-semibold text-center">CÓDIGO</th>
                   <th class="py-4 px-4 font-semibold text-center">ACCIONES</th>
                 </tr>
               </thead>
@@ -879,7 +891,7 @@
           </div>
           <div>
             <h3 class="text-base font-bold text-slate-900 font-display">Modificar Asistente</h3>
-            <p class="text-[11px] text-slate-500 font-mono" id="edit-header-code">CÓDIGO: -</p>
+            <p class="text-[11px] text-slate-500 font-mono">EDICIÓN DE DATOS EN BASE DE DATOS</p>
           </div>
         </div>
         <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100">
@@ -1057,7 +1069,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: LÓGICA COMPLETA, PERSISTENCIA Y FIXES DEFINITIVOS -->
+  <!-- JAVASCRIPT: LÓGICA COMPLETA, XLSX NATIVO Y GESTIÓN CRUD -->
   <script>
     lucide.createIcons();
 
@@ -1278,10 +1290,9 @@
       });
     }
 
-    // Almacenamiento local con filtro permanente de borrados
     function getStoredAttendees() {
       try {
-        const stored = localStorage.getItem('ingelab_attendees_v5');
+        const stored = localStorage.getItem('ingelab_attendees_v6');
         if (stored) {
           const list = JSON.parse(stored);
           return list.filter(a => !isRecordDeleted(a));
@@ -1292,7 +1303,7 @@
 
     function saveStoredAttendees(list) {
       const cleanList = list.filter(a => !isRecordDeleted(a));
-      localStorage.setItem('ingelab_attendees_v5', JSON.stringify(cleanList));
+      localStorage.setItem('ingelab_attendees_v6', JSON.stringify(cleanList));
     }
 
     let allAttendeesCache = getStoredAttendees();
@@ -1359,7 +1370,7 @@
         const diff = eventDate - now;
 
         if (diff <= 0) {
-          document.getElementById('countdown-timer').innerHTML = '<div class="col-span-4 text-center font-mono font-bold text-ingelab-green">EVENTO EN CURSO</div>';
+          document.getElementById('countdown-timer').innerHTML = '<div class="col-span-4 text-center font-mono font-bold text-ingelab-green text-xl sm:text-2xl">EVENTO EN CURSO</div>';
           return;
         }
 
@@ -1379,19 +1390,13 @@
     }
 
     // ============================================================
-    // 8. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA (FIX DEFINITIVO)
+    // 8. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA
     // ============================================================
     let isSubmittingForm = false;
-
-    function generateConfirmationCode() {
-      const rand = Math.floor(Math.random() * 90000 + 10000);
-      return String(rand);
-    }
 
     async function handleSubmit(e) {
       e.preventDefault();
       
-      // Bloquear inmediatamente para evitar registros dobles
       if (isSubmittingForm) return;
       isSubmittingForm = true;
 
@@ -1405,7 +1410,6 @@
 
       const form = e.target;
       const formData = new FormData(form);
-      const confirmCode = generateConfirmationCode();
 
       const newRecord = {
         id: Date.now(),
@@ -1417,23 +1421,17 @@
         position: (formData.get('position') || '').trim(),
         attending: formData.get('attending') || 'yes',
         ticket_count: 1,
-        ticket_list: [confirmCode],
         comments: (formData.get('comments') || '').trim(),
         created_at: new Date().toISOString()
       };
 
       try {
-        // 1. Guardar en memoria local inmediatamente
         allAttendeesCache.unshift(newRecord);
         saveStoredAttendees(allAttendeesCache);
 
-        // 2. Transición INMEDIATA a la pantalla de éxito
         showSuccessScreen(newRecord);
-
-        // 3. Resetear formulario
         form.reset();
 
-        // 4. Confeti
         try {
           if (window.confetti) {
             confetti({
@@ -1445,8 +1443,7 @@
           }
         } catch (confettiErr) {}
 
-        // 5. Guardar en Supabase y Backend de forma asíncrona
-        saveRecordToCloud(newRecord, confirmCode);
+        saveRecordToCloud(newRecord);
 
       } catch (err) {
         console.error('Error al procesar registro:', err);
@@ -1460,27 +1457,21 @@
     }
 
     function showSuccessScreen(record) {
-      // 1. Mostrar la vista de éxito de forma inmediata
       switchView('success');
 
-      // 2. Llenar los datos del asistente en el comprobante
       document.getElementById('success-display-name').innerText = record.full_name || '-';
       document.getElementById('success-display-ci').innerText = record.ci ? `C.I: ${record.ci}` : '-';
       document.getElementById('success-display-email').innerText = record.email || '-';
       document.getElementById('success-display-phone').innerText = record.phone || '-';
       document.getElementById('success-display-institution').innerText = record.institution || 'Particular';
       document.getElementById('success-display-position').innerText = record.position || 'Profesional de la Salud';
-      
-      const code = (record.ticket_list && record.ticket_list[0]) ? record.ticket_list[0] : '05802';
-      document.getElementById('success-display-code').innerText = code;
 
-      // 3. Generar código QR con retardo seguro para garantizar renderizado
       setTimeout(() => {
         try {
           const canvas = document.getElementById('success-qr-canvas');
           if (canvas && window.QRCode) {
-            QRCode.toCanvas(canvas, `INGELAB-EVOLUTION-2026|${code}|${record.full_name}|CI:${record.ci}`, {
-              width: 135,
+            QRCode.toCanvas(canvas, `INGELAB-EVOLUTION-2026|${record.full_name}|CI:${record.ci}|HOTEL-HILTON-COLON`, {
+              width: 140,
               margin: 1,
               color: {
                 dark: '#1C2852',
@@ -1496,7 +1487,7 @@
       }, 50);
     }
 
-    async function saveRecordToCloud(record, code) {
+    async function saveRecordToCloud(record) {
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
@@ -1509,11 +1500,9 @@
         position: record.position,
         attending: record.attending,
         ticket_count: 1,
-        ticket_list: [code],
         comments: record.comments
       }];
 
-      // Enviar a Supabase
       if (supabaseClient) {
         try {
           supabaseClient.from('attendees').insert(supabasePayload).then(({ error }) => {
@@ -1526,7 +1515,6 @@
         directSupabaseInsert(supabasePayload);
       }
 
-      // Enviar a Backend Express
       try {
         fetch('/api/confirm', {
           method: 'POST',
@@ -1555,7 +1543,7 @@
     }
 
     // ============================================================
-    // 9. PANEL ADMINISTRADOR: CRUD Y SINCRONIZACIÓN
+    // 9. PANEL ADMINISTRADOR: CRUD Y EXPORTACIÓN .XLSX
     // ============================================================
     async function loadAdminData() {
       allAttendeesCache = getStoredAttendees();
@@ -1569,7 +1557,6 @@
         try {
           const { data, error } = await supabaseClient.from('attendees').select('*').order('id', { ascending: false });
           if (!error && data && data.length > 0) {
-            // Filtrar eliminados permanentemente
             const filteredData = data.filter(d => !isRecordDeleted(d));
             allAttendeesCache = filteredData.map(d => ({
               id: d.id,
@@ -1580,7 +1567,6 @@
               institution: d.institution || '',
               position: d.position || '',
               ticket_count: d.ticket_count || 1,
-              ticket_list: Array.isArray(d.ticket_list) ? d.ticket_list : (d.ticket_list ? d.ticket_list.split(',') : ['05802']),
               attending: d.attending || 'yes',
               comments: d.comments || '',
               created_at: d.created_at
@@ -1615,7 +1601,6 @@
                 institution: d.institution || '',
                 position: d.position || '',
                 ticket_count: d.ticket_count || 1,
-                ticket_list: Array.isArray(d.ticket_list) ? d.ticket_list : (d.ticket_list ? d.ticket_list.split(',') : ['05802']),
                 attending: d.attending || 'yes',
                 comments: d.comments || '',
                 created_at: d.created_at
@@ -1643,7 +1628,6 @@
               institution: s.institution || '',
               position: s.position || '',
               ticket_count: s.ticket_count || 1,
-              ticket_list: Array.isArray(s.ticket_list) ? s.ticket_list : (s.ticket_list ? s.ticket_list.split(',').map(t => t.trim()) : ['05802']),
               attending: s.attending,
               comments: s.comments || '',
               created_at: s.created_at
@@ -1697,7 +1681,6 @@
       btn.disabled = true;
       btn.innerText = 'GUARDANDO...';
 
-      const code = generateConfirmationCode();
       const newRecord = {
         id: Date.now(),
         full_name: document.getElementById('create-name').value.trim().toUpperCase(),
@@ -1708,7 +1691,6 @@
         position: document.getElementById('create-position').value.trim(),
         attending: document.getElementById('create-attending').value,
         ticket_count: 1,
-        ticket_list: [code],
         comments: document.getElementById('create-comments').value.trim(),
         created_at: new Date().toISOString()
       };
@@ -1716,8 +1698,7 @@
       allAttendeesCache.unshift(newRecord);
       saveStoredAttendees(allAttendeesCache);
 
-      // Guardar en Supabase
-      saveRecordToCloud(newRecord, code);
+      saveRecordToCloud(newRecord);
 
       closeCreateModal();
       updateKpis(allAttendeesCache);
@@ -1734,8 +1715,6 @@
       if (!item) return;
 
       document.getElementById('edit-id').value = item.id;
-      const code = (item.ticket_list && item.ticket_list[0]) ? item.ticket_list[0] : (item.ticket_list || '-');
-      document.getElementById('edit-header-code').innerText = `CÓDIGO: ${code}`;
       document.getElementById('edit-name').value = item.full_name || '';
       document.getElementById('edit-ci').value = item.ci || '';
       document.getElementById('edit-phone').value = item.phone || '';
@@ -1773,14 +1752,12 @@
         comments: document.getElementById('edit-comments').value.trim()
       };
 
-      // 1. Actualizar en caché local
       const index = allAttendeesCache.findIndex(a => a.id === id || String(a.id) === String(rawId));
       if (index !== -1) {
         allAttendeesCache[index] = { ...allAttendeesCache[index], ...updatedFields };
         saveStoredAttendees(allAttendeesCache);
       }
 
-      // 2. Actualizar en Supabase vía PATCH
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       if (url && key) {
@@ -1797,7 +1774,6 @@
         } catch(err) {}
       }
 
-      // 3. Actualizar en backend de Vercel
       try {
         fetch(`/api/attendees/${id}`, {
           method: 'PUT',
@@ -1815,7 +1791,7 @@
       showToast('Asistente modificado con éxito');
     }
 
-    // ELIMINAR ASISTENTE (ADMIN) CON ELIMINACIÓN PERMANENTE GARANTIZADA
+    // ELIMINAR ASISTENTE PERMANENTE
     async function deleteRecord(id) {
       const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
       const name = item ? item.full_name : 'este registro';
@@ -1823,19 +1799,15 @@
         return;
       }
 
-      // 1. Registrar en lista negra permanente para que NUNCA vuelva a aparecer al recargar
       addDeletedToRegistry(id, item ? item.ci : null, item ? item.full_name : null);
 
-      // 2. Eliminar de caché local y guardar
       allAttendeesCache = allAttendeesCache.filter(a => a.id !== id && String(a.id) !== String(id));
       saveStoredAttendees(allAttendeesCache);
 
-      // 3. Actualizar la vista de la tabla y KPIs de inmediato
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
       showToast('Asistente eliminado permanentemente');
 
-      // 4. Enviar eliminación a Supabase
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       if (url && key) {
@@ -1850,25 +1822,22 @@
         } catch(err) {}
       }
 
-      // 5. Enviar eliminación a backend de Vercel
       try {
         fetch(`/api/attendees/${id}`, { method: 'DELETE' }).catch(() => {});
       } catch(err) {}
     }
 
     // ============================================================
-    // 10. RENDERIZADO DE TABLA ADMINISTRATIVA
+    // 10. RENDERIZADO DE TABLA (SIN COLUMNA DE CÓDIGO)
     // ============================================================
     function renderTable(list) {
       const tableBody = document.getElementById('attendees-table-body');
-      
-      // Filtrar permanentemente cualquier registro eliminado
       const cleanList = (list || []).filter(a => !isRecordDeleted(a));
 
       if (cleanList.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="6" class="text-center py-8 text-slate-400 font-mono">
+            <td colspan="5" class="text-center py-8 text-slate-400 font-mono">
               No hay asistentes registrados actualmente.
             </td>
           </tr>
@@ -1877,7 +1846,6 @@
       }
 
       tableBody.innerHTML = cleanList.map(a => {
-        const code = (a.ticket_list && a.ticket_list[0]) ? a.ticket_list[0] : (a.ticket_list || '05802');
         const isConfirmed = a.attending === 'yes';
 
         return `
@@ -1919,13 +1887,6 @@
                   NO ASISTE
                 </span>
               `}
-            </td>
-
-            <!-- CÓDIGO -->
-            <td class="py-4 px-4 align-middle text-center">
-              <span class="inline-block px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-[11px] font-mono font-bold text-ingelab-navy">
-                ${escapeHtml(String(code).trim())}
-              </span>
             </td>
 
             <!-- ACCIONES: VER, EDITAR, ELIMINAR -->
@@ -1970,31 +1931,56 @@
       renderTable(filtered);
     }
 
-    function exportToCsv() {
-      const headers = ['ASISTENTE', 'C.I. / DOCUMENTO', 'CORREO', 'TELEFONO', 'INSTITUCION', 'CARGO', 'ESTADO', 'CODIGO_REGISTRO', 'FECHA'];
-      let csv = '\uFEFF' + headers.join(';') + '\n';
+    // ============================================================
+    // 11. EXPORTACIÓN A EXCEL NATIVO FORMATO .XLSX (SHEETJS)
+    // ============================================================
+    function exportToExcel() {
+      if (!window.XLSX) {
+        alert('Cargando librería de exportación a Excel, intente nuevamente en 2 segundos.');
+        return;
+      }
 
-      allAttendeesCache.forEach(a => {
-        const code = (a.ticket_list && a.ticket_list[0]) ? a.ticket_list[0] : (a.ticket_list || '');
-        const row = [
-          `"${a.full_name}"`,
-          `"${a.ci || ''}"`,
-          `"${a.email}"`,
-          `"${a.phone}"`,
-          `"${a.institution || ''}"`,
-          `"${a.position || ''}"`,
-          `"${a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE'}"`,
-          `"${code}"`,
-          `"${a.created_at || ''}"`
-        ];
-        csv += row.join(';') + '\n';
-      });
+      const cleanList = (allAttendeesCache || []).filter(a => !isRecordDeleted(a));
+      
+      if (cleanList.length === 0) {
+        alert('No hay registros de asistentes para exportar.');
+        return;
+      }
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `Asistentes_INGELAB_EVOLUTION_${new Date().toISOString().slice(0,10)}.csv`;
-      link.click();
+      const data = cleanList.map((a, index) => ({
+        'N°': index + 1,
+        'ASISTENTE': a.full_name || '',
+        'C.I. / DOCUMENTO': a.ci || '',
+        'CORREO ELECTRÓNICO': a.email || '',
+        'TELÉFONO': a.phone || '',
+        'INSTITUCIÓN / EMPRESA': a.institution || 'Particular',
+        'CARGO / ESPECIALIDAD': a.position || 'Profesional de la Salud',
+        'ESTADO': a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE',
+        'OBSERVACIONES': a.comments || '',
+        'FECHA DE REGISTRO': a.created_at ? new Date(a.created_at).toLocaleString('es-EC') : ''
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+
+      worksheet['!cols'] = [
+        { wch: 6 },
+        { wch: 32 },
+        { wch: 18 },
+        { wch: 28 },
+        { wch: 16 },
+        { wch: 28 },
+        { wch: 24 },
+        { wch: 16 },
+        { wch: 30 },
+        { wch: 22 }
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Asistentes Ingelab');
+
+      // Descargar archivo .xlsx nativo
+      XLSX.writeFile(workbook, `Asistentes_INGELAB_EVOLUTION_${new Date().toISOString().slice(0,10)}.xlsx`);
+      showToast('Archivo Excel (.xlsx) generado con éxito');
     }
 
     // TOAST NOTIFICATION

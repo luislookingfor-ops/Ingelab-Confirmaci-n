@@ -1,3 +1,9 @@
 {
-  "version": 2
+  "version": 2,
+  "cleanUrls": true,
+  "functions": {
+    "index.js": {
+      "includeFiles": "{index.html,public/**,*.png}"
+    }
+  }
 }
