@@ -14,21 +14,22 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_cx0IDgIzs4N6hIb
 const app = express();
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // Servir archivos estáticos del proyecto desde múltiples ubicaciones (raíz, __dirname y public)
-app.use(express.static(rootDir));
-app.use(express.static(path.join(rootDir, 'public')));
-app.use(express.static(__dirname));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/assets', express.static(rootDir));
-app.use('/assets', express.static(path.join(rootDir, 'public')));
+const staticOpts = { maxAge: '1d', immutable: false };
+app.use(express.static(rootDir, staticOpts));
+app.use(express.static(path.join(rootDir, 'public'), staticOpts));
+app.use(express.static(__dirname, staticOpts));
+app.use(express.static(path.join(__dirname, 'public'), staticOpts));
+app.use('/assets', express.static(rootDir, staticOpts));
+app.use('/assets', express.static(path.join(rootDir, 'public'), staticOpts));
 
 // Función para obtener index.html de forma segura y tolerante a fallos
 let cachedHtml = null;
 function getIndexHtml() {
-  if (cachedHtml) return cachedHtml;
+  if (cachedHtml && process.env.NODE_ENV === 'production') return cachedHtml;
   const candidates = [
     path.join(rootDir, 'index.html'),
     path.join(rootDir, 'public', 'index.html'),
@@ -38,8 +39,9 @@ function getIndexHtml() {
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) {
       try {
-        cachedHtml = fs.readFileSync(candidate, 'utf-8');
-        return cachedHtml;
+        const content = fs.readFileSync(candidate, 'utf-8');
+        cachedHtml = content;
+        return content;
       } catch (e) {
         console.warn('Lectura fallida en candidato:', candidate, e);
       }
@@ -48,7 +50,7 @@ function getIndexHtml() {
   return null;
 }
 
-// Endpoint de verificación
+// Endpoint de verificación rápida (Healthcheck)
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
@@ -69,7 +71,7 @@ app.get('/api/attendees', async (req, res) => {
     });
     if (response.ok) {
       const attendees = await response.json();
-      return res.json({ success: true, attendees });
+      return res.json({ success: true, attendees: attendees || [] });
     }
     const errText = await response.text();
     res.status(response.status).json({ success: false, error: errText });
@@ -78,21 +80,29 @@ app.get('/api/attendees', async (req, res) => {
   }
 });
 
-// Endpoint para registrar confirmación en Supabase
+// Endpoint para registrar confirmación en Supabase (con validación y sanitización)
 app.post('/api/confirm', async (req, res) => {
   try {
-    const b = req.body;
+    const b = req.body || {};
+    const fullName = (b.fullName || b.full_name || '').trim().toUpperCase();
+    const email = (b.email || '').trim().toLowerCase();
+    const phone = (b.phone || '').trim();
+
+    if (!fullName || !email) {
+      return res.status(400).json({ success: false, error: 'Nombre y correo son obligatorios' });
+    }
+
     const record = {
-      full_name: (b.fullName || b.full_name || '').trim().toUpperCase(),
+      full_name: fullName,
       ci: (b.ci || '').trim(),
-      email: (b.email || '').trim().toLowerCase(),
-      phone: (b.phone || '').trim(),
-      ticket_count: parseInt(b.ticketCount || b.ticket_count || 1),
-      ticket_list: Array.isArray(b.ticketList || b.ticket_list) ? (b.ticketList || b.ticket_list) : [],
+      email: email,
+      phone: phone,
+      ticket_count: 1,
+      ticket_list: [],
       institution: (b.institution || '').trim(),
       position: (b.position || '').trim(),
       attending: b.attending || 'yes',
-      dietary: Array.isArray(b.dietary) ? b.dietary : [],
+      dietary: [],
       comments: (b.comments || '').trim()
     };
 
@@ -104,12 +114,12 @@ app.post('/api/confirm', async (req, res) => {
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       },
-      body: JSON.stringify(record)
+      body: JSON.stringify([record])
     });
 
     if (response.ok) {
       const data = await response.json();
-      return res.status(201).json({ success: true, attendee: data[0] });
+      return res.status(201).json({ success: true, attendee: data ? data[0] : record });
     }
     const errText = await response.text();
     res.status(response.status).json({ success: false, error: errText });
@@ -122,12 +132,12 @@ app.post('/api/confirm', async (req, res) => {
 app.put('/api/attendees/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const b = req.body;
+    const b = req.body || {};
     const record = {};
     if (b.full_name) record.full_name = b.full_name.trim().toUpperCase();
     if (b.ci !== undefined) record.ci = b.ci.trim();
     if (b.email) record.email = b.email.trim().toLowerCase();
-    if (b.phone) record.phone = b.phone.trim();
+    if (b.phone !== undefined) record.phone = b.phone.trim();
     if (b.institution !== undefined) record.institution = b.institution.trim();
     if (b.position !== undefined) record.position = b.position.trim();
     if (b.attending) record.attending = b.attending;
@@ -177,15 +187,15 @@ app.delete('/api/attendees/:id', async (req, res) => {
   }
 });
 
-// Todas las demás peticiones van a index.html (servido de forma segura)
+// Servir la página principal con index.html
 app.get('*', (req, res) => {
   const html = getIndexHtml();
   if (html) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
     return res.send(html);
   }
   
-  // Fallback con sendFile
   try {
     res.sendFile(path.join(rootDir, 'index.html'));
   } catch (e) {
@@ -193,7 +203,7 @@ app.get('*', (req, res) => {
   }
 });
 
-// Manejador global de errores para garantizar 0 fallas no controladas (evita 500 FUNCTION_INVOCATION_FAILED)
+// Manejador global de errores (evita 500 FUNCTION_INVOCATION_FAILED)
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);
   const html = getIndexHtml();

@@ -300,34 +300,21 @@
       
       <div class="max-w-3xl mx-auto space-y-8">
         
-        <!-- HERO CARD: INGELAB EVOLUTION CON TIPOGRAFÍA GRANDE -->
-        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-10 shadow-xl overflow-hidden relative">
+        <!-- HERO CARD: AFICHE OFICIAL INVITACION1.PNG Y FICHA TÉCNICA -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-4 sm:p-8 shadow-xl overflow-hidden relative">
           
-          <!-- Banner Logo Ingelab Evolution Oficial -->
-          <div class="max-w-md mx-auto mb-6 text-center">
-            <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="w-full max-w-sm sm:max-w-md mx-auto h-auto object-contain logo-sharp">
+          <!-- Afiche Oficial INVITACION1.png -->
+          <div class="rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-white mb-8 cursor-pointer group" onclick="openInvitationModal()" title="Haga clic para ver invitación completa">
+            <img src="INVITACION1.png" alt="Ingelab Evolution - Invitación Oficial" class="w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]">
           </div>
-
-          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-mono tracking-widest uppercase text-arch-subtle mb-3">
-            <span class="px-3.5 py-1 rounded-md bg-ingelab-green text-white font-bold">
-              EVENTO EXCLUSIVO
-            </span>
-            <span class="font-bold text-slate-700">EDICIÓN 2026</span>
-            <span class="text-slate-300">/</span>
-            <span>RED DE LABORATORIOS CLÍNICOS</span>
-          </div>
-
-          <p class="text-center text-base sm:text-lg text-slate-700 font-medium leading-relaxed mb-8 max-w-2xl mx-auto">
-            Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
-          </p>
 
           <!-- ============================================================ -->
           <!-- FICHA TÉCNICA DEL EVENTO CON TIPOGRAFÍA DESTACADA Y GRANDE   -->
           <!-- ============================================================ -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             
             <!-- 01 / FECHA -->
-            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-green transition-colors">
+            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-green transition-colors text-left">
               <div class="w-12 h-12 rounded-2xl bg-ingelab-green-light text-ingelab-green flex items-center justify-center shrink-0">
                 <i data-lucide="calendar" class="w-6 h-6"></i>
               </div>
@@ -338,7 +325,7 @@
             </div>
 
             <!-- 02 / HORARIO -->
-            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-navy transition-colors">
+            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-navy transition-colors text-left">
               <div class="w-12 h-12 rounded-2xl bg-ingelab-navy-light text-ingelab-navy flex items-center justify-center shrink-0">
                 <i data-lucide="clock" class="w-6 h-6"></i>
               </div>
@@ -349,7 +336,7 @@
             </div>
 
             <!-- 03 / LUGAR -->
-            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-blue transition-colors">
+            <div class="p-5 rounded-2xl bg-white/95 border border-slate-200/90 flex items-center gap-4 shadow-sm hover:border-ingelab-blue transition-colors text-left">
               <div class="w-12 h-12 rounded-2xl bg-slate-100 text-ingelab-blue flex items-center justify-center shrink-0">
                 <i data-lucide="map-pin" class="w-6 h-6"></i>
               </div>
@@ -365,7 +352,7 @@
           <!-- ============================================================ -->
           <!-- RELOJ DE CUENTA REGRESIVA CON NÚMEROS GRANDES Y VISIBLES     -->
           <!-- ============================================================ -->
-          <div class="bg-white/95 rounded-2xl border border-slate-200/90 p-6 shadow-sm">
+          <div class="bg-white/95 rounded-2xl border border-slate-200/90 p-6 shadow-sm text-left">
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4 text-xs font-mono">
               <span class="text-slate-600 uppercase tracking-widest flex items-center gap-2.5 font-bold text-xs sm:text-sm">
                 <i data-lucide="timer" class="w-5 h-5 text-ingelab-green"></i>
@@ -394,11 +381,6 @@
             </div>
           </div>
 
-        </div>
-
-        <!-- BANNER ILUSTRATIVO DE QUITO ARTÍSTICO -->
-        <div class="rounded-3xl overflow-hidden border border-white/80 shadow-lg bg-white/70">
-          <img src="quito_skyline_banner.png" alt="Quito - Ingelab Evolution" class="w-full h-auto object-cover max-h-48 sm:max-h-60">
         </div>
 
         <!-- FORMULARIO DE CONFIRMACIÓN -->
@@ -624,22 +606,13 @@
               </div>
             </div>
 
-            <!-- Código QR y Datos del Evento (CÓDIGO OMITIDO) -->
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
-              <div class="shrink-0 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center">
-                <canvas id="success-qr-canvas" class="rounded-lg"></canvas>
+            <!-- Resumen de Confirmación -->
+            <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-ingelab-green"></span>
+                <span class="font-bold text-slate-700">Asistencia Registrada Oficialmente</span>
               </div>
-              <div class="space-y-2.5 text-xs sm:text-sm font-mono text-center sm:text-left flex-1">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
-                  <span class="w-2 h-2 rounded-full bg-ingelab-green animate-pulse"></span>
-                  PASE DIGITAL CONFIRMADO
-                </div>
-                <div class="text-xs sm:text-sm text-slate-700 space-y-1 font-mono pt-1">
-                  <div><strong>Fecha:</strong> Viernes, 13 de Noviembre 2026</div>
-                  <div><strong>Hora:</strong> 17:00</div>
-                  <div><strong>Lugar:</strong> HOTEL HILTON COLÓN (Av. Amazonas N19-14 y Av. Patria)</div>
-                </div>
-              </div>
+              <div class="text-slate-600 font-mono">HOTEL HILTON COLÓN • 13 Nov 2026 • 17:00</div>
             </div>
 
           </div>
@@ -1259,35 +1232,35 @@
     }
 
     // ============================================================
-    // 5. REGISTRO DE ELIMINACIONES PERMANENTES (ANTI-RESURRECCIÓN)
+    // 5. REGISTRO DE ELIMINACIONES PERMANENTES (POR ID EXCLUSIVO)
     // ============================================================
+    try {
+      localStorage.removeItem('ingelab_deleted_registry_v1');
+    } catch (e) {}
+
     function getDeletedRegistry() {
       try {
-        const raw = localStorage.getItem('ingelab_deleted_registry_v1');
+        const raw = localStorage.getItem('ingelab_deleted_registry_v2');
         if (raw) return JSON.parse(raw);
       } catch (e) {}
       return [];
     }
 
-    function addDeletedToRegistry(id, ci, fullName) {
+    function addDeletedToRegistry(id) {
+      if (!id) return;
       const list = getDeletedRegistry();
-      list.push({
-        id: String(id),
-        ci: ci ? String(ci).trim() : '',
-        name: fullName ? String(fullName).trim().toUpperCase() : ''
-      });
-      localStorage.setItem('ingelab_deleted_registry_v1', JSON.stringify(list));
+      const strId = String(id);
+      if (!list.includes(strId)) {
+        list.push(strId);
+      }
+      localStorage.setItem('ingelab_deleted_registry_v2', JSON.stringify(list));
     }
 
     function isRecordDeleted(record) {
+      if (!record || !record.id) return false;
       const deletedList = getDeletedRegistry();
       if (!deletedList || deletedList.length === 0) return false;
-      return deletedList.some(d => {
-        if (d.id && String(record.id) === String(d.id)) return true;
-        if (d.ci && record.ci && String(record.ci).trim() === d.ci) return true;
-        if (d.name && record.full_name && String(record.full_name).trim().toUpperCase() === d.name) return true;
-        return false;
-      });
+      return deletedList.includes(String(record.id));
     }
 
     function getStoredAttendees() {
@@ -1302,7 +1275,7 @@
     }
 
     function saveStoredAttendees(list) {
-      const cleanList = list.filter(a => !isRecordDeleted(a));
+      const cleanList = (list || []).filter(a => !isRecordDeleted(a));
       localStorage.setItem('ingelab_attendees_v6', JSON.stringify(cleanList));
     }
 
@@ -1465,98 +1438,117 @@
       document.getElementById('success-display-phone').innerText = record.phone || '-';
       document.getElementById('success-display-institution').innerText = record.institution || 'Particular';
       document.getElementById('success-display-position').innerText = record.position || 'Profesional de la Salud';
-
-      setTimeout(() => {
-        try {
-          const canvas = document.getElementById('success-qr-canvas');
-          if (canvas && window.QRCode) {
-            QRCode.toCanvas(canvas, `INGELAB-EVOLUTION-2026|${record.full_name}|CI:${record.ci}|HOTEL-HILTON-COLON`, {
-              width: 140,
-              margin: 1,
-              color: {
-                dark: '#1C2852',
-                light: '#ffffff'
-              }
-            }, function(err) {
-              if (err) console.warn('QR Canvas notice:', err);
-            });
-          }
-        } catch (qrErr) {
-          console.warn('QR code generation error:', qrErr);
-        }
-      }, 50);
     }
 
     async function saveRecordToCloud(record) {
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
-      const supabasePayload = [{
+      const payload = {
         full_name: record.full_name,
-        ci: record.ci,
+        ci: record.ci || '',
         email: record.email,
         phone: record.phone,
-        institution: record.institution,
-        position: record.position,
-        attending: record.attending,
+        institution: record.institution || '',
+        position: record.position || '',
+        attending: record.attending || 'yes',
         ticket_count: 1,
-        comments: record.comments
-      }];
+        ticket_list: [],
+        dietary: [],
+        comments: record.comments || ''
+      };
 
+      let saved = false;
+
+      // 1. Inserción directa en Supabase vía SDK (obtiene el ID de base de datos)
       if (supabaseClient) {
         try {
-          supabaseClient.from('attendees').insert(supabasePayload).then(({ error }) => {
-            if (error) directSupabaseInsert(supabasePayload);
-          }).catch(() => directSupabaseInsert(supabasePayload));
+          const { data, error } = await supabaseClient
+            .from('attendees')
+            .insert([payload])
+            .select();
+
+          if (!error && data && data.length > 0) {
+            saved = true;
+            record.id = data[0].id;
+            record.created_at = data[0].created_at;
+            saveStoredAttendees(allAttendeesCache);
+          }
         } catch (e) {
-          directSupabaseInsert(supabasePayload);
+          console.warn('Supabase SDK insert fallback:', e);
         }
-      } else {
-        directSupabaseInsert(supabasePayload);
       }
 
-      try {
-        fetch('/api/confirm', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(record)
-        }).catch(() => {});
-      } catch (err) {}
-    }
+      // 2. Inserción directa vía REST API a Supabase
+      if (!saved && url && key) {
+        try {
+          const response = await fetch(`${url}/rest/v1/attendees`, {
+            method: 'POST',
+            headers: {
+              'apikey': key,
+              'Authorization': `Bearer ${key}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify([payload])
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.length > 0) {
+              saved = true;
+              record.id = data[0].id;
+              record.created_at = data[0].created_at;
+              saveStoredAttendees(allAttendeesCache);
+            }
+          }
+        } catch (err) {
+          console.warn('Supabase REST insert fallback:', err);
+        }
+      }
 
-    async function directSupabaseInsert(payload) {
-      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
-      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
-      if (!url || !key) return;
-      try {
-        await fetch(`${url}/rest/v1/attendees`, {
-          method: 'POST',
-          headers: {
-            'apikey': key,
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {}
+      // 3. Fallback al backend Express solo si falló la conexión directa
+      if (!saved) {
+        try {
+          const res = await fetch('/api/confirm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(record)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.attendee && data.attendee.id) {
+              record.id = data.attendee.id;
+              saveStoredAttendees(allAttendeesCache);
+            }
+          }
+        } catch (err) {
+          console.warn('Backend fallback notice:', err);
+        }
+      }
     }
 
     // ============================================================
     // 9. PANEL ADMINISTRADOR: CRUD Y EXPORTACIÓN .XLSX
     // ============================================================
     async function loadAdminData() {
+      // 1. Mostrar caché local de inmediato (0ms de espera)
       allAttendeesCache = getStoredAttendees();
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
 
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       let cloudLoaded = false;
 
-      // 1. Cargar vía Supabase Client SDK
+      // 2. Cargar en segundo plano desde Supabase Client SDK
       if (supabaseClient) {
         try {
-          const { data, error } = await supabaseClient.from('attendees').select('*').order('id', { ascending: false });
-          if (!error && data && data.length > 0) {
+          const { data, error } = await supabaseClient
+            .from('attendees')
+            .select('*')
+            .order('id', { ascending: false });
+
+          if (!error && data) {
             const filteredData = data.filter(d => !isRecordDeleted(d));
             allAttendeesCache = filteredData.map(d => ({
               id: d.id,
@@ -1579,7 +1571,7 @@
         }
       }
 
-      // 2. Fallback: Cargar vía REST directo a Supabase
+      // 3. Fallback REST directo a Supabase
       if (!cloudLoaded && url && key) {
         try {
           const res = await fetch(`${url}/rest/v1/attendees?select=*&order=id.desc`, {
@@ -1590,7 +1582,7 @@
           });
           if (res.ok) {
             const data = await res.json();
-            if (data && data.length > 0) {
+            if (Array.isArray(data)) {
               const filteredData = data.filter(d => !isRecordDeleted(d));
               allAttendeesCache = filteredData.map(d => ({
                 id: d.id,
@@ -1612,27 +1604,29 @@
         } catch (e) {}
       }
 
-      // 3. Fallback: Endpoint backend de Vercel
+      // 4. Fallback Endpoint backend /api/attendees
       if (!cloudLoaded) {
         try {
           const res = await fetch('/api/attendees');
-          const data = await res.json();
-          if (data.success && data.attendees && data.attendees.length > 0) {
-            const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
-            allAttendeesCache = filteredData.map(s => ({
-              id: s.id,
-              full_name: s.full_name,
-              ci: s.ci || '',
-              email: s.email,
-              phone: s.phone,
-              institution: s.institution || '',
-              position: s.position || '',
-              ticket_count: s.ticket_count || 1,
-              attending: s.attending,
-              comments: s.comments || '',
-              created_at: s.created_at
-            }));
-            saveStoredAttendees(allAttendeesCache);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && Array.isArray(data.attendees)) {
+              const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
+              allAttendeesCache = filteredData.map(s => ({
+                id: s.id,
+                full_name: s.full_name,
+                ci: s.ci || '',
+                email: s.email,
+                phone: s.phone,
+                institution: s.institution || '',
+                position: s.position || '',
+                ticket_count: s.ticket_count || 1,
+                attending: s.attending,
+                comments: s.comments || '',
+                created_at: s.created_at
+              }));
+              saveStoredAttendees(allAttendeesCache);
+            }
           }
         } catch (e) {}
       }
@@ -1642,31 +1636,31 @@
     }
 
     function updateKpis(list) {
-      const total = list.length;
+      const cleanList = (list || []).filter(a => !isRecordDeleted(a));
+      const total = cleanList.length;
       let confirmed = 0;
       let declined = 0;
 
-      list.forEach(a => {
+      cleanList.forEach(a => {
         if (a.attending === 'yes') confirmed++;
         else declined++;
       });
 
-      const rate = total > 0 ? Math.round((confirmed / total) * 100) : 100;
-
       document.getElementById('kpi-total').innerText = total;
       document.getElementById('kpi-confirmed').innerText = confirmed;
       document.getElementById('kpi-declined').innerText = declined;
-      document.getElementById('kpi-rate').innerText = `${rate}%`;
-
-      const badgeTotal = document.getElementById('badge-total-attendees');
-      if (badgeTotal) badgeTotal.innerText = total;
-      const filterCount = document.getElementById('filter-count');
-      if (filterCount) filterCount.innerText = total;
     }
 
-    // CREAR ASISTENTE (ADMIN)
+    // ABRIR MODAL CREAR NUEVO ASISTENTE
     function openCreateModal() {
-      document.getElementById('create-attendee-form').reset();
+      document.getElementById('create-fullname').value = '';
+      document.getElementById('create-ci').value = '';
+      document.getElementById('create-email').value = '';
+      document.getElementById('create-phone').value = '';
+      document.getElementById('create-institution').value = '';
+      document.getElementById('create-position').value = '';
+      document.getElementById('create-attending').value = 'yes';
+      document.getElementById('create-comments').value = '';
       document.getElementById('create-modal').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -1675,15 +1669,16 @@
       document.getElementById('create-modal').classList.add('hidden');
     }
 
-    async function handleAdminCreate(e) {
+    // GUARDAR ASISTENTE CREADO DESDE ADMIN
+    async function handleCreateSubmit(e) {
       e.preventDefault();
-      const btn = document.getElementById('create-submit-btn');
+      const btn = document.getElementById('save-create-btn');
       btn.disabled = true;
-      btn.innerText = 'GUARDANDO...';
+      btn.innerHTML = '<span>Guardando...</span>';
 
       const newRecord = {
         id: Date.now(),
-        full_name: document.getElementById('create-name').value.trim().toUpperCase(),
+        full_name: document.getElementById('create-fullname').value.trim().toUpperCase(),
         ci: document.getElementById('create-ci').value.trim(),
         email: document.getElementById('create-email').value.trim().toLowerCase(),
         phone: document.getElementById('create-phone').value.trim(),
@@ -1698,27 +1693,52 @@
       allAttendeesCache.unshift(newRecord);
       saveStoredAttendees(allAttendeesCache);
 
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
+
       saveRecordToCloud(newRecord);
 
       closeCreateModal();
-      updateKpis(allAttendeesCache);
-      renderTable(allAttendeesCache);
       btn.disabled = false;
-      btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Guardar Registro</span>';
+      btn.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i><span>Crear Asistente</span>';
       lucide.createIcons();
       showToast('Asistente registrado exitosamente');
     }
 
-    // EDITAR ASISTENTE (ADMIN)
+    // MODAL DE DETALLE / VER ASISTENTE
+    function viewAttendeeDetail(id) {
+      const item = allAttendeesCache.find(a => String(a.id) === String(id));
+      if (!item) return;
+
+      document.getElementById('detail-name').innerText = item.full_name || '-';
+      document.getElementById('detail-ci').innerText = item.ci || '-';
+      document.getElementById('detail-email').innerText = item.email || '-';
+      document.getElementById('detail-phone').innerText = item.phone || '-';
+      document.getElementById('detail-institution').innerText = item.institution || 'Particular';
+      document.getElementById('detail-position').innerText = item.position || 'Profesional de la Salud';
+      document.getElementById('detail-status').innerText = item.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE';
+      document.getElementById('detail-status').className = item.attending === 'yes' ? 'font-bold text-emerald-600' : 'font-bold text-slate-500';
+      document.getElementById('detail-comments').innerText = item.comments || 'Sin comentarios';
+      document.getElementById('detail-date').innerText = item.created_at ? new Date(item.created_at).toLocaleString('es-EC') : '-';
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    // EDITAR ASISTENTE EXISTENTE
     function openEditModal(id) {
-      const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
+      const item = allAttendeesCache.find(a => String(a.id) === String(id));
       if (!item) return;
 
       document.getElementById('edit-id').value = item.id;
-      document.getElementById('edit-name').value = item.full_name || '';
+      document.getElementById('edit-fullname').value = item.full_name || '';
       document.getElementById('edit-ci').value = item.ci || '';
-      document.getElementById('edit-phone').value = item.phone || '';
       document.getElementById('edit-email').value = item.email || '';
+      document.getElementById('edit-phone').value = item.phone || '';
       document.getElementById('edit-institution').value = item.institution || '';
       document.getElementById('edit-position').value = item.position || '';
       document.getElementById('edit-attending').value = item.attending || 'yes';
@@ -1732,17 +1752,15 @@
       document.getElementById('edit-modal').classList.add('hidden');
     }
 
-    async function handleAdminEdit(e) {
+    async function handleEditSubmit(e) {
       e.preventDefault();
-      const btn = document.getElementById('edit-submit-btn');
+      const id = document.getElementById('edit-id').value;
+      const btn = document.getElementById('save-edit-btn');
       btn.disabled = true;
-      btn.innerText = 'ACTUALIZANDO...';
-
-      const rawId = document.getElementById('edit-id').value;
-      const id = isNaN(rawId) ? rawId : parseInt(rawId);
+      btn.innerHTML = '<span>Guardando...</span>';
 
       const updatedFields = {
-        full_name: document.getElementById('edit-name').value.trim().toUpperCase(),
+        full_name: document.getElementById('edit-fullname').value.trim().toUpperCase(),
         ci: document.getElementById('edit-ci').value.trim(),
         email: document.getElementById('edit-email').value.trim().toLowerCase(),
         phone: document.getElementById('edit-phone').value.trim(),
@@ -1752,14 +1770,22 @@
         comments: document.getElementById('edit-comments').value.trim()
       };
 
-      const index = allAttendeesCache.findIndex(a => a.id === id || String(a.id) === String(rawId));
-      if (index !== -1) {
-        allAttendeesCache[index] = { ...allAttendeesCache[index], ...updatedFields };
+      const idx = allAttendeesCache.findIndex(a => String(a.id) === String(id));
+      if (idx !== -1) {
+        allAttendeesCache[idx] = { ...allAttendeesCache[idx], ...updatedFields };
         saveStoredAttendees(allAttendeesCache);
       }
 
+      // Actualizar en Supabase
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('attendees').update(updatedFields).eq('id', id);
+        } catch(e) {}
+      }
+
       if (url && key) {
         try {
           fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
@@ -1791,25 +1817,35 @@
       showToast('Asistente modificado con éxito');
     }
 
-    // ELIMINAR ASISTENTE PERMANENTE
+    // ELIMINAR ASISTENTE PERMANENTE (SOLO POR ID)
     async function deleteRecord(id) {
-      const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
+      const item = allAttendeesCache.find(a => String(a.id) === String(id));
       const name = item ? item.full_name : 'este registro';
       if (!confirm(`¿Está seguro de eliminar a "${name}" de la lista oficial de participantes? Esta acción no se puede deshacer.`)) {
         return;
       }
 
-      addDeletedToRegistry(id, item ? item.ci : null, item ? item.full_name : null);
+      // 1. Agregar ID a eliminados
+      addDeletedToRegistry(id);
 
-      allAttendeesCache = allAttendeesCache.filter(a => a.id !== id && String(a.id) !== String(id));
+      // 2. Remover de caché local y actualizar
+      allAttendeesCache = allAttendeesCache.filter(a => String(a.id) !== String(id));
       saveStoredAttendees(allAttendeesCache);
 
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
       showToast('Asistente eliminado permanentemente');
 
+      // 3. Eliminar en Supabase directamente
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+
+      if (supabaseClient) {
+        try {
+          supabaseClient.from('attendees').delete().eq('id', id).then(() => {}).catch(() => {});
+        } catch (e) {}
+      }
+
       if (url && key) {
         try {
           fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
@@ -1822,6 +1858,7 @@
         } catch(err) {}
       }
 
+      // 4. Eliminar en backend express
       try {
         fetch(`/api/attendees/${id}`, { method: 'DELETE' }).catch(() => {});
       } catch(err) {}
