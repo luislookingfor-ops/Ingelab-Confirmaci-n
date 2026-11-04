@@ -2,11 +2,10 @@
   "name": "ingelab-confirmacion-evento",
   "version": "1.0.0",
   "description": "Sistema de confirmación de asistencia y registro de evento para Ingelab",
-  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "local": "node local_server.js",
+    "dev": "node --watch local_server.js"
   },
   "dependencies": {
     "express": "^4.21.1",
