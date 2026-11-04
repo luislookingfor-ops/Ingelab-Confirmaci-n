@@ -805,11 +805,13 @@
     lucide.createIcons();
 
     // GESTIÓN DE SUPABASE CLIENT
+    const DEFAULT_SUPABASE_URL = 'https://hfxgmeykdxnoapqdspzn.supabase.co';
+    const DEFAULT_SUPABASE_KEY = ''; // Inyectar clave anon para conexión global automática
     let supabaseClient = null;
 
     function initSupabase() {
-      const url = localStorage.getItem('ingelab_supabase_url');
-      const key = localStorage.getItem('ingelab_supabase_key');
+      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       const badge = document.getElementById('supabase-status-badge');
       const btnLabel = document.getElementById('supabase-btn-label');
 
@@ -828,8 +830,8 @@
     }
 
     function openSupabaseModal() {
-      document.getElementById('input-supabase-url').value = localStorage.getItem('ingelab_supabase_url') || '';
-      document.getElementById('input-supabase-key').value = localStorage.getItem('ingelab_supabase_key') || '';
+      document.getElementById('input-supabase-url').value = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+      document.getElementById('input-supabase-key').value = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       document.getElementById('supabase-modal').classList.remove('hidden');
       lucide.createIcons();
     }
