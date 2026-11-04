@@ -13,11 +13,63 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_cx0IDgIzs4N6hIb
 
 const app = express();
 
-app.use(cors());
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ extended: true, limit: '2mb' }));
+// ==============================================================
+// 1. CABECERAS DE SEGURIDAD Y CONFIGURACIÓN BÁSICA
+// ==============================================================
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
 
-// Servir archivos estáticos del proyecto desde múltiples ubicaciones (raíz, __dirname y public)
+app.use(cors());
+// Límite estricto de payload para evitar ataques de desbordamiento de buffer
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+
+// ==============================================================
+// 2. RATE LIMITING EN MEMORIA (Anti-Spam / Anti-DDoS por IP)
+// ==============================================================
+const ipRegistrationMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minuto
+const MAX_REGISTRATIONS_PER_WINDOW = 6; // Máximo 6 confirmaciones por IP por minuto
+
+function rateLimiterMiddleware(req, res, next) {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+
+  const clientHistory = ipRegistrationMap.get(ip) || [];
+  // Filtrar peticiones fuera de la ventana actual de 60 segundos
+  const recentRequests = clientHistory.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW_MS);
+
+  if (recentRequests.length >= MAX_REGISTRATIONS_PER_WINDOW) {
+    res.setHeader('Retry-After', '60');
+    return res.status(429).json({
+      success: false,
+      error: 'Ha superado el límite de intentos por minuto. Por favor espere 60 segundos antes de reintentar.'
+    });
+  }
+
+  recentRequests.push(now);
+  ipRegistrationMap.set(ip, recentRequests);
+
+  // Limpieza periódica para evitar fugas de memoria
+  if (ipRegistrationMap.size > 2000) {
+    for (const [key, timestamps] of ipRegistrationMap.entries()) {
+      if (timestamps.length === 0 || now - timestamps[timestamps.length - 1] > RATE_LIMIT_WINDOW_MS) {
+        ipRegistrationMap.delete(key);
+      }
+    }
+  }
+
+  next();
+}
+
+// ==============================================================
+// 3. ARCHIVOS ESTÁTICOS CON CACHÉ ÓPTIMO (Evita Cold Starts)
+// ==============================================================
 const staticOpts = { maxAge: '1d', immutable: false };
 app.use(express.static(rootDir, staticOpts));
 app.use(express.static(path.join(rootDir, 'public'), staticOpts));
@@ -26,7 +78,7 @@ app.use(express.static(path.join(__dirname, 'public'), staticOpts));
 app.use('/assets', express.static(rootDir, staticOpts));
 app.use('/assets', express.static(path.join(rootDir, 'public'), staticOpts));
 
-// Función para obtener index.html de forma segura y tolerante a fallos
+// Lector seguro de index.html con caché en memoria
 let cachedHtml = null;
 function getIndexHtml() {
   if (cachedHtml && process.env.NODE_ENV === 'production') return cachedHtml;
@@ -50,25 +102,35 @@ function getIndexHtml() {
   return null;
 }
 
-// Endpoint de verificación rápida (Healthcheck)
+// ==============================================================
+// 4. ENDPOINTS DE LA API (Stateless / PostgREST Connection Pooling)
+// ==============================================================
+
+// Healthcheck
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     service: 'INGELAB Confirmación de Asistencia - Ingelab Evolution',
-    supabase: 'connected',
+    connectionPool: 'PostgREST HTTPS Stateless Pool',
     eventDate: '2026-11-13'
   });
 });
 
-// Endpoint para obtener lista de asistentes desde Supabase
+// Listado de asistentes
 app.get('/api/attendees', async (req, res) => {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
+
     const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=*&order=id.desc`, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
+      },
+      signal: controller.signal
     });
+    clearTimeout(timeout);
+
     if (response.ok) {
       const attendees = await response.json();
       return res.json({ success: true, attendees: attendees || [] });
@@ -80,16 +142,29 @@ app.get('/api/attendees', async (req, res) => {
   }
 });
 
-// Endpoint para registrar confirmación en Supabase (con validación y sanitización)
-app.post('/api/confirm', async (req, res) => {
+// Confirmación de Asistencia con Protección Anti-Bot (Honeypot), Rate Limiting e Idempotencia (Upsert)
+app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
   try {
     const b = req.body || {};
+
+    // 1. Detección de Bots vía Honeypot (Trampa oculta para bots)
+    if (b.website_url_hp && String(b.website_url_hp).trim().length > 0) {
+      console.warn('Bot detectado por Honeypot. Registro descartado.');
+      // Retornar éxito simulado para neutralizar al bot sin gastar recursos de base de datos
+      return res.status(200).json({ success: true, message: 'Solicitud procesada' });
+    }
+
     const fullName = (b.fullName || b.full_name || '').trim().toUpperCase();
     const email = (b.email || '').trim().toLowerCase();
     const phone = (b.phone || '').trim();
 
-    if (!fullName || !email) {
-      return res.status(400).json({ success: false, error: 'Nombre y correo son obligatorios' });
+    // 2. Validación estricta en servidor
+    if (!fullName || fullName.length < 3) {
+      return res.status(400).json({ success: false, error: 'El nombre completo debe tener al menos 3 caracteres.' });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ success: false, error: 'Por favor ingrese una dirección de correo válida.' });
     }
 
     const record = {
@@ -106,16 +181,42 @@ app.post('/api/confirm', async (req, res) => {
       comments: (b.comments || '').trim()
     };
 
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+    // 3. Inserción Idempotente con Resolución de Conflictos (Upsert por email con fallback inteligente)
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 7000);
+
+    let response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?on_conflict=email`, {
       method: 'POST',
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`,
         'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
+        'Prefer': 'resolution=merge-duplicates,return=representation'
       },
-      body: JSON.stringify([record])
+      body: JSON.stringify([record]),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
+
+    // Si la restricción UNIQUE en email aún no ha sido aplicada en la BD, PostgREST retorna 400 (42P10)
+    // En ese caso, ejecutamos la inserción estándar transparente sin que falle la petición
+    if (!response.ok && response.status === 400) {
+      const errText = await response.text();
+      if (errText.includes('ON CONFLICT') || errText.includes('42P10')) {
+        response = await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify([record])
+        });
+      } else {
+        return res.status(response.status).json({ success: false, error: errText });
+      }
+    }
 
     if (response.ok) {
       const data = await response.json();
@@ -128,7 +229,7 @@ app.post('/api/confirm', async (req, res) => {
   }
 });
 
-// Endpoint para modificar asistente en Supabase
+// Modificar asistente en Supabase
 app.put('/api/attendees/:id', async (req, res) => {
   try {
     const id = req.params.id;
@@ -165,7 +266,7 @@ app.put('/api/attendees/:id', async (req, res) => {
   }
 });
 
-// Endpoint para eliminar asistente en Supabase
+// Eliminar asistente en Supabase
 app.delete('/api/attendees/:id', async (req, res) => {
   try {
     const id = req.params.id;
@@ -187,7 +288,7 @@ app.delete('/api/attendees/:id', async (req, res) => {
   }
 });
 
-// Servir la página principal con index.html
+// Servir la página principal
 app.get('*', (req, res) => {
   const html = getIndexHtml();
   if (html) {
@@ -203,7 +304,7 @@ app.get('*', (req, res) => {
   }
 });
 
-// Manejador global de errores (evita 500 FUNCTION_INVOCATION_FAILED)
+// Manejador global de errores (Garantiza 0 caídas no controladas)
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);
   const html = getIndexHtml();
@@ -214,7 +315,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: err.message || 'Internal Server Error' });
 });
 
-// Solo iniciar el servidor HTTP si se ejecuta directamente y no está en Vercel
+// Iniciar servidor local
 if (!process.env.VERCEL && process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3000;
   try {

@@ -407,6 +407,12 @@
 
           <form id="attendance-form" onsubmit="handleSubmit(event)" class="space-y-6 sm:space-y-8">
             
+            <!-- CAMPO TRAMPA HONEYPOT (ANTI-BOTS / ANTI-SPAM) -->
+            <div style="opacity:0; position:absolute; top:0; left:0; height:0; width:0; z-index:-1; overflow:hidden;" aria-hidden="true">
+              <label for="website_url_hp">Por favor no complete este campo</label>
+              <input type="text" id="website_url_hp" name="website_url_hp" tabindex="-1" autocomplete="off">
+            </div>
+            
             <!-- SECCIÓN 01: INFORMACIÓN DEL ASISTENTE -->
             <div>
               <div class="flex items-center gap-3 mb-5">
@@ -1384,6 +1390,15 @@
       const form = e.target;
       const formData = new FormData(form);
 
+      // 1. Detección Anti-Bot Honeypot
+      const hp = (formData.get('website_url_hp') || '').trim();
+      if (hp.length > 0) {
+        console.warn('Bot detectado por Honeypot. Registro descartado.');
+        form.reset();
+        showSuccessScreen({ full_name: 'Confirmación Procesada' });
+        return;
+      }
+
       const newRecord = {
         id: Date.now(),
         full_name: (formData.get('fullName') || '').trim().toUpperCase(),
@@ -1440,7 +1455,44 @@
       document.getElementById('success-display-position').innerText = record.position || 'Profesional de la Salud';
     }
 
-    async function saveRecordToCloud(record) {
+    // ============================================================
+    // COLA DE SINCRONIZACIÓN OFFLINE (RESILIENCIA ANTE FALLOS DE RED)
+    // ============================================================
+    function queueOfflineRecord(record) {
+      try {
+        const queue = JSON.parse(localStorage.getItem('ingelab_offline_queue_v1') || '[]');
+        if (!queue.some(q => q.email === record.email)) {
+          queue.push(record);
+          localStorage.setItem('ingelab_offline_queue_v1', JSON.stringify(queue));
+        }
+      } catch (e) {}
+    }
+
+    async function syncOfflineQueue() {
+      if (!navigator.onLine) return;
+      try {
+        const queue = JSON.parse(localStorage.getItem('ingelab_offline_queue_v1') || '[]');
+        if (queue.length === 0) return;
+        const remaining = [];
+        for (const rec of queue) {
+          const ok = await saveRecordToCloud(rec, false);
+          if (!ok) remaining.push(rec);
+        }
+        localStorage.setItem('ingelab_offline_queue_v1', JSON.stringify(remaining));
+        if (remaining.length === 0 && queue.length > 0) {
+          showToast('Sincronización en línea completada');
+          if (typeof loadAdminData === 'function') loadAdminData();
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('online', syncOfflineQueue);
+    window.addEventListener('load', () => setTimeout(syncOfflineQueue, 2000));
+
+    // ============================================================
+    // INSERCIÓN IDEMPOTENTE CON RESOLUCIÓN DE CONFLICTOS (UPSERT)
+    // ============================================================
+    async function saveRecordToCloud(record, allowQueue = true) {
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
@@ -1460,53 +1512,87 @@
 
       let saved = false;
 
-      // 1. Inserción directa en Supabase vía SDK (obtiene el ID de base de datos)
+      // 1. Inserción Idempotente vía Supabase Client SDK (Upsert por email con fallback)
       if (supabaseClient) {
         try {
-          const { data, error } = await supabaseClient
+          let { data, error } = await supabaseClient
             .from('attendees')
-            .insert([payload])
+            .upsert([payload], { onConflict: 'email' })
             .select();
+
+          if (error && (error.code === '42P10' || String(error.message).includes('ON CONFLICT'))) {
+            // Si la restricción única aún no se ejecuta en la BD, hacer insert estándar transparente
+            const insertRes = await supabaseClient.from('attendees').insert([payload]).select();
+            data = insertRes.data;
+            error = insertRes.error;
+          }
 
           if (!error && data && data.length > 0) {
             saved = true;
             record.id = data[0].id;
             record.created_at = data[0].created_at;
             saveStoredAttendees(allAttendeesCache);
+            return true;
           }
         } catch (e) {
-          console.warn('Supabase SDK insert fallback:', e);
+          console.warn('Supabase SDK upsert fallback:', e);
         }
       }
 
-      // 2. Inserción directa vía REST API a Supabase
+      // 2. Inserción Idempotente vía REST directa a Supabase con reintentos y tolerancia a 42P10
       if (!saved && url && key) {
-        try {
-          const response = await fetch(`${url}/rest/v1/attendees`, {
-            method: 'POST',
-            headers: {
-              'apikey': key,
-              'Authorization': `Bearer ${key}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=representation'
-            },
-            body: JSON.stringify([payload])
-          });
-          if (response.ok) {
-            const data = await response.json();
-            if (data && data.length > 0) {
-              saved = true;
-              record.id = data[0].id;
-              record.created_at = data[0].created_at;
-              saveStoredAttendees(allAttendeesCache);
+        for (let attempt = 1; attempt <= 2 && !saved; attempt++) {
+          try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 6000);
+
+            let response = await fetch(`${url}/rest/v1/attendees?on_conflict=email`, {
+              method: 'POST',
+              headers: {
+                'apikey': key,
+                'Authorization': `Bearer ${key}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'resolution=merge-duplicates,return=representation'
+              },
+              body: JSON.stringify([payload]),
+              signal: controller.signal
+            });
+            clearTimeout(timeout);
+
+            if (!response.ok && response.status === 400) {
+              const errBody = await response.text();
+              if (errBody.includes('ON CONFLICT') || errBody.includes('42P10')) {
+                response = await fetch(`${url}/rest/v1/attendees`, {
+                  method: 'POST',
+                  headers: {
+                    'apikey': key,
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                  },
+                  body: JSON.stringify([payload])
+                });
+              }
             }
+
+            if (response.ok) {
+              const data = await response.json();
+              if (data && data.length > 0) {
+                saved = true;
+                record.id = data[0].id;
+                record.created_at = data[0].created_at;
+                saveStoredAttendees(allAttendeesCache);
+                return true;
+              }
+            }
+          } catch (err) {
+            console.warn(`Intento REST ${attempt} fallido:`, err);
+            if (attempt === 1) await new Promise(r => setTimeout(r, 1200));
           }
-        } catch (err) {
-          console.warn('Supabase REST insert fallback:', err);
         }
       }
 
-      // 3. Fallback al backend Express solo si falló la conexión directa
+      // 3. Fallback al backend Express
       if (!saved) {
         try {
           const res = await fetch('/api/confirm', {
@@ -1517,14 +1603,23 @@
           if (res.ok) {
             const data = await res.json();
             if (data.attendee && data.attendee.id) {
+              saved = true;
               record.id = data.attendee.id;
               saveStoredAttendees(allAttendeesCache);
+              return true;
             }
           }
         } catch (err) {
           console.warn('Backend fallback notice:', err);
         }
       }
+
+      // 4. Si todo falló por problemas de señal, encolar para sincronizar en línea
+      if (!saved && allowQueue) {
+        queueOfflineRecord(record);
+      }
+
+      return saved;
     }
 
     // ============================================================
