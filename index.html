@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INGELAB • Confirmación de Asistencia 2026</title>
+  
+  <link rel="icon" type="image/png" href="logo_ingelab_hd.png">
+
+  <!-- Tipografía: Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- QRCode.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+  <!-- Tailwind Config con colores exactos de Ingelab -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ingelab: {
+              green: '#59A456',
+              'green-dark': '#468744',
+              'green-light': '#F1F8F0',
+              navy: '#2C3E7C',
+              'navy-dark': '#1C2852',
+              'navy-light': '#F3F5FA',
+              blue: '#4079B8',
+              mint: '#6FB99D'
+            },
+            arch: {
+              black: '#0F172A',
+              card: 'rgba(255, 255, 255, 0.96)',
+              surface: 'rgba(248, 250, 252, 0.9)',
+              border: '#E2E8F0',
+              subtle: '#64748B'
+            }
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace']
+          },
+          letterSpacing: {
+            'widest-plus': '0.2em',
+            'ultra': '0.25em'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ============================================================ */
+    /* CONFIGURACIÓN BASE Y FONDO DE PANTALLA ANIMADO               */
+    /* ============================================================ */
+    html {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      position: relative;
+      background-color: #f1f5f9;
+    }
+
+    /* Fondo animado multicapa con los gradientes Ingelab */
+    .bg {
+      animation: slide 3s ease-in-out infinite alternate;
+      background-image: linear-gradient(-60deg, #59A456 50%, #2C3E7C 50%);
+      bottom: 0;
+      left: -50%;
+      opacity: .45;
+      position: fixed;
+      right: -50%;
+      top: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .bg2 {
+      animation-direction: alternate-reverse;
+      animation-duration: 4s;
+      background-image: linear-gradient(-60deg, #4079B8 50%, #59A456 50%);
+    }
+
+    .bg3 {
+      animation-duration: 5s;
+      background-image: linear-gradient(-60deg, #6FB99D 50%, #2C3E7C 50%);
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateX(-25%);
+      }
+      100% {
+        transform: translateX(25%);
+      }
+    }
+
+    /* ============================================================ */
+    /* RENDERIZADO NÍTIDO DEL LOGO (HD ULTRA SHARP, ZERO BLUR)      */
+    /* ============================================================ */
+    .logo-sharp {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.06));
+    }
+
+    /* ANIMACIÓN ZOOM IN NÍTIDA & TRANSIÓN TELÓN */
+    @keyframes crispZoom {
+      0% {
+        transform: scale(0.94);
+        opacity: 0;
+      }
+      30% {
+        transform: scale(1.0);
+        opacity: 1;
+      }
+      80% {
+        transform: scale(1.03);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.06);
+        opacity: 0.95;
+      }
+    }
+
+    @keyframes curtainSlideUp {
+      0% {
+        transform: translateY(0%);
+      }
+      100% {
+        transform: translateY(-100%);
+      }
+    }
+
+    @keyframes contentReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-crisp-zoom {
+      animation: crispZoom 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-curtain-up {
+      animation: curtainSlideUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    }
+
+    .animate-content-in {
+      animation: contentReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    body.intro-lock {
+      overflow: hidden;
+    }
+
+    /* Tarjetas estilo Glassmorphic sobre el fondo animado */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #ticket-modal, #ticket-content, #ticket-content * {
+        visibility: visible;
+      }
+      #ticket-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-arch-black font-sans antialiased selection:bg-ingelab-green selection:text-white min-h-screen flex flex-col intro-lock">
+
+  <!-- ============================================================ -->
+  <!-- FONDOS ANIMADOS MULTICAPA SLIDE (LINEAR GRADIENT REQUERIDO)   -->
+  <!-- ============================================================ -->
+  <div class="bg"></div>
+  <div class="bg bg2"></div>
+  <div class="bg bg3"></div>
+
+  <!-- ============================================================ -->
+  <!-- SPLASH SCREEN: INTRO ZOOM-IN NÍTIDO CON LOGO HD              -->
+  <!-- ============================================================ -->
+  <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white transition-all duration-700 pointer-events-auto">
+    
+    <div id="intro-box" class="relative z-10 flex flex-col items-center text-center px-6 animate-crisp-zoom">
+      
+      <!-- Contenedor del Logo HD Ultra Nítido -->
+      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200/80 shadow-2xl mb-6">
+        <img src="logo_ingelab_hd.png" alt="INGELAB" class="w-80 sm:w-96 md:w-[460px] h-auto object-contain logo-sharp">
+      </div>
+
+      <div class="flex items-center gap-3 text-xs tracking-ultra font-mono uppercase text-arch-subtle mb-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-ingelab-green"></span>
+        <span class="font-bold text-slate-800">ENCUENTRO INSTITUCIONAL</span>
+        <span class="text-slate-300">•</span>
+        <span class="text-ingelab-navy font-black">13.11.2026</span>
+      </div>
+
+      <!-- Barra de progreso arquitectónica -->
+      <div class="w-52 sm:w-64 h-[3px] bg-slate-100 rounded-full overflow-hidden mt-4">
+        <div id="intro-bar" class="h-full bg-gradient-to-r from-ingelab-green via-ingelab-blue to-ingelab-navy w-0 transition-all duration-[1800ms] ease-out"></div>
+      </div>
+
+    </div>
+
+    <button onclick="skipIntro()" class="absolute bottom-8 text-[11px] font-mono tracking-widest text-slate-400 hover:text-arch-black transition-colors z-20">
+      [ SALTAR INTRODUCCIÓN ]
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- APLICACIÓN PRINCIPAL                                         -->
+  <!-- ============================================================ -->
+  <div id="app-container" class="flex-1 flex flex-col opacity-0 transition-opacity duration-500">
+
+    <!-- ============================================================ -->
+    <!-- HEADER VIDRIO ESMERILADO SOBRE FONDO ANIMADO                 -->
+    <!-- ============================================================ -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/60 shadow-sm">
+      <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+        
+        <!-- Logo Ingelab HD Nítido -->
+        <a href="#" class="flex items-center group py-2">
+          <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-14 sm:h-16 md:h-20 w-auto object-contain logo-sharp">
+        </a>
+
+        <!-- Navegación -->
+        <div class="flex items-center gap-4">
+          <div class="inline-flex p-1 rounded-xl bg-white/80 border border-slate-200/80 text-xs font-semibold font-mono shadow-sm">
+            <button id="nav-btn-form" onclick="switchView('form')" class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 bg-ingelab-navy text-white shadow-sm">
+              <i data-lucide="check-square" class="w-3.5 h-3.5 text-ingelab-green"></i>
+              <span>CONFIRMAR ASISTENCIA</span>
+            </button>
+            <button id="nav-btn-admin" onclick="switchView('admin')" class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-arch-subtle hover:text-arch-black">
+              <i data-lucide="database" class="w-3.5 h-3.5 text-ingelab-navy"></i>
+              <span>BASE DE DATOS</span>
+              <span id="badge-total-attendees" class="px-1.5 py-0.2 rounded bg-ingelab-green text-white text-[10px] font-mono font-bold">1</span>
+            </button>
+          </div>
+
+          <button onclick="replayIntro()" title="Volver a ver apertura" class="hidden sm:inline-flex p-2.5 rounded-xl border border-slate-200/80 bg-white/80 text-slate-500 hover:text-arch-black hover:bg-white transition-colors shadow-sm">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- VISTA FORMULARIO: PANELES FLOTANTES SOBRE GRADIENTES         -->
+    <!-- ============================================================ -->
+    <main id="view-form" class="flex-1 py-12 px-4 sm:px-6">
+      
+      <div class="max-w-4xl mx-auto space-y-8">
+        
+        <!-- HERO CARD TRANSLÚCIDA -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-8 sm:p-12 shadow-xl">
+          
+          <div class="flex flex-wrap items-center gap-3 text-[11px] font-mono tracking-widest uppercase text-arch-subtle mb-4">
+            <span class="px-3 py-1 rounded-md bg-ingelab-green text-white font-bold">
+              EVENTO OFICIAL
+            </span>
+            <span class="font-bold text-slate-700">EDICIÓN 2026</span>
+            <span class="text-slate-300">/</span>
+            <span>RED DE LABORATORIOS CLÍNICOS</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl font-bold font-display tracking-tight text-arch-black leading-[1.1] mb-4">
+            Confirmación de <br class="hidden sm:inline">
+            <span class="text-ingelab-navy">Asistencia Institucional</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-arch-subtle font-normal leading-relaxed mb-8 max-w-2xl">
+            Acompáñanos a una jornada de relacionamiento y avances tecnológicos junto a directores técnicos, bioquímicos y aliados estratégicos de INGELAB.
+          </p>
+
+          <!-- Ficha Técnica -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+            <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-ingelab-green-light text-ingelab-green flex items-center justify-center shrink-0">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">01 / FECHA</span>
+                <span class="text-xs font-bold text-arch-black block">Viernes, 13 Nov 2026</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-ingelab-navy-light text-ingelab-navy flex items-center justify-center shrink-0">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">02 / HORARIO</span>
+                <span class="text-xs font-bold text-arch-black block">18:30 hrs (Recepción)</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-slate-100 text-ingelab-blue flex items-center justify-center shrink-0">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">03 / LUGAR</span>
+                <span class="text-xs font-bold text-arch-black block">Centro de Convenciones</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reloj de Cuenta Regresiva -->
+          <div class="bg-white/80 rounded-2xl border border-slate-200/80 p-5 shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3 text-xs font-mono">
+              <span class="text-arch-subtle uppercase tracking-widest flex items-center gap-2">
+                <i data-lucide="timer" class="w-4 h-4 text-ingelab-green"></i>
+                CUENTA REGRESIVA HASTA LA APERTURA
+              </span>
+              <span class="text-ingelab-green font-bold">13.11.2026</span>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 text-center" id="countdown-timer">
+              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
+                <div id="days" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
+                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">DÍAS</div>
+              </div>
+              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
+                <div id="hours" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
+                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">HORAS</div>
+              </div>
+              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
+                <div id="minutes" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
+                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">MINUTOS</div>
+              </div>
+              <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
+                <div id="seconds" class="text-2xl sm:text-3xl font-mono font-bold text-ingelab-green">00</div>
+                <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">SEGUNDOS</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FORMULARIO FLOTANTE (COMPATIBLE CON NETLIFY FORMS Y LOCAL) -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-8 sm:p-12 shadow-xl">
+          
+          <div class="pb-6 border-b border-slate-200/80 mb-8">
+            <span class="text-[11px] font-mono uppercase tracking-ultra text-ingelab-green font-bold block mb-1">
+              REGISTRO DIGITAL
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-bold font-display text-arch-black">
+              Pase Oficial de Asistencia
+            </h2>
+            <p class="text-sm text-arch-subtle mt-1">
+              Por favor complete los campos para su acreditación y asignación de boletos.
+            </p>
+          </div>
+
+          <form id="attendance-form" name="registro-asistencia" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)" class="space-y-8">
+            
+            <input type="hidden" name="form-name" value="registro-asistencia" />
+            <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+
+            <!-- SECCIÓN 01: DATOS PERSONALES Y C.I. -->
+            <div>
+              <div class="flex items-center gap-3 mb-5">
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">01</span>
+                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información del Participante</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Nombre Completo -->
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="fullName">
+                    Nombre y Apellidos completos <span class="text-ingelab-green">*</span>
+                  </label>
+                  <input type="text" id="fullName" name="fullName" required placeholder="Ej: SERGIO ELOY GARCIA MADRID" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
+                </div>
+
+                <!-- Cédula de Identidad (C.I. / Documento) -->
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
+                    C.I. / Documento de Identidad <span class="text-ingelab-green">*</span>
+                  </label>
+                  <input type="text" id="ci" name="ci" required placeholder="Ej: 0500597661" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
+                </div>
+
+                <!-- Correo Electrónico -->
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="email">
+                    Correo Electrónico <span class="text-ingelab-green">*</span>
+                  </label>
+                  <input type="email" id="email" name="email" required placeholder="sergioeloyg@hotmail.com" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
+                </div>
+
+                <!-- Teléfono / WhatsApp -->
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
+                    Teléfono Móvil / WhatsApp <span class="text-ingelab-green">*</span>
+                  </label>
+                  <input type="tel" id="phone" name="phone" required placeholder="0984246768" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
+                </div>
+
+                <!-- Cantidad de Boletos / Pases -->
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ticketCount">
+                    Cantidad de Boletos / Cupos Solicitados
+                  </label>
+                  <select id="ticketCount" name="ticketCount" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ingelab-green transition-all shadow-sm">
+                    <option value="1">1 Boleto (Pase Individual)</option>
+                    <option value="2">2 Boletos (Con Acompañante)</option>
+                    <option value="3">3 Boletos</option>
+                    <option value="4">4 Boletos</option>
+                    <option value="5">5 Boletos</option>
+                    <option value="10" selected>10 Boletos (Delegación Institucional)</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- SECCIÓN 02: INSTITUCIÓN Y CARGO -->
+            <div class="pt-6 border-t border-slate-200/80">
+              <div class="flex items-center gap-3 mb-5">
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
+                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Afiliación Profesional</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="institution">
+                    Institución o Laboratorio Clínico
+                  </label>
+                  <input type="text" id="institution" name="institution" placeholder="Laboratorio Clínico San Rafael" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="position">
+                    Cargo o Especialidad
+                  </label>
+                  <input type="text" id="position" name="position" placeholder="Director Técnico / Bioquímico" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
+                </div>
+
+              </div>
+            </div>
+
+            <!-- SECCIÓN 03: CONFIRMACIÓN Y CATERING -->
+            <div class="pt-6 border-t border-slate-200/80">
+              <div class="flex items-center gap-3 mb-5">
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">03</span>
+                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Confirmación de Asistencia</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                
+                <label class="relative flex items-center p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-ingelab-green bg-white has-[:checked]:border-ingelab-green has-[:checked]:bg-ingelab-green-light shadow-sm">
+                  <input type="radio" name="attending" value="yes" checked class="w-4 h-4 text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                  <div class="ml-3">
+                    <span class="block text-sm font-bold text-arch-black">Confirmo mi Asistencia</span>
+                    <span class="block text-xs text-arch-subtle">Reserva de plaza y emisión de boletos</span>
+                  </div>
+                </label>
+
+                <label class="relative flex items-center p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-slate-400 bg-white has-[:checked]:border-slate-400 has-[:checked]:bg-slate-100 shadow-sm">
+                  <input type="radio" name="attending" value="no" class="w-4 h-4 text-slate-600 focus:ring-slate-500 border-slate-300">
+                  <div class="ml-3">
+                    <span class="block text-sm font-bold text-arch-black">No podré asistir</span>
+                    <span class="block text-xs text-arch-subtle">Notificación al comité de INGELAB</span>
+                  </div>
+                </label>
+
+              </div>
+
+              <div>
+                <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-2.5">
+                  Requerimientos Dietéticos para Servicio de Cóctel
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
+                    <input type="checkbox" name="dietary" value="Menú Estándar" checked class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                    <span>Menú Estándar</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
+                    <input type="checkbox" name="dietary" value="Vegetariano" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                    <span>Vegetariano</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
+                    <input type="checkbox" name="dietary" value="Vegano" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                    <span>Vegano</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
+                    <input type="checkbox" name="dietary" value="Libre de Gluten" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                    <span>Libre de Gluten</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
+                    <input type="checkbox" name="dietary" value="Libre de Lactosa" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                    <span>Libre de Lactosa</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
+                    <input type="checkbox" name="dietary" value="Sin Mariscos" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
+                    <span>Sin Mariscos</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- SECCIÓN 04: COMENTARIOS -->
+            <div class="pt-6 border-t border-slate-200/80">
+              <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="comments">
+                Observaciones o Consultas Especiales (Opcional)
+              </label>
+              <textarea id="comments" name="comments" rows="3" placeholder="Indique cualquier requerimiento logístico o consulta especial."
+                class="w-full p-4 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green transition-all shadow-sm"></textarea>
+            </div>
+
+            <!-- BOTÓN DE ENVÍO -->
+            <div class="pt-2">
+              <button type="submit" id="submit-btn" 
+                class="w-full py-4 px-8 rounded-xl bg-gradient-to-r from-ingelab-green to-ingelab-green-dark hover:from-ingelab-green-dark hover:to-ingelab-navy text-white font-mono font-bold text-xs uppercase tracking-ultra transition-all shadow-lg shadow-ingelab-green/20 flex items-center justify-center gap-3">
+                <span id="submit-btn-text">CONFIRMAR Y EMITIR BOLETOS</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+
+              <div class="flex items-center justify-center gap-2 text-[11px] font-mono text-arch-subtle mt-4">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-ingelab-green"></i>
+                <span>REGISTRO OFICIAL Y ENCRIPTADO • SISTEMA DE ASISTENCIA INGELAB</span>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- VISTA BASE DE DATOS (EXACTA A LA REFERENCIA VISUAL)          -->
+    <!-- ============================================================ -->
+    <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-6 py-10 w-full">
+      
+      <div class="glass-panel border border-white/80 rounded-3xl p-8 shadow-xl">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-ingelab-navy text-white text-[10px] font-mono font-bold tracking-wider">REGISTROS</span>
+              <h1 class="text-2xl font-bold font-display text-arch-black">Base de Datos de Participantes</h1>
+            </div>
+            <p class="text-xs font-mono text-arch-subtle mt-1">
+              LISTA OFICIAL DE ACREDITACIONES Y BOLETOS ASIGNADOS
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="loadAdminData()" class="px-3.5 py-2 bg-white border border-slate-200 text-arch-black rounded-lg text-xs font-mono font-semibold flex items-center gap-2 hover:bg-slate-50 shadow-sm">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-ingelab-navy"></i>
+              <span>ACTUALIZAR</span>
+            </button>
+
+            <button onclick="exportToCsv()" class="px-4 py-2 bg-ingelab-green hover:bg-ingelab-green-dark text-white rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-2 transition-all shadow-md">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>EXPORTAR EXCEL (CSV)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs Resumen -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">TOTAL PARTICIPANTES</span>
+            <span id="kpi-total" class="text-3xl font-mono font-bold text-arch-black block mt-1">1</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-green block">BOLETOS EMITIDOS</span>
+            <span id="kpi-tickets" class="text-3xl font-mono font-bold text-ingelab-green block mt-1">10</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-navy block">CONFIRMADOS (SÍ)</span>
+            <span id="kpi-confirmed" class="text-3xl font-mono font-bold text-ingelab-navy block mt-1">1</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">NO ASISTEN</span>
+            <span id="kpi-declined" class="text-3xl font-mono font-bold text-slate-400 block mt-1">0</span>
+          </div>
+
+        </div>
+
+        <!-- TABLA CON EL FORMATO EXACTO DE LA CAPTURA -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
+          
+          <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar participante, C.I., email..." 
+                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ingelab-green">
+            </div>
+
+            <span class="text-xs font-mono text-slate-400">Total mostrados: <strong id="filter-count" class="text-slate-700">1</strong></span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-mono text-[11px] uppercase tracking-wider">
+                  <th class="py-4 px-6 font-semibold">PARTICIPANTE (DOC.)</th>
+                  <th class="py-4 px-6 font-semibold">INFORMACIÓN DE CONTACTO</th>
+                  <th class="py-4 px-4 font-semibold text-center">CANT. BOLETOS</th>
+                  <th class="py-4 px-6 font-semibold">LISTA DE BOLETOS</th>
+                  <th class="py-4 px-4 font-semibold text-center">GESTIÓN</th>
+                </tr>
+              </thead>
+              <tbody id="attendees-table-body" class="divide-y divide-slate-100 text-slate-700">
+                <!-- Se llena dinámicamente con JavaScript -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- MODAL / CREDENCIAL DIGITAL NÍTIDA                            -->
+    <!-- ============================================================ -->
+    <div id="ticket-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+      
+      <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden border border-slate-200 shadow-2xl" id="ticket-modal-card">
+        
+        <div class="border-b border-slate-100 p-6 flex items-center justify-between bg-white">
+          <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-10 w-auto object-contain logo-sharp">
+          <button onclick="closeTicketModal()" class="no-print p-1 text-slate-400 hover:text-arch-black">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="p-6 space-y-5 text-center" id="ticket-content">
+          
+          <div class="p-4 border border-dashed border-slate-300 rounded-2xl bg-slate-50">
+            <div id="ticket-qr-container" class="flex justify-center mb-3">
+              <canvas id="ticket-qr-canvas" class="rounded-lg shadow-sm"></canvas>
+            </div>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">CÓDIGO PRINCIPAL</span>
+            <span id="ticket-code-display" class="text-xl font-mono font-bold text-ingelab-navy block">05802</span>
+          </div>
+
+          <div class="text-left space-y-2 border border-slate-200 p-4 rounded-xl text-xs font-mono bg-slate-50">
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase">Participante:</span>
+              <span id="ticket-name-display" class="font-bold text-arch-black block">-</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase">Documento / C.I.:</span>
+              <span id="ticket-ci-display" class="font-bold text-slate-700 block">-</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase">Fecha:</span>
+                <span class="font-bold text-ingelab-green block">13.11.2026</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase">Boletos:</span>
+                <span id="ticket-count-display" class="font-bold text-slate-700 block">1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-2 pt-2 no-print">
+            <button onclick="window.print()" class="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-arch-black rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2">
+              <i data-lucide="printer" class="w-4 h-4"></i>
+              <span>IMPRIMIR / PDF</span>
+            </button>
+            <button onclick="closeTicketModal()" class="flex-1 py-3 px-4 bg-ingelab-green hover:bg-ingelab-green-dark text-white rounded-xl text-xs font-mono font-bold">
+              <span>CONTINUAR</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-white/60 py-8 text-xs font-mono text-arch-subtle mt-auto">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <img src="logo_ingelab_hd.png" alt="Ingelab" class="h-8 w-auto logo-sharp">
+          <span>EQUIPOS, REACTIVOS E INSUMOS PARA LABORATORIO CLÍNICO</span>
+        </div>
+        <div>
+          <span>VIERNES, 13 DE NOVIEMBRE DE 2026 • INGELAB</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JAVASCRIPT: AUTÓNOMO, COMPATIBLE CON NETLIFY DROP Y SERVIDOR LOCAL -->
+  <script>
+    lucide.createIcons();
+
+    // REGISTRO INICIAL POR DEFECTO (EL DE TU IMAGEN DE REFERENCIA)
+    const DEFAULT_RECORDS = [
+      {
+        id: 1,
+        full_name: 'SERGIO ELOY GARCIA MADRID',
+        ci: '0500597661',
+        email: 'sergioeloyg@hotmail.com',
+        phone: '0984246768',
+        ticket_count: 10,
+        ticket_list: ['05802', '12237', '15956', '19811', '31773', '33248', '36966', '42525', '50553', '55962'],
+        attending: 'yes',
+        created_at: new Date().toISOString()
+      }
+    ];
+
+    // Cargar datos locales desde localStorage o valor inicial
+    function getStoredAttendees() {
+      try {
+        const stored = localStorage.getItem('ingelab_attendees_v2');
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch (e) {}
+      localStorage.setItem('ingelab_attendees_v2', JSON.stringify(DEFAULT_RECORDS));
+      return DEFAULT_RECORDS;
+    }
+
+    function saveStoredAttendees(list) {
+      localStorage.setItem('ingelab_attendees_v2', JSON.stringify(list));
+    }
+
+    let allAttendeesCache = getStoredAttendees();
+
+    // 1. MANEJO DE INTRO NÍTIDA
+    function runIntro() {
+      document.body.classList.add('intro-lock');
+      const introScreen = document.getElementById('intro-screen');
+      const appContainer = document.getElementById('app-container');
+      const introBar = document.getElementById('intro-bar');
+
+      setTimeout(() => {
+        if (introBar) introBar.style.width = '100%';
+      }, 100);
+
+      setTimeout(() => {
+        introScreen.classList.add('animate-curtain-up');
+        appContainer.classList.remove('opacity-0');
+        appContainer.classList.add('animate-content-in');
+        document.body.classList.remove('intro-lock');
+
+        setTimeout(() => {
+          introScreen.classList.add('hidden');
+        }, 850);
+      }, 2000);
+    }
+
+    function skipIntro() {
+      const introScreen = document.getElementById('intro-screen');
+      const appContainer = document.getElementById('app-container');
+      introScreen.classList.add('hidden');
+      appContainer.classList.remove('opacity-0');
+      document.body.classList.remove('intro-lock');
+    }
+
+    function replayIntro() {
+      const introScreen = document.getElementById('intro-screen');
+      const appContainer = document.getElementById('app-container');
+      const introBar = document.getElementById('intro-bar');
+      const introBox = document.getElementById('intro-box');
+
+      introScreen.classList.remove('hidden', 'animate-curtain-up');
+      appContainer.classList.add('opacity-0');
+      appContainer.classList.remove('animate-content-in');
+      if (introBar) introBar.style.width = '0%';
+
+      introBox.classList.remove('animate-crisp-zoom');
+      void introBox.offsetWidth;
+      introBox.classList.add('animate-crisp-zoom');
+
+      runIntro();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      runIntro();
+      loadAdminData();
+    });
+
+    // 2. CUENTA REGRESIVA
+    function initCountdown() {
+      const eventDate = new Date('2026-11-13T18:30:00').getTime();
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const diff = eventDate - now;
+
+        if (diff <= 0) {
+          document.getElementById('countdown-timer').innerHTML = '<div class="col-span-4 text-center font-mono font-bold text-ingelab-green">EVENTO EN CURSO</div>';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerText = String(days).padStart(2, '0');
+        document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+    initCountdown();
+
+    // 3. NAVEGACIÓN Y VISTAS
+    function switchView(view) {
+      const formView = document.getElementById('view-form');
+      const adminView = document.getElementById('view-admin');
+      const btnForm = document.getElementById('nav-btn-form');
+      const btnAdmin = document.getElementById('nav-btn-admin');
+
+      if (view === 'admin') {
+        formView.classList.add('hidden');
+        adminView.classList.remove('hidden');
+
+        btnAdmin.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 bg-ingelab-navy text-white shadow-sm';
+        btnForm.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-arch-subtle hover:text-arch-black';
+        
+        loadAdminData();
+      } else {
+        adminView.classList.add('hidden');
+        formView.classList.remove('hidden');
+
+        btnForm.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 bg-ingelab-navy text-white shadow-sm';
+        btnAdmin.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-arch-subtle hover:text-arch-black';
+      }
+      lucide.createIcons();
+    }
+
+    if (window.location.hash === '#admin') {
+      switchView('admin');
+    }
+
+    // 4. GENERADOR DE BOLETOS DE 5 DÍGITOS (EJ: 05802, 12237)
+    function generateTicketNumbers(count) {
+      const tickets = new Set();
+      while (tickets.size < count) {
+        const rand = Math.floor(Math.random() * 90000 + 1000);
+        tickets.add(String(rand).padStart(5, '0'));
+      }
+      return Array.from(tickets).sort((a, b) => parseInt(a) - parseInt(b));
+    }
+
+    // 5. ENVÍO DEL FORMULARIO Y GUARDADO GARANTIZADO
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submit-btn');
+      const originalText = submitBtn.innerHTML;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>REGISTRANDO EN BASE DE DATOS...</span>`;
+
+      const form = e.target;
+      const formData = new FormData(form);
+      const count = parseInt(formData.get('ticketCount')) || 1;
+      const ticketNumbers = generateTicketNumbers(count);
+
+      const newRecord = {
+        id: Date.now(),
+        full_name: (formData.get('fullName') || '').trim().toUpperCase(),
+        ci: (formData.get('ci') || '').trim(),
+        email: (formData.get('email') || '').trim().toLowerCase(),
+        phone: (formData.get('phone') || '').trim(),
+        ticket_count: count,
+        ticket_list: ticketNumbers,
+        institution: (formData.get('institution') || '').trim(),
+        position: (formData.get('position') || '').trim(),
+        attending: formData.get('attending') || 'yes',
+        dietary: Array.from(document.querySelectorAll('input[name="dietary"]:checked')).map(cb => cb.value),
+        comments: (formData.get('comments') || '').trim(),
+        created_at: new Date().toISOString()
+      };
+
+      // Guardar inmediatamente en almacenamiento local (para Netlify Drop)
+      allAttendeesCache.unshift(newRecord);
+      saveStoredAttendees(allAttendeesCache);
+
+      // Si existe un servidor Node.js backend activo, enviar también allá
+      try {
+        fetch('/api/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fullName: newRecord.full_name,
+            ci: newRecord.ci,
+            email: newRecord.email,
+            phone: newRecord.phone,
+            ticketCount: newRecord.ticket_count,
+            ticketList: newRecord.ticket_list,
+            institution: newRecord.institution,
+            position: newRecord.position,
+            attending: newRecord.attending,
+            dietary: newRecord.dietary,
+            comments: newRecord.comments
+          })
+        }).catch(() => {});
+      } catch (err) {}
+
+      // Si estamos en Netlify, enviar también como formulario de Netlify
+      try {
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData).toString()
+        }).catch(() => {});
+      } catch (e) {}
+
+      // Éxito: Confeti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#59A456', '#2C3E7C', '#4079B8']
+      });
+
+      // Mostrar Modal con Boleto
+      showTicketModal(newRecord);
+
+      // Limpiar formulario y actualizar tabla
+      form.reset();
+      loadAdminData();
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+      lucide.createIcons();
+    }
+
+    // 6. MOSTRAR MODAL CON CÓDIGO QR
+    function showTicketModal(attendee) {
+      const mainTicket = attendee.ticket_list[0] || '05802';
+      document.getElementById('ticket-code-display').innerText = mainTicket;
+      document.getElementById('ticket-name-display').innerText = attendee.full_name;
+      document.getElementById('ticket-ci-display').innerText = attendee.ci ? `C.I: ${attendee.ci}` : '-';
+      document.getElementById('ticket-count-display').innerText = `${attendee.ticket_count} Boletos emitidos`;
+
+      const qrCanvas = document.getElementById('ticket-qr-canvas');
+      QRCode.toCanvas(qrCanvas, `INGELAB-2026|${mainTicket}|${attendee.full_name}|CI:${attendee.ci}`, {
+        width: 140,
+        margin: 1,
+        color: {
+          dark: '#1C2852',
+          light: '#ffffff'
+        }
+      });
+
+      const modal = document.getElementById('ticket-modal');
+      modal.classList.remove('hidden');
+    }
+
+    function closeTicketModal() {
+      const modal = document.getElementById('ticket-modal');
+      modal.classList.add('hidden');
+    }
+
+    // 7. CARGA DE DATOS EN LA TABLA ADMIN
+    async function loadAdminData() {
+      allAttendeesCache = getStoredAttendees();
+
+      // Intentar cargar de la base de datos backend si está disponible
+      try {
+        const res = await fetch('/api/attendees');
+        const data = await res.json();
+        if (data.success && data.attendees && data.attendees.length > 0) {
+          // Fusionar con registros del servidor
+          const serverList = data.attendees.map(s => ({
+            id: s.id,
+            full_name: s.full_name,
+            ci: s.ci || '',
+            email: s.email,
+            phone: s.phone,
+            ticket_count: s.ticket_count || 1,
+            ticket_list: s.ticket_list ? s.ticket_list.split(',').map(t => t.trim()) : [s.ticket_code],
+            attending: s.attending,
+            created_at: s.created_at
+          }));
+          
+          // Unir evitando duplicados
+          const combined = [...serverList];
+          allAttendeesCache.forEach(loc => {
+            if (!combined.some(c => c.ci === loc.ci && c.full_name === loc.full_name)) {
+              combined.push(loc);
+            }
+          });
+          allAttendeesCache = combined;
+          saveStoredAttendees(allAttendeesCache);
+        }
+      } catch (e) {}
+
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
+    }
+
+    function updateKpis(list) {
+      const totalPart = list.length;
+      let totalTickets = 0;
+      let confirmed = 0;
+      let declined = 0;
+
+      list.forEach(a => {
+        totalTickets += parseInt(a.ticket_count) || 1;
+        if (a.attending === 'yes') confirmed++;
+        else declined++;
+      });
+
+      document.getElementById('kpi-total').innerText = totalPart;
+      document.getElementById('kpi-tickets').innerText = totalTickets;
+      document.getElementById('kpi-confirmed').innerText = confirmed;
+      document.getElementById('kpi-declined').innerText = declined;
+      document.getElementById('badge-total-attendees').innerText = totalPart;
+      document.getElementById('filter-count').innerText = totalPart;
+    }
+
+    // 8. RENDERIZADO EXACTO DE LA TABLA DE TU IMAGEN
+    function renderTable(list) {
+      const tableBody = document.getElementById('attendees-table-body');
+      
+      if (!list || list.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-8 text-slate-400 font-mono">
+              No hay participantes registrados.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = list.map(a => {
+        const tickets = Array.isArray(a.ticket_list) ? a.ticket_list : (a.ticket_list ? a.ticket_list.split(',') : ['05802']);
+        
+        // Generar píldoras de boletos redondeadas como en tu imagen
+        const ticketPills = tickets.map(t => `
+          <span class="inline-block px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-[11px] font-mono text-slate-700 shadow-xs">
+            ${escapeHtml(t.trim())}
+          </span>
+        `).join(' ');
+
+        return `
+          <tr class="hover:bg-slate-50/70 transition-colors">
+            
+            <!-- PARTICIPANTE (DOC.) -->
+            <td class="py-4 px-6 align-middle">
+              <span class="font-black text-slate-900 block text-xs tracking-tight">${escapeHtml(a.full_name)}</span>
+              ${a.ci ? `<span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-500 border border-slate-200">C.I: ${escapeHtml(a.ci)}</span>` : ''}
+            </td>
+
+            <!-- INFORMACIÓN DE CONTACTO -->
+            <td class="py-4 px-6 align-middle space-y-1">
+              <div class="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
+                <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                <span>${escapeHtml(a.email)}</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
+                <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                <span>${escapeHtml(a.phone)}</span>
+              </div>
+            </td>
+
+            <!-- CANT. BOLETOS (INSIGNIA CIRCULAR COMO EN LA IMAGEN) -->
+            <td class="py-4 px-4 align-middle text-center">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-50 border border-rose-200 text-rose-900 font-mono font-extrabold text-xs">
+                ${a.ticket_count || tickets.length}
+              </span>
+            </td>
+
+            <!-- LISTA DE BOLETOS -->
+            <td class="py-4 px-6 align-middle">
+              <div class="flex flex-wrap gap-1.5 max-w-md">
+                ${ticketPills}
+              </div>
+            </td>
+
+            <!-- GESTIÓN -->
+            <td class="py-4 px-4 align-middle text-center">
+              <button onclick="deleteRecord(${a.id})" title="Eliminar registro" class="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+
+          </tr>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // 9. FILTRO EN TIEMPO REAL
+    function filterTable() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const filtered = allAttendeesCache.filter(item => {
+        return item.full_name.toLowerCase().includes(q) ||
+               (item.ci && item.ci.toLowerCase().includes(q)) ||
+               item.email.toLowerCase().includes(q) ||
+               item.phone.toLowerCase().includes(q);
+      });
+      document.getElementById('filter-count').innerText = filtered.length;
+      renderTable(filtered);
+    }
+
+    // 10. ELIMINAR REGISTRO
+    function deleteRecord(id) {
+      if (!confirm('¿Desea eliminar este registro de la base de datos?')) return;
+      allAttendeesCache = allAttendeesCache.filter(a => a.id !== id);
+      saveStoredAttendees(allAttendeesCache);
+      loadAdminData();
+    }
+
+    // 11. EXPORTAR A EXCEL (CSV UTF-8 BOM)
+    function exportToCsv() {
+      const headers = ['PARTICIPANTE', 'C.I. / DOCUMENTO', 'CORREO', 'TELEFONO', 'CANT. BOLETOS', 'LISTA DE BOLETOS', 'FECHA'];
+      let csv = '\uFEFF' + headers.join(';') + '\n';
+
+      allAttendeesCache.forEach(a => {
+        const tickets = Array.isArray(a.ticket_list) ? a.ticket_list.join(' ') : (a.ticket_list || '');
+        const row = [
+          `"${a.full_name}"`,
+          `"${a.ci || ''}"`,
+          `"${a.email}"`,
+          `"${a.phone}"`,
+          a.ticket_count || 1,
+          `"${tickets}"`,
+          `"${a.created_at || ''}"`
+        ];
+        csv += row.join(';') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `Asistentes_INGELAB_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
