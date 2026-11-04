@@ -209,28 +209,54 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
       comments: combinedComments
     };
 
-    // 2.1 Verificar si el asistente ya existe para ACTUALIZAR en vez de duplicar
-    const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(email)}&order=id.desc&limit=1`, {
+    // 2.1 Verificar si el asistente ya existe por NOMBRE, EMAIL o CÉDULA para ACTUALIZAR en vez de duplicar
+    let existingId = null;
+
+    // Buscar por email
+    const checkEmail = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(email)}&order=id.desc&limit=1`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
-    if (checkRes.ok) {
-      const existing = await checkRes.json();
-      if (existing && existing.length > 0) {
-        const existingId = existing[0].id;
-        const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${existingId}`, {
-          method: 'PATCH',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify(record)
-        });
-        if (updateRes.ok) {
-          const updatedData = await updateRes.json();
-          return res.status(200).json({ success: true, attendee: updatedData ? updatedData[0] : { ...record, id: existingId } });
-        }
+    if (checkEmail.ok) {
+      const data = await checkEmail.json();
+      if (data && data.length > 0) existingId = data[0].id;
+    }
+
+    // Si no se encontró por email, buscar por nombre exacto
+    if (!existingId && fullName) {
+      const checkName = await fetch(`${SUPABASE_URL}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(fullName)}&order=id.desc&limit=1`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (checkName.ok) {
+        const data = await checkName.json();
+        if (data && data.length > 0) existingId = data[0].id;
+      }
+    }
+
+    // Si no se encontró, buscar por C.I.
+    if (!existingId && ci) {
+      const checkCi = await fetch(`${SUPABASE_URL}/rest/v1/attendees?ci=eq.${encodeURIComponent(ci)}&order=id.desc&limit=1`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (checkCi.ok) {
+        const data = await checkCi.json();
+        if (data && data.length > 0) existingId = data[0].id;
+      }
+    }
+
+    if (existingId) {
+      const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${existingId}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(record)
+      });
+      if (updateRes.ok) {
+        const updatedData = await updateRes.json();
+        return res.status(200).json({ success: true, attendee: updatedData ? updatedData[0] : { ...record, id: existingId } });
       }
     }
 

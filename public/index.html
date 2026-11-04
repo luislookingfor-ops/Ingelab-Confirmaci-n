@@ -1284,9 +1284,18 @@
     // ============================================================
     // DEDUPLICACIÓN ESTRICTA: UN SOLO REGISTRO POR ASISTENTE (EL ÚLTIMO)
     // ============================================================
+    function normalizeAttendeeStr(str) {
+      return (str || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toUpperCase();
+    }
+
     function deduplicateAttendees(list) {
       if (!Array.isArray(list)) return [];
-      // Ordenar cronológicamente descendente (los más recientes primero)
+      // Ordenar cronológicamente descendente (el último registrado siempre queda primero)
       const sorted = [...list].sort((a, b) => {
         const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
         const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
@@ -1294,23 +1303,32 @@
         return Number(b.id || 0) - Number(a.id || 0);
       });
 
+      const seenNames = new Set();
       const seenEmails = new Set();
       const seenCis = new Set();
       const uniqueList = [];
 
       for (const item of sorted) {
+        const nameKey = normalizeAttendeeStr(item.full_name);
         const emailKey = (item.email || '').trim().toLowerCase();
         const ciKey = (item.ci || '').trim();
 
         let isDuplicate = false;
+        // Detección por nombre idéntico (normalizado)
+        if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) {
+          isDuplicate = true;
+        }
+        // Detección por correo
         if (emailKey && seenEmails.has(emailKey)) {
           isDuplicate = true;
         }
+        // Detección por documento/cédula
         if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
           isDuplicate = true;
         }
 
         if (!isDuplicate) {
+          if (nameKey && nameKey.length >= 3) seenNames.add(nameKey);
           if (emailKey) seenEmails.add(emailKey);
           if (ciKey && ciKey.length >= 6) seenCis.add(ciKey);
           uniqueList.push(item);
@@ -1553,16 +1571,21 @@
       };
 
       try {
-        // Si el asistente ya existe por correo o documento, actualizar su registro existente en lugar de duplicar
+        // Si el asistente ya existe por NOMBRE, CORREO o CÉDULA, actualizar su registro existente al último registrado
         const existingIdx = allAttendeesCache.findIndex(a => {
+          const nameMatch = a.full_name && newRecord.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(newRecord.full_name);
           const emailMatch = a.email && newRecord.email && a.email.toLowerCase() === newRecord.email.toLowerCase();
           const ciMatch = a.ci && newRecord.ci && a.ci.trim() === newRecord.ci.trim();
-          return emailMatch || ciMatch;
+          return nameMatch || emailMatch || ciMatch;
         });
 
         if (existingIdx !== -1) {
           newRecord.id = allAttendeesCache[existingIdx].id;
-          allAttendeesCache[existingIdx] = { ...allAttendeesCache[existingIdx], ...newRecord };
+          allAttendeesCache[existingIdx] = { 
+            ...allAttendeesCache[existingIdx], 
+            ...newRecord,
+            created_at: newRecord.created_at // asegurar fecha del último registro
+          };
         } else {
           allAttendeesCache.unshift(newRecord);
         }
@@ -1668,33 +1691,62 @@
 
       let saved = false;
 
-      // 0. Si ya existe en Supabase por email, actualizar mediante PATCH directo (evita duplicados incluso sin UNIQUE constraint)
-      if (url && key && record.email) {
+      // 0. Si ya existe en Supabase por NOMBRE, EMAIL o CÉDULA, actualizar mediante PATCH directo (evita duplicados)
+      if (url && key) {
         try {
-          const checkRes = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
-            headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
-          });
-          if (checkRes.ok) {
-            const existing = await checkRes.json();
-            if (existing && existing.length > 0) {
-              const existingId = existing[0].id;
-              record.id = existingId;
-              const patchRes = await fetch(`${url}/rest/v1/attendees?id=eq.${existingId}`, {
-                method: 'PATCH',
-                headers: {
-                  'apikey': key,
-                  'Authorization': `Bearer ${key}`,
-                  'Content-Type': 'application/json',
-                  'Prefer': 'return=representation'
-                },
-                body: JSON.stringify(payload)
-              });
-              if (patchRes.ok) {
-                saved = true;
-                allAttendeesCache = deduplicateAttendees(allAttendeesCache);
-                saveStoredAttendees(allAttendeesCache);
-                return true;
-              }
+          let existingId = null;
+
+          // 1. Buscar por email
+          if (record.email) {
+            const checkEmail = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
+              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+            });
+            if (checkEmail.ok) {
+              const res = await checkEmail.json();
+              if (res && res.length > 0) existingId = res[0].id;
+            }
+          }
+
+          // 2. Si no se encontró por email, buscar por nombre exacto
+          if (!existingId && record.full_name) {
+            const checkName = await fetch(`${url}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(record.full_name)}&order=id.desc&limit=1`, {
+              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+            });
+            if (checkName.ok) {
+              const res = await checkName.json();
+              if (res && res.length > 0) existingId = res[0].id;
+            }
+          }
+
+          // 3. Si no se encontró, buscar por C.I.
+          if (!existingId && record.ci) {
+            const checkCi = await fetch(`${url}/rest/v1/attendees?ci=eq.${encodeURIComponent(record.ci)}&order=id.desc&limit=1`, {
+              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+            });
+            if (checkCi.ok) {
+              const res = await checkCi.json();
+              if (res && res.length > 0) existingId = res[0].id;
+            }
+          }
+
+          // Si existe, actualizar mediante PATCH garantizando un solo registro (el último)
+          if (existingId) {
+            record.id = existingId;
+            const patchRes = await fetch(`${url}/rest/v1/attendees?id=eq.${existingId}`, {
+              method: 'PATCH',
+              headers: {
+                'apikey': key,
+                'Authorization': `Bearer ${key}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+              },
+              body: JSON.stringify(payload)
+            });
+            if (patchRes.ok) {
+              saved = true;
+              allAttendeesCache = deduplicateAttendees(allAttendeesCache);
+              saveStoredAttendees(allAttendeesCache);
+              return true;
             }
           }
         } catch (e) {
@@ -1949,14 +2001,16 @@
 
     // ABRIR MODAL CREAR NUEVO ASISTENTE
     function openCreateModal() {
-      document.getElementById('create-fullname').value = '';
-      document.getElementById('create-ci').value = '';
-      document.getElementById('create-email').value = '';
-      document.getElementById('create-phone').value = '';
-      document.getElementById('create-institution').value = '';
-      document.getElementById('create-position').value = '';
-      document.getElementById('create-attending').value = 'yes';
-      document.getElementById('create-comments').value = '';
+      const nameEl = document.getElementById('create-name') || document.getElementById('create-fullname');
+      if (nameEl) nameEl.value = '';
+      if (document.getElementById('create-ci')) document.getElementById('create-ci').value = '';
+      if (document.getElementById('create-email')) document.getElementById('create-email').value = '';
+      if (document.getElementById('create-phone')) document.getElementById('create-phone').value = '';
+      if (document.getElementById('create-institution')) document.getElementById('create-institution').value = '';
+      if (document.getElementById('create-position')) document.getElementById('create-position').value = '';
+      if (document.getElementById('create-birthdate')) document.getElementById('create-birthdate').value = '';
+      if (document.getElementById('create-attending')) document.getElementById('create-attending').value = 'yes';
+      if (document.getElementById('create-comments')) document.getElementById('create-comments').value = '';
       document.getElementById('create-modal').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -1968,26 +2022,58 @@
     // GUARDAR ASISTENTE CREADO DESDE ADMIN
     async function handleCreateSubmit(e) {
       e.preventDefault();
-      const btn = document.getElementById('save-create-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<span>Guardando...</span>';
+      const btn = document.getElementById('create-submit-btn') || document.getElementById('save-create-btn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>Guardando...</span>';
+      }
+
+      const nameEl = document.getElementById('create-name') || document.getElementById('create-fullname');
+      const fullName = nameEl ? nameEl.value.trim().toUpperCase() : '';
+      const ci = document.getElementById('create-ci') ? document.getElementById('create-ci').value.trim() : '';
+      const email = document.getElementById('create-email') ? document.getElementById('create-email').value.trim().toLowerCase() : '';
+      const phone = document.getElementById('create-phone') ? document.getElementById('create-phone').value.trim() : '';
+      const institution = document.getElementById('create-institution') ? document.getElementById('create-institution').value.trim() : '';
+      const position = document.getElementById('create-position') ? document.getElementById('create-position').value.trim() : '';
+      const birthDate = document.getElementById('create-birthdate') ? document.getElementById('create-birthdate').value.trim() : '';
+      const attending = document.getElementById('create-attending') ? document.getElementById('create-attending').value : 'yes';
+      const comments = document.getElementById('create-comments') ? document.getElementById('create-comments').value.trim() : '';
 
       const newRecord = {
         id: Date.now(),
-        full_name: document.getElementById('create-fullname').value.trim().toUpperCase(),
-        ci: document.getElementById('create-ci').value.trim(),
-        email: document.getElementById('create-email').value.trim().toLowerCase(),
-        phone: document.getElementById('create-phone').value.trim(),
-        institution: document.getElementById('create-institution').value.trim(),
-        position: document.getElementById('create-position').value.trim(),
-        birth_date: document.getElementById('create-birthdate') ? document.getElementById('create-birthdate').value.trim() : '',
-        attending: document.getElementById('create-attending').value,
+        full_name: fullName,
+        ci: ci,
+        email: email,
+        phone: phone,
+        institution: institution,
+        position: position,
+        birth_date: birthDate,
+        attending: attending,
         ticket_count: 1,
-        comments: document.getElementById('create-comments').value.trim(),
+        comments: comments,
         created_at: new Date().toISOString()
       };
 
-      allAttendeesCache.unshift(newRecord);
+      // Si el asistente ya existe por NOMBRE, EMAIL o CÉDULA, actualizar en vez de duplicar
+      const existingIdx = allAttendeesCache.findIndex(a => {
+        const nameMatch = a.full_name && newRecord.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(newRecord.full_name);
+        const emailMatch = a.email && newRecord.email && a.email.toLowerCase() === newRecord.email.toLowerCase();
+        const ciMatch = a.ci && newRecord.ci && a.ci.trim() === newRecord.ci.trim();
+        return nameMatch || emailMatch || ciMatch;
+      });
+
+      if (existingIdx !== -1) {
+        newRecord.id = allAttendeesCache[existingIdx].id;
+        allAttendeesCache[existingIdx] = { 
+          ...allAttendeesCache[existingIdx], 
+          ...newRecord,
+          created_at: newRecord.created_at
+        };
+      } else {
+        allAttendeesCache.unshift(newRecord);
+      }
+
+      allAttendeesCache = deduplicateAttendees(allAttendeesCache);
       saveStoredAttendees(allAttendeesCache);
 
       updateKpis(allAttendeesCache);
@@ -1996,11 +2082,14 @@
       saveRecordToCloud(newRecord);
 
       closeCreateModal();
-      btn.disabled = false;
-      btn.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i><span>Crear Asistente</span>';
-      lucide.createIcons();
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Guardar Registro</span>';
+        lucide.createIcons();
+      }
       showToast('Asistente registrado exitosamente');
     }
+    window.handleAdminCreate = handleCreateSubmit;
 
     // MODAL DE DETALLE / VER ASISTENTE
     function viewAttendeeDetail(id) {
