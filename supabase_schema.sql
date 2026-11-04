@@ -4,7 +4,7 @@
 -- INSTRUCCIONES:
 -- 1. Ve a tu proyecto en https://app.supabase.com
 -- 2. Entra en el menú "SQL Editor" (ícono de consola en la barra lateral)
--- 3. Pega este código completo y haz clic en "RUN".
+-- 3. Pega este código y haz clic en "RUN".
 -- ==============================================================
 
 -- 1. Crear tabla de asistentes
@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS public.attendees (
 ALTER TABLE public.attendees ENABLE ROW LEVEL SECURITY;
 
 -- 3. Política: Permitir inserción pública (Cualquier persona puede registrarse)
+DROP POLICY IF EXISTS "Permitir registros publicos" ON public.attendees;
 CREATE POLICY "Permitir registros publicos" 
 ON public.attendees 
 FOR INSERT 
@@ -35,23 +36,26 @@ TO anon
 WITH CHECK (true);
 
 -- 4. Política: Permitir lectura pública (Para visualizar en el panel admin)
+DROP POLICY IF EXISTS "Permitir lectura publica" ON public.attendees;
 CREATE POLICY "Permitir lectura publica" 
 ON public.attendees 
 FOR SELECT 
 TO anon 
 USING (true);
 
--- 5. Insertar registro inicial de referencia (Sergio Eloy García Madrid)
-INSERT INTO public.attendees (
-    full_name, ci, email, phone, ticket_count, ticket_list, institution, position, attending
-) VALUES (
-    'SERGIO ELOY GARCIA MADRID',
-    '0500597661',
-    'sergioeloyg@hotmail.com',
-    '0984246768',
-    10,
-    ARRAY['05802', '12237', '15956', '19811', '31773', '33248', '36966', '42525', '50553', '55962'],
-    'Laboratorio Clínico San Rafael',
-    'Director',
-    'yes'
-) ON CONFLICT DO NOTHING;
+-- 5. Política: Permitir actualizar registros (Gestión de participantes)
+DROP POLICY IF EXISTS "Permitir actualizar registros" ON public.attendees;
+CREATE POLICY "Permitir actualizar registros" 
+ON public.attendees 
+FOR UPDATE 
+TO anon 
+USING (true) 
+WITH CHECK (true);
+
+-- 6. Política: Permitir eliminar registros (Gestión de participantes)
+DROP POLICY IF EXISTS "Permitir eliminar registros" ON public.attendees;
+CREATE POLICY "Permitir eliminar registros" 
+ON public.attendees 
+FOR DELETE 
+TO anon 
+USING (true);
