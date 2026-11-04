@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>INGELAB • Ingelab Evolution 2026</title>
   
-  <link rel="icon" type="image/png" href="logo_ingelab_hd.png">
+  <link rel="icon" type="image/png" href="ingelab_evolution_logo.png">
 
   <!-- Tipografía: Space Grotesk & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,9 +114,7 @@
       }
     }
 
-    /* ============================================================ */
-    /* RENDERIZADO NÍTIDO DEL LOGO (HD ULTRA SHARP, ZERO BLUR)      */
-    /* ============================================================ */
+    /* Renderizado nítido de imágenes sin desenfoque */
     .logo-sharp {
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
@@ -125,44 +123,22 @@
       filter: drop-shadow(0 2px 8px rgba(0,0,0,0.06));
     }
 
-    /* ANIMACIÓN ZOOM IN NÍTIDA & TRANSIÓN TELÓN */
+    /* Animaciones de Splash Screen */
     @keyframes crispZoom {
-      0% {
-        transform: scale(0.94);
-        opacity: 0;
-      }
-      30% {
-        transform: scale(1.0);
-        opacity: 1;
-      }
-      80% {
-        transform: scale(1.03);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1.06);
-        opacity: 0.95;
-      }
+      0% { transform: scale(0.94); opacity: 0; }
+      30% { transform: scale(1.0); opacity: 1; }
+      80% { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(1.05); opacity: 0.95; }
     }
 
     @keyframes curtainSlideUp {
-      0% {
-        transform: translateY(0%);
-      }
-      100% {
-        transform: translateY(-100%);
-      }
+      0% { transform: translateY(0%); }
+      100% { transform: translateY(-100%); }
     }
 
     @keyframes contentReveal {
-      0% {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(16px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .animate-crisp-zoom {
@@ -181,7 +157,7 @@
       overflow: hidden;
     }
 
-    /* Tarjetas estilo Glassmorphic sobre el fondo animado */
+    /* Paneles Glassmorphic */
     .glass-panel {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
@@ -220,15 +196,15 @@
   <div class="bg bg3"></div>
 
   <!-- ============================================================ -->
-  <!-- SPLASH SCREEN: INTRO ZOOM-IN NÍTIDO CON LOGO HD              -->
+  <!-- SPLASH SCREEN: INTRO ZOOM-IN NÍTIDO CON LOGO OFICIAL         -->
   <!-- ============================================================ -->
   <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white transition-all duration-700 pointer-events-auto">
     
     <div id="intro-box" class="relative z-10 flex flex-col items-center text-center px-6 animate-crisp-zoom">
       
-      <!-- Contenedor del Logo HD Ultra Nítido -->
-      <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200/80 shadow-2xl mb-6">
-        <img src="logo_ingelab_hd.png" alt="INGELAB" class="w-72 sm:w-80 md:w-96 h-auto object-contain logo-sharp">
+      <!-- Logo Oficial Ingelab Evolution Recortado en HD -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 shadow-2xl mb-6 max-w-sm sm:max-w-md">
+        <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="w-full h-auto object-contain logo-sharp">
       </div>
 
       <div class="flex items-center gap-3 text-xs tracking-ultra font-mono uppercase text-arch-subtle mb-2">
@@ -265,7 +241,7 @@
     <header class="sticky top-0 z-40 glass-panel border-b border-white/60 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-24 flex items-center justify-between">
         
-        <!-- Logo Ingelab HD Nítido -->
+        <!-- Logo Ingelab HD -->
         <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-2">
           <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-12 sm:h-16 md:h-18 w-auto object-contain logo-sharp">
         </a>
@@ -275,10 +251,10 @@
           
           <!-- Estado Público: Badge y Botón de Acceso Admin -->
           <div id="public-nav-group" class="flex items-center gap-2">
-            <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-bold tracking-wider">
-              <span class="w-2 h-2 rounded-full bg-ingelab-green animate-pulse"></span>
-              INGELAB EVOLUTION
-            </span>
+            <button onclick="openInvitationModal()" title="Ver Invitación Oficial" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-ingelab-navy hover:bg-slate-50 text-[11px] font-mono font-bold tracking-wider transition-all shadow-xs">
+              <i data-lucide="image" class="w-3.5 h-3.5 text-ingelab-green"></i>
+              <span>VER INVITACIÓN</span>
+            </button>
 
             <button onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-xs">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-ingelab-navy"></i>
@@ -322,26 +298,27 @@
       <div class="max-w-3xl mx-auto space-y-8">
         
         <!-- HERO CARD: INGELAB EVOLUTION -->
-        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-xl">
+        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-10 shadow-xl overflow-hidden relative">
           
-          <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] font-mono tracking-widest uppercase text-arch-subtle mb-4">
+          <!-- Banner Logo Ingelab Evolution Oficial -->
+          <div class="max-w-md mx-auto mb-6 text-center">
+            <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="w-full max-w-sm sm:max-w-md mx-auto h-auto object-contain logo-sharp">
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] font-mono tracking-widest uppercase text-arch-subtle mb-3">
             <span class="px-3 py-1 rounded-md bg-ingelab-green text-white font-bold">
-              INGELAB EVOLUTION
+              EVENTO EXCLUSIVO
             </span>
             <span class="font-bold text-slate-700">EDICIÓN 2026</span>
             <span class="text-slate-300">/</span>
             <span>RED DE LABORATORIOS CLÍNICOS</span>
           </div>
 
-          <h1 class="text-3xl sm:text-5xl font-bold font-display tracking-tight text-arch-black leading-[1.1] mb-4">
-            Ingelab Evolution
-          </h1>
-
-          <p class="text-base sm:text-lg text-slate-700 font-medium leading-relaxed mb-8 max-w-2xl">
+          <p class="text-center text-base sm:text-lg text-slate-700 font-medium leading-relaxed mb-8 max-w-2xl mx-auto">
             Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
           </p>
 
-          <!-- Ficha Técnica del Evento -->
+          <!-- Ficha Técnica del Evento: Hilton Colón & 17:00 -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
             <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
               <div class="w-10 h-10 rounded-xl bg-ingelab-green-light text-ingelab-green flex items-center justify-center shrink-0">
@@ -359,7 +336,7 @@
               </div>
               <div>
                 <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">02 / HORARIO</span>
-                <span class="text-xs font-bold text-arch-black block">18:30 hrs (Recepción)</span>
+                <span class="text-xs font-bold text-arch-black block">17:00</span>
               </div>
             </div>
 
@@ -369,19 +346,20 @@
               </div>
               <div>
                 <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">03 / LUGAR</span>
-                <span class="text-xs font-bold text-arch-black block">Centro de Convenciones</span>
+                <span class="text-xs font-bold text-arch-black block">HOTEL HILTON COLÓN</span>
+                <span class="text-[10px] text-slate-500 font-mono block">Av. Amazonas N19-14 y Av. Patria</span>
               </div>
             </div>
           </div>
 
-          <!-- Reloj de Cuenta Regresiva -->
+          <!-- Reloj de Cuenta Regresiva ajustado a las 17:00 -->
           <div class="bg-white/80 rounded-2xl border border-slate-200/80 p-5 shadow-sm">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3 text-xs font-mono">
               <span class="text-arch-subtle uppercase tracking-widest flex items-center gap-2">
                 <i data-lucide="timer" class="w-4 h-4 text-ingelab-green"></i>
                 CUENTA REGRESIVA HASTA LA APERTURA
               </span>
-              <span class="text-ingelab-green font-bold">13.11.2026</span>
+              <span class="text-ingelab-green font-bold">13.11.2026 • 17:00</span>
             </div>
 
             <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center" id="countdown-timer">
@@ -406,28 +384,40 @@
 
         </div>
 
-        <!-- FORMULARIO LIMPIO Y RÁPIDO (HEURÍSTICAS DE USABILIDAD) -->
+        <!-- BANNER ILUSTRATIVO DE QUITO ARTÍSTICO (DE LA INVITACIÓN) -->
+        <div class="rounded-3xl overflow-hidden border border-white/80 shadow-lg bg-white/70">
+          <img src="quito_skyline_banner.png" alt="Quito - Ingelab Evolution" class="w-full h-auto object-cover max-h-48 sm:max-h-60">
+        </div>
+
+        <!-- FORMULARIO DE CONFIRMACIÓN -->
         <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-xl">
           
-          <div class="pb-6 border-b border-slate-200/80 mb-8">
-            <span class="text-[11px] font-mono uppercase tracking-ultra text-ingelab-green font-bold block mb-1">
-              REGISTRO DIGITAL
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-bold font-display text-arch-black">
-              Confirmación de Asistencia
-            </h2>
-            <p class="text-sm text-arch-subtle mt-1">
-              Por favor complete los campos para su acreditación oficial en Ingelab Evolution.
-            </p>
+          <div class="pb-6 border-b border-slate-200/80 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-ultra text-ingelab-green font-bold block mb-1">
+                REGISTRO DIGITAL
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-bold font-display text-arch-black">
+                Confirmación de Asistencia
+              </h2>
+              <p class="text-sm text-arch-subtle mt-1">
+                Complete sus datos para acreditar su pase a Ingelab Evolution.
+              </p>
+            </div>
+
+            <button type="button" onclick="openInvitationModal()" class="px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-semibold flex items-center gap-1.5 self-start sm:self-auto transition-all shadow-xs">
+              <i data-lucide="file-image" class="w-3.5 h-3.5 text-ingelab-navy"></i>
+              <span>Ver Invitación</span>
+            </button>
           </div>
 
           <form id="attendance-form" onsubmit="handleSubmit(event)" class="space-y-6 sm:space-y-8">
             
-            <!-- SECCIÓN 01: INFORMACIÓN DEL PARTICIPANTE -->
+            <!-- SECCIÓN 01: INFORMACIÓN DEL ASISTENTE -->
             <div>
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">01</span>
-                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información del Participante</h3>
+                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información del Asistente</h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -471,11 +461,11 @@
               </div>
             </div>
 
-            <!-- SECCIÓN 02: AFILIACIÓN PROFESIONAL -->
+            <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL -->
             <div class="pt-6 border-t border-slate-200/80">
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
-                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Afiliación Profesional</h3>
+                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información Profesional</h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -559,7 +549,7 @@
     </main>
 
     <!-- ============================================================ -->
-    <!-- VISTA ÉXITO: PANTALLA COMPLETA DE REGISTRO REALIZADO CON ÉXITO-->
+    <!-- VISTA ÉXITO: PANTALLA COMPLETA DE ASISTENCIA CONFIRMADA      -->
     <!-- ============================================================ -->
     <main id="view-success" class="flex-1 hidden py-8 sm:py-12 px-4 sm:px-6">
       <div class="max-w-2xl mx-auto space-y-6">
@@ -572,7 +562,7 @@
           </div>
 
           <span class="px-3 py-1 rounded-md bg-ingelab-green text-white text-[11px] font-mono font-bold tracking-widest uppercase inline-block mb-3">
-            ACREDITACIÓN CONFIRMADA
+            ASISTENCIA CONFIRMADA
           </span>
 
           <h2 class="text-2xl sm:text-4xl font-bold font-display text-arch-black tracking-tight mb-3">
@@ -587,17 +577,17 @@
           <div class="bg-white rounded-2xl border border-slate-200/90 p-6 text-left shadow-md space-y-5" id="printable-credential">
             
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-              <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-10 w-auto object-contain logo-sharp">
+              <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-10 w-auto object-contain logo-sharp">
               <div class="text-right font-mono text-[11px]">
                 <span class="text-slate-400 block text-[10px] uppercase">EVENTO OFICIAL</span>
                 <span class="font-bold text-ingelab-navy">INGELAB EVOLUTION</span>
               </div>
             </div>
 
-            <!-- Resumen de Participante -->
+            <!-- Resumen de Asistente -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
               <div>
-                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Nombre del Participante:</span>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Nombre del Asistente:</span>
                 <span id="success-display-name" class="font-bold text-arch-black text-sm block mt-0.5">-</span>
               </div>
               <div>
@@ -634,8 +624,8 @@
                 </div>
                 <div class="pt-1.5 border-t border-slate-200 text-[11px] text-slate-600 space-y-0.5">
                   <div><strong>Fecha:</strong> Viernes, 13 de Noviembre 2026</div>
-                  <div><strong>Hora:</strong> 18:30 hrs (Recepción)</div>
-                  <div><strong>Lugar:</strong> Centro de Convenciones</div>
+                  <div><strong>Hora:</strong> 17:00</div>
+                  <div><strong>Lugar:</strong> HOTEL HILTON COLÓN (Av. Amazonas N19-14 y Av. Patria)</div>
                 </div>
               </div>
             </div>
@@ -732,7 +722,7 @@
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="relative w-full sm:w-80">
-              <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar participante, C.I., email, empresa..." 
+              <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar asistente, C.I., email, empresa..." 
                 class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ingelab-green">
             </div>
 
@@ -743,7 +733,7 @@
             <table class="w-full text-left border-collapse text-xs">
               <thead>
                 <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-mono text-[11px] uppercase tracking-wider">
-                  <th class="py-4 px-6 font-semibold">PARTICIPANTE (DOC.)</th>
+                  <th class="py-4 px-6 font-semibold">ASISTENTE (DOC.)</th>
                   <th class="py-4 px-6 font-semibold">INFORMACIÓN DE CONTACTO</th>
                   <th class="py-4 px-6 font-semibold">INSTITUCIÓN / CARGO</th>
                   <th class="py-4 px-4 font-semibold text-center">ESTADO</th>
@@ -766,7 +756,38 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MODAL DE CREAR PARTICIPANTE (ADMIN)                          -->
+  <!-- MODAL VER INVITACIÓN OFICIAL                                 -->
+  <!-- ============================================================ -->
+  <div id="invitation-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 border border-slate-200 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 font-display">Invitación Oficial</h3>
+          <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION • 13 NOVIEMBRE 2026</p>
+        </div>
+        <button onclick="closeInvitationModal()" class="text-slate-400 hover:text-slate-800 p-1.5 rounded-lg hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-50">
+        <img src="INVITACION.png" alt="Invitación Oficial Ingelab Evolution" class="w-full h-auto object-contain">
+      </div>
+
+      <div class="flex gap-3 pt-1">
+        <a href="INVITACION.png" download="Invitacion_Ingelab_Evolution.png" class="flex-1 py-3 px-4 bg-ingelab-navy hover:bg-slate-900 text-white font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Descargar Imagen</span>
+        </a>
+        <button onclick="closeInvitationModal()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-xs font-bold rounded-xl transition-all">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE CREAR ASISTENTE (ADMIN)                             -->
   <!-- ============================================================ -->
   <div id="create-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
@@ -777,7 +798,7 @@
             <i data-lucide="user-plus" class="w-5 h-5 text-ingelab-green"></i>
           </div>
           <div>
-            <h3 class="text-base font-bold text-slate-900 font-display">Crear Nuevo Participante</h3>
+            <h3 class="text-base font-bold text-slate-900 font-display">Crear Nuevo Asistente</h3>
             <p class="text-[11px] text-slate-500 font-mono">REGISTRO MANUAL EN BASE DE DATOS</p>
           </div>
         </div>
@@ -846,7 +867,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MODAL DE EDITAR PARTICIPANTE (ADMIN)                         -->
+  <!-- MODAL DE EDITAR ASISTENTE (ADMIN)                            -->
   <!-- ============================================================ -->
   <div id="edit-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
@@ -857,7 +878,7 @@
             <i data-lucide="edit-3" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-base font-bold text-slate-900 font-display">Modificar Participante</h3>
+            <h3 class="text-base font-bold text-slate-900 font-display">Modificar Asistente</h3>
             <p class="text-[11px] text-slate-500 font-mono" id="edit-header-code">CÓDIGO: -</p>
           </div>
         </div>
@@ -1036,7 +1057,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: LÓGICA COMPLETA, SUPABASE Y GESTIÓN CRUD -->
+  <!-- JAVASCRIPT: LÓGICA COMPLETA, PERSISTENCIA Y FIXES DEFINITIVOS -->
   <script>
     lucide.createIcons();
 
@@ -1062,26 +1083,6 @@
         } catch (e) {
           console.warn('Error Supabase:', e);
         }
-      }
-    }
-
-    async function directSupabaseInsert(payload) {
-      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
-      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
-      if (!url || !key) return;
-      try {
-        await fetch(`${url}/rest/v1/attendees`, {
-          method: 'POST',
-          headers: {
-            'apikey': key,
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {
-        console.warn('Direct Supabase insert notice:', err);
       }
     }
 
@@ -1114,7 +1115,19 @@
     }
 
     // ============================================================
-    // 2. AUTENTICACIÓN Y ROLES: PÚBLICO VS ADMINISTRADOR
+    // 2. MODAL INVITACIÓN OFICIAL
+    // ============================================================
+    function openInvitationModal() {
+      document.getElementById('invitation-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeInvitationModal() {
+      document.getElementById('invitation-modal').classList.add('hidden');
+    }
+
+    // ============================================================
+    // 3. AUTENTICACIÓN Y ROLES: PÚBLICO VS ADMINISTRADOR
     // ============================================================
     const ADMIN_USER = 'pasante@ingelabcorp.com';
     const ADMIN_PASS = 'Jco13855182';
@@ -1187,7 +1200,7 @@
     }
 
     // ============================================================
-    // 3. NAVEGACIÓN ENTRE VISTAS
+    // 4. NAVEGACIÓN ENTRE VISTAS
     // ============================================================
     function switchView(view) {
       const formView = document.getElementById('view-form');
@@ -1234,41 +1247,58 @@
     }
 
     // ============================================================
-    // 4. ALMACENAMIENTO LOCAL Y CACHÉ
+    // 5. REGISTRO DE ELIMINACIONES PERMANENTES (ANTI-RESURRECCIÓN)
     // ============================================================
-    const DEFAULT_RECORDS = [
-      {
-        id: 1,
-        full_name: 'SERGIO ELOY GARCIA MADRID',
-        ci: '0500597661',
-        email: 'sergioeloyg@hotmail.com',
-        phone: '0984246768',
-        institution: 'Laboratorio Clínico San Rafael',
-        position: 'Director',
-        ticket_count: 1,
-        ticket_list: ['05802'],
-        attending: 'yes',
-        created_at: new Date().toISOString()
-      }
-    ];
+    function getDeletedRegistry() {
+      try {
+        const raw = localStorage.getItem('ingelab_deleted_registry_v1');
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return [];
+    }
 
+    function addDeletedToRegistry(id, ci, fullName) {
+      const list = getDeletedRegistry();
+      list.push({
+        id: String(id),
+        ci: ci ? String(ci).trim() : '',
+        name: fullName ? String(fullName).trim().toUpperCase() : ''
+      });
+      localStorage.setItem('ingelab_deleted_registry_v1', JSON.stringify(list));
+    }
+
+    function isRecordDeleted(record) {
+      const deletedList = getDeletedRegistry();
+      if (!deletedList || deletedList.length === 0) return false;
+      return deletedList.some(d => {
+        if (d.id && String(record.id) === String(d.id)) return true;
+        if (d.ci && record.ci && String(record.ci).trim() === d.ci) return true;
+        if (d.name && record.full_name && String(record.full_name).trim().toUpperCase() === d.name) return true;
+        return false;
+      });
+    }
+
+    // Almacenamiento local con filtro permanente de borrados
     function getStoredAttendees() {
       try {
-        const stored = localStorage.getItem('ingelab_attendees_v4');
-        if (stored) return JSON.parse(stored);
+        const stored = localStorage.getItem('ingelab_attendees_v5');
+        if (stored) {
+          const list = JSON.parse(stored);
+          return list.filter(a => !isRecordDeleted(a));
+        }
       } catch (e) {}
-      localStorage.setItem('ingelab_attendees_v4', JSON.stringify(DEFAULT_RECORDS));
-      return DEFAULT_RECORDS;
+      return [];
     }
 
     function saveStoredAttendees(list) {
-      localStorage.setItem('ingelab_attendees_v4', JSON.stringify(list));
+      const cleanList = list.filter(a => !isRecordDeleted(a));
+      localStorage.setItem('ingelab_attendees_v5', JSON.stringify(cleanList));
     }
 
     let allAttendeesCache = getStoredAttendees();
 
     // ============================================================
-    // 5. INTRO ZOOM-IN NÍTIDO
+    // 6. INTRO ZOOM-IN NÍTIDO
     // ============================================================
     function runIntro() {
       document.body.classList.add('intro-lock');
@@ -1319,10 +1349,10 @@
     }
 
     // ============================================================
-    // 6. CUENTA REGRESIVA
+    // 7. CUENTA REGRESIVA AL EVENTO (13 NOV 2026 • 17:00)
     // ============================================================
     function initCountdown() {
-      const eventDate = new Date('2026-11-13T18:30:00').getTime();
+      const eventDate = new Date('2026-11-13T17:00:00').getTime();
 
       function updateTimer() {
         const now = new Date().getTime();
@@ -1349,8 +1379,10 @@
     }
 
     // ============================================================
-    // 7. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA
+    // 8. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA (FIX DEFINITIVO)
     // ============================================================
+    let isSubmittingForm = false;
+
     function generateConfirmationCode() {
       const rand = Math.floor(Math.random() * 90000 + 10000);
       return String(rand);
@@ -1358,13 +1390,17 @@
 
     async function handleSubmit(e) {
       e.preventDefault();
+      
+      // Bloquear inmediatamente para evitar registros dobles
+      if (isSubmittingForm) return;
+      isSubmittingForm = true;
 
       const submitBtn = document.getElementById('submit-btn');
       const submitText = document.getElementById('submit-btn-text');
       const originalText = submitText.innerText;
 
       submitBtn.disabled = true;
-      submitBtn.classList.add('opacity-80');
+      submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
       submitText.innerText = 'REGISTRANDO EN BASE DE DATOS...';
 
       const form = e.target;
@@ -1386,90 +1422,140 @@
         created_at: new Date().toISOString()
       };
 
-      // 1. Guardar en memoria / localStorage local
-      allAttendeesCache.unshift(newRecord);
-      saveStoredAttendees(allAttendeesCache);
-
-      // 2. Guardar en Supabase (dual: Client SDK + Direct REST)
-      const supabasePayload = [{
-        full_name: newRecord.full_name,
-        ci: newRecord.ci,
-        email: newRecord.email,
-        phone: newRecord.phone,
-        institution: newRecord.institution,
-        position: newRecord.position,
-        attending: newRecord.attending,
-        ticket_count: 1,
-        ticket_list: [confirmCode],
-        comments: newRecord.comments
-      }];
-
-      if (supabaseClient) {
-        supabaseClient.from('attendees').insert(supabasePayload).then(({ error }) => {
-          if (error) {
-            console.warn('Supabase Client insert notice:', error.message);
-            directSupabaseInsert(supabasePayload);
-          } else {
-            console.log('Guardado en Supabase con éxito!');
-          }
-        }).catch(() => directSupabaseInsert(supabasePayload));
-      } else {
-        directSupabaseInsert(supabasePayload);
-      }
-
-      // 3. Enviar a backend Express de Vercel como respaldo
       try {
-        fetch('/api/confirm', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newRecord)
-        }).catch(() => {});
-      } catch (err) {}
+        // 1. Guardar en memoria local inmediatamente
+        allAttendeesCache.unshift(newRecord);
+        saveStoredAttendees(allAttendeesCache);
 
-      // 4. Mostrar Pantalla Completa de Éxito
-      showSuccessScreen(newRecord);
+        // 2. Transición INMEDIATA a la pantalla de éxito
+        showSuccessScreen(newRecord);
 
-      // Éxito: Confeti
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#59A456', '#2C3E7C', '#4079B8']
-      });
+        // 3. Resetear formulario
+        form.reset();
 
-      // Restaurar botón
-      submitBtn.disabled = false;
-      submitBtn.classList.remove('opacity-80');
-      submitText.innerText = originalText;
+        // 4. Confeti
+        try {
+          if (window.confetti) {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#59A456', '#2C3E7C', '#4079B8']
+            });
+          }
+        } catch (confettiErr) {}
+
+        // 5. Guardar en Supabase y Backend de forma asíncrona
+        saveRecordToCloud(newRecord, confirmCode);
+
+      } catch (err) {
+        console.error('Error al procesar registro:', err);
+        showSuccessScreen(newRecord);
+      } finally {
+        isSubmittingForm = false;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+        submitText.innerText = originalText;
+      }
     }
 
     function showSuccessScreen(record) {
+      // 1. Mostrar la vista de éxito de forma inmediata
+      switchView('success');
+
+      // 2. Llenar los datos del asistente en el comprobante
       document.getElementById('success-display-name').innerText = record.full_name || '-';
       document.getElementById('success-display-ci').innerText = record.ci ? `C.I: ${record.ci}` : '-';
       document.getElementById('success-display-email').innerText = record.email || '-';
       document.getElementById('success-display-phone').innerText = record.phone || '-';
-      document.getElementById('success-display-institution').innerText = record.institution || 'No especificada';
+      document.getElementById('success-display-institution').innerText = record.institution || 'Particular';
       document.getElementById('success-display-position').innerText = record.position || 'Profesional de la Salud';
       
       const code = (record.ticket_list && record.ticket_list[0]) ? record.ticket_list[0] : '05802';
       document.getElementById('success-display-code').innerText = code;
 
-      // Generar código QR dinámico
-      const canvas = document.getElementById('success-qr-canvas');
-      QRCode.toCanvas(canvas, `INGELAB-EVOLUTION-2026|${code}|${record.full_name}|CI:${record.ci}`, {
-        width: 130,
-        margin: 1,
-        color: {
-          dark: '#1C2852',
-          light: '#ffffff'
+      // 3. Generar código QR con retardo seguro para garantizar renderizado
+      setTimeout(() => {
+        try {
+          const canvas = document.getElementById('success-qr-canvas');
+          if (canvas && window.QRCode) {
+            QRCode.toCanvas(canvas, `INGELAB-EVOLUTION-2026|${code}|${record.full_name}|CI:${record.ci}`, {
+              width: 135,
+              margin: 1,
+              color: {
+                dark: '#1C2852',
+                light: '#ffffff'
+              }
+            }, function(err) {
+              if (err) console.warn('QR Canvas notice:', err);
+            });
+          }
+        } catch (qrErr) {
+          console.warn('QR code generation error:', qrErr);
         }
-      });
+      }, 50);
+    }
 
-      switchView('success');
+    async function saveRecordToCloud(record, code) {
+      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+
+      const supabasePayload = [{
+        full_name: record.full_name,
+        ci: record.ci,
+        email: record.email,
+        phone: record.phone,
+        institution: record.institution,
+        position: record.position,
+        attending: record.attending,
+        ticket_count: 1,
+        ticket_list: [code],
+        comments: record.comments
+      }];
+
+      // Enviar a Supabase
+      if (supabaseClient) {
+        try {
+          supabaseClient.from('attendees').insert(supabasePayload).then(({ error }) => {
+            if (error) directSupabaseInsert(supabasePayload);
+          }).catch(() => directSupabaseInsert(supabasePayload));
+        } catch (e) {
+          directSupabaseInsert(supabasePayload);
+        }
+      } else {
+        directSupabaseInsert(supabasePayload);
+      }
+
+      // Enviar a Backend Express
+      try {
+        fetch('/api/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(record)
+        }).catch(() => {});
+      } catch (err) {}
+    }
+
+    async function directSupabaseInsert(payload) {
+      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+      if (!url || !key) return;
+      try {
+        await fetch(`${url}/rest/v1/attendees`, {
+          method: 'POST',
+          headers: {
+            'apikey': key,
+            'Authorization': `Bearer ${key}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {}
     }
 
     // ============================================================
-    // 8. PANEL ADMINISTRADOR: GESTIÓN CRUD (CREAR, EDITAR, BORRAR)
+    // 9. PANEL ADMINISTRADOR: CRUD Y SINCRONIZACIÓN
     // ============================================================
     async function loadAdminData() {
       allAttendeesCache = getStoredAttendees();
@@ -1483,7 +1569,9 @@
         try {
           const { data, error } = await supabaseClient.from('attendees').select('*').order('id', { ascending: false });
           if (!error && data && data.length > 0) {
-            allAttendeesCache = data.map(d => ({
+            // Filtrar eliminados permanentemente
+            const filteredData = data.filter(d => !isRecordDeleted(d));
+            allAttendeesCache = filteredData.map(d => ({
               id: d.id,
               full_name: d.full_name,
               ci: d.ci || '',
@@ -1517,7 +1605,8 @@
           if (res.ok) {
             const data = await res.json();
             if (data && data.length > 0) {
-              allAttendeesCache = data.map(d => ({
+              const filteredData = data.filter(d => !isRecordDeleted(d));
+              allAttendeesCache = filteredData.map(d => ({
                 id: d.id,
                 full_name: d.full_name,
                 ci: d.ci || '',
@@ -1535,9 +1624,7 @@
               cloudLoaded = true;
             }
           }
-        } catch (e) {
-          console.warn('Direct fetch Supabase notice:', e);
-        }
+        } catch (e) {}
       }
 
       // 3. Fallback: Endpoint backend de Vercel
@@ -1546,7 +1633,8 @@
           const res = await fetch('/api/attendees');
           const data = await res.json();
           if (data.success && data.attendees && data.attendees.length > 0) {
-            allAttendeesCache = data.attendees.map(s => ({
+            const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
+            allAttendeesCache = filteredData.map(s => ({
               id: s.id,
               full_name: s.full_name,
               ci: s.ci || '',
@@ -1592,7 +1680,7 @@
       if (filterCount) filterCount.innerText = total;
     }
 
-    // ABRIR Y GUARDAR CREACIÓN MANUAL (ADMIN)
+    // CREAR ASISTENTE (ADMIN)
     function openCreateModal() {
       document.getElementById('create-attendee-form').reset();
       document.getElementById('create-modal').classList.remove('hidden');
@@ -1629,33 +1717,7 @@
       saveStoredAttendees(allAttendeesCache);
 
       // Guardar en Supabase
-      if (supabaseClient) {
-        try {
-          await supabaseClient.from('attendees').insert([{
-            full_name: newRecord.full_name,
-            ci: newRecord.ci,
-            email: newRecord.email,
-            phone: newRecord.phone,
-            institution: newRecord.institution,
-            position: newRecord.position,
-            attending: newRecord.attending,
-            ticket_count: 1,
-            ticket_list: [code],
-            comments: newRecord.comments
-          }]);
-        } catch (err) {
-          console.warn('Supabase create notice:', err);
-        }
-      }
-
-      // Guardar en backend
-      try {
-        fetch('/api/confirm', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newRecord)
-        }).catch(() => {});
-      } catch(err) {}
+      saveRecordToCloud(newRecord, code);
 
       closeCreateModal();
       updateKpis(allAttendeesCache);
@@ -1663,10 +1725,10 @@
       btn.disabled = false;
       btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Guardar Registro</span>';
       lucide.createIcons();
-      showToast('Participante creado exitosamente');
+      showToast('Asistente registrado exitosamente');
     }
 
-    // ABRIR Y GUARDAR EDICIÓN (ADMIN)
+    // EDITAR ASISTENTE (ADMIN)
     function openEditModal(id) {
       const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
       if (!item) return;
@@ -1718,12 +1780,12 @@
         saveStoredAttendees(allAttendeesCache);
       }
 
-      // 2. Actualizar en Supabase
+      // 2. Actualizar en Supabase vía PATCH
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       if (url && key) {
         try {
-          await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
+          fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
             method: 'PATCH',
             headers: {
               'apikey': key,
@@ -1731,10 +1793,8 @@
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(updatedFields)
-          });
-        } catch(err) {
-          console.warn('Supabase patch notice:', err);
-        }
+          }).catch(() => {});
+        } catch(err) {}
       }
 
       // 3. Actualizar en backend de Vercel
@@ -1752,73 +1812,78 @@
       btn.disabled = false;
       btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Registro</span>';
       lucide.createIcons();
-      showToast('Participante modificado con éxito');
+      showToast('Asistente modificado con éxito');
     }
 
-    // ELIMINAR REGISTRO (ADMIN)
+    // ELIMINAR ASISTENTE (ADMIN) CON ELIMINACIÓN PERMANENTE GARANTIZADA
     async function deleteRecord(id) {
       const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
-      const name = item ? item.full_name : 'este participante';
+      const name = item ? item.full_name : 'este registro';
       if (!confirm(`¿Está seguro de eliminar a "${name}" de la lista oficial de participantes? Esta acción no se puede deshacer.`)) {
         return;
       }
 
-      // 1. Eliminar de caché local
+      // 1. Registrar en lista negra permanente para que NUNCA vuelva a aparecer al recargar
+      addDeletedToRegistry(id, item ? item.ci : null, item ? item.full_name : null);
+
+      // 2. Eliminar de caché local y guardar
       allAttendeesCache = allAttendeesCache.filter(a => a.id !== id && String(a.id) !== String(id));
       saveStoredAttendees(allAttendeesCache);
 
-      // 2. Eliminar de Supabase
+      // 3. Actualizar la vista de la tabla y KPIs de inmediato
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
+      showToast('Asistente eliminado permanentemente');
+
+      // 4. Enviar eliminación a Supabase
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       if (url && key) {
         try {
-          await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
+          fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
             method: 'DELETE',
             headers: {
               'apikey': key,
               'Authorization': `Bearer ${key}`
             }
-          });
-        } catch(err) {
-          console.warn('Supabase delete notice:', err);
-        }
+          }).catch(() => {});
+        } catch(err) {}
       }
 
-      // 3. Eliminar de backend de Vercel
+      // 5. Enviar eliminación a backend de Vercel
       try {
         fetch(`/api/attendees/${id}`, { method: 'DELETE' }).catch(() => {});
       } catch(err) {}
-
-      updateKpis(allAttendeesCache);
-      renderTable(allAttendeesCache);
-      showToast('Participante eliminado del sistema');
     }
 
     // ============================================================
-    // 9. RENDERIZADO DE TABLA ADMINISTRATIVA
+    // 10. RENDERIZADO DE TABLA ADMINISTRATIVA
     // ============================================================
     function renderTable(list) {
       const tableBody = document.getElementById('attendees-table-body');
       
-      if (!list || list.length === 0) {
+      // Filtrar permanentemente cualquier registro eliminado
+      const cleanList = (list || []).filter(a => !isRecordDeleted(a));
+
+      if (cleanList.length === 0) {
         tableBody.innerHTML = `
           <tr>
             <td colspan="6" class="text-center py-8 text-slate-400 font-mono">
-              No hay participantes registrados todavía.
+              No hay asistentes registrados actualmente.
             </td>
           </tr>
         `;
         return;
       }
 
-      tableBody.innerHTML = list.map(a => {
+      tableBody.innerHTML = cleanList.map(a => {
         const code = (a.ticket_list && a.ticket_list[0]) ? a.ticket_list[0] : (a.ticket_list || '05802');
         const isConfirmed = a.attending === 'yes';
 
         return `
           <tr class="hover:bg-slate-50/70 transition-colors">
             
-            <!-- PARTICIPANTE (DOC.) -->
+            <!-- ASISTENTE (DOC.) -->
             <td class="py-4 px-6 align-middle">
               <span class="font-black text-slate-900 block text-xs tracking-tight">${escapeHtml(a.full_name)}</span>
               ${a.ci ? `<span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-600 border border-slate-200">C.I: ${escapeHtml(a.ci)}</span>` : ''}
@@ -1872,7 +1937,7 @@
                 <button onclick="openEditModal(${a.id})" title="Modificar datos" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-green hover:bg-emerald-50 transition-colors">
                   <i data-lucide="edit-3" class="w-4 h-4"></i>
                 </button>
-                <button onclick="deleteRecord(${a.id})" title="Eliminar registro" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">
+                <button onclick="deleteRecord(${a.id})" title="Eliminar permanentemente" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -1906,7 +1971,7 @@
     }
 
     function exportToCsv() {
-      const headers = ['PARTICIPANTE', 'C.I. / DOCUMENTO', 'CORREO', 'TELEFONO', 'INSTITUCION', 'CARGO', 'ESTADO', 'CODIGO_REGISTRO', 'FECHA'];
+      const headers = ['ASISTENTE', 'C.I. / DOCUMENTO', 'CORREO', 'TELEFONO', 'INSTITUCION', 'CARGO', 'ESTADO', 'CODIGO_REGISTRO', 'FECHA'];
       let csv = '\uFEFF' + headers.join(';') + '\n';
 
       allAttendeesCache.forEach(a => {
