@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Sistema de confirmación de asistencia y registro de evento para Ingelab",
   "type": "module",
+  "main": "index.js",
   "scripts": {
-    "build": "echo Static build complete",
-    "local": "node local_server.js",
-    "dev": "node --watch local_server.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "local-sqlite": "node local_server.js"
   },
   "dependencies": {
     "express": "^4.21.1",
