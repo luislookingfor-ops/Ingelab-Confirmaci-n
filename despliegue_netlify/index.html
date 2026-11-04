@@ -437,7 +437,7 @@
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="fullName">
                     Nombre y Apellidos completos <span class="text-ingelab-green">*</span>
                   </label>
-                  <input type="text" id="fullName" name="fullName" required placeholder="Ej: SERGIO ELOY GARCIA MADRID" 
+                  <input type="text" id="fullName" name="fullName" required placeholder="Ej: Juan Carlos Pérez" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
@@ -446,7 +446,7 @@
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
                     C.I. / Documento de Identidad <span class="text-ingelab-green">*</span>
                   </label>
-                  <input type="text" id="ci" name="ci" required placeholder="Ej: 0500597661" 
+                  <input type="text" id="ci" name="ci" required placeholder="Ej: 1712345678" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
                 </div>
 
@@ -455,7 +455,7 @@
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="email">
                     Correo Electrónico <span class="text-ingelab-green">*</span>
                   </label>
-                  <input type="email" id="email" name="email" required placeholder="sergioeloyg@hotmail.com" 
+                  <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
@@ -464,7 +464,7 @@
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
                     Teléfono Móvil / WhatsApp <span class="text-ingelab-green">*</span>
                   </label>
-                  <input type="tel" id="phone" name="phone" required placeholder="0984246768" 
+                  <input type="tel" id="phone" name="phone" required placeholder="Ej: 0991234567" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
                 </div>
 
@@ -484,7 +484,7 @@
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="institution">
                     Institución o Laboratorio Clínico
                   </label>
-                  <input type="text" id="institution" name="institution" placeholder="Laboratorio Clínico San Rafael" 
+                  <input type="text" id="institution" name="institution" placeholder="Hospital / Laboratorio Clínico" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
@@ -660,7 +660,7 @@
     </main>
 
     <!-- ============================================================ -->
-    <!-- VISTA PANEL ADMINISTRADOR (SOLO ACCESIBLE CON LOGIN)         -->
+    <!-- VISTA PANEL ADMINISTRADOR (GESTIÓN CRUD COMPLETA)            -->
     <!-- ============================================================ -->
     <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full">
       
@@ -674,11 +674,17 @@
               <h1 class="text-xl sm:text-2xl font-bold font-display text-arch-black">Base de Datos de Participantes</h1>
             </div>
             <p class="text-xs font-mono text-arch-subtle mt-1">
-              INGELAB EVOLUTION • GESTIÓN OFICIAL DE ASISTENCIA
+              INGELAB EVOLUTION • GESTIÓN DE PARTICIPANTES (CREAR, MODIFICAR, ELIMINAR)
             </p>
           </div>
 
           <div class="flex flex-wrap items-center gap-2.5">
+            <!-- Botón Crear Nuevo Registro -->
+            <button onclick="openCreateModal()" class="px-4 py-2 bg-ingelab-navy hover:bg-slate-900 text-white rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-1.5 transition-all shadow-md">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5 text-ingelab-green"></i>
+              <span>+ NUEVO REGISTRO</span>
+            </button>
+
             <button onclick="loadAdminData()" class="px-3.5 py-2 bg-white border border-slate-200 text-arch-black rounded-lg text-xs font-mono font-semibold flex items-center gap-2 hover:bg-slate-50 shadow-sm">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-ingelab-navy"></i>
               <span>ACTUALIZAR</span>
@@ -691,7 +697,7 @@
 
             <button onclick="openSupabaseModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition-all">
               <i data-lucide="database" class="w-3.5 h-3.5 text-emerald-600"></i>
-              <span>CONFIG. SUPABASE</span>
+              <span>SUPABASE</span>
             </button>
           </div>
         </div>
@@ -721,7 +727,7 @@
 
         </div>
 
-        <!-- TABLA ADMINISTRATIVA -->
+        <!-- TABLA ADMINISTRATIVA CON GESTIÓN CRUD -->
         <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -742,7 +748,7 @@
                   <th class="py-4 px-6 font-semibold">INSTITUCIÓN / CARGO</th>
                   <th class="py-4 px-4 font-semibold text-center">ESTADO</th>
                   <th class="py-4 px-4 font-semibold text-center">CÓDIGO</th>
-                  <th class="py-4 px-4 font-semibold text-center">GESTIÓN</th>
+                  <th class="py-4 px-4 font-semibold text-center">ACCIONES</th>
                 </tr>
               </thead>
               <tbody id="attendees-table-body" class="divide-y divide-slate-100 text-slate-700">
@@ -757,6 +763,168 @@
 
     </main>
 
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE CREAR PARTICIPANTE (ADMIN)                          -->
+  <!-- ============================================================ -->
+  <div id="create-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-ingelab-navy text-white flex items-center justify-center font-bold">
+            <i data-lucide="user-plus" class="w-5 h-5 text-ingelab-green"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 font-display">Crear Nuevo Participante</h3>
+            <p class="text-[11px] text-slate-500 font-mono">REGISTRO MANUAL EN BASE DE DATOS</p>
+          </div>
+        </div>
+        <button onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="create-attendee-form" onsubmit="handleAdminCreate(event)" class="space-y-4 text-xs font-mono">
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+          <input type="text" id="create-name" required placeholder="Ej: Dr. Roberto Mendoza" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">C.I. / Documento *</label>
+            <input type="text" id="create-ci" required placeholder="1712345678" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
+            <input type="tel" id="create-phone" required placeholder="0991234567" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
+          <input type="email" id="create-email" required placeholder="correo@institucional.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa</label>
+            <input type="text" id="create-institution" placeholder="Hospital / Laboratorio" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad</label>
+            <input type="text" id="create-position" placeholder="Bioquímico / Director" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Estado de Asistencia</label>
+          <select id="create-attending" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <option value="yes" selected>CONFIRMADO (Asiste)</option>
+            <option value="no">NO ASISTE</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Observaciones (Opcional)</label>
+          <textarea id="create-comments" rows="2" placeholder="Notas internas..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono"></textarea>
+        </div>
+
+        <div class="pt-3 flex gap-3">
+          <button type="button" onclick="closeCreateModal()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-xs font-bold rounded-xl transition-all">
+            Cancelar
+          </button>
+          <button type="submit" id="create-submit-btn" class="flex-1 py-3 px-4 bg-ingelab-green hover:bg-ingelab-green-dark text-white font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Guardar Registro</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE EDITAR PARTICIPANTE (ADMIN)                         -->
+  <!-- ============================================================ -->
+  <div id="edit-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-ingelab-blue text-white flex items-center justify-center font-bold">
+            <i data-lucide="edit-3" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 font-display">Modificar Participante</h3>
+            <p class="text-[11px] text-slate-500 font-mono" id="edit-header-code">CÓDIGO: -</p>
+          </div>
+        </div>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="edit-attendee-form" onsubmit="handleAdminEdit(event)" class="space-y-4 text-xs font-mono">
+        <input type="hidden" id="edit-id" />
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+          <input type="text" id="edit-name" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">C.I. / Documento *</label>
+            <input type="text" id="edit-ci" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
+            <input type="tel" id="edit-phone" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
+          <input type="email" id="edit-email" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa</label>
+            <input type="text" id="edit-institution" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad</label>
+            <input type="text" id="edit-position" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Estado de Asistencia</label>
+          <select id="edit-attending" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <option value="yes">CONFIRMADO (Asiste)</option>
+            <option value="no">NO ASISTE</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Observaciones</label>
+          <textarea id="edit-comments" rows="2" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono"></textarea>
+        </div>
+
+        <div class="pt-3 flex gap-3">
+          <button type="button" onclick="closeEditModal()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-xs font-bold rounded-xl transition-all">
+            Cancelar
+          </button>
+          <button type="submit" id="edit-submit-btn" class="flex-1 py-3 px-4 bg-ingelab-navy hover:bg-slate-900 text-white font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Actualizar Registro</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- ============================================================ -->
@@ -783,14 +951,14 @@
       <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs font-mono">
         
         <div id="login-error-msg" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-sans">
-          Credenciales incorrectas. Verifique el correo institucional y la contraseña.
+          Credenciales incorrectas. Verifique el usuario y la contraseña.
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1.5" for="admin-email">
-            Correo Institucional
+            Usuario o Correo Institucional
           </label>
-          <input type="email" id="admin-email" required placeholder="pasante@ingelabcorp.com" autocomplete="username"
+          <input type="email" id="admin-email" required placeholder="correo@institucional.com" autocomplete="username"
             class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-ingelab-green">
         </div>
 
@@ -868,7 +1036,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: LÓGICA COMPLETA, SUPABASE Y CONTROL DE ROLES -->
+  <!-- JAVASCRIPT: LÓGICA COMPLETA, SUPABASE Y GESTIÓN CRUD -->
   <script>
     lucide.createIcons();
 
@@ -941,7 +1109,7 @@
       localStorage.setItem('ingelab_supabase_key', key);
       initSupabase();
       closeSupabaseModal();
-      alert('Supabase conectado exitosamente.');
+      showToast('Supabase conectado exitosamente');
       await loadAdminData();
     }
 
@@ -966,7 +1134,6 @@
 
     function togglePasswordVisibility() {
       const pwdInput = document.getElementById('admin-password');
-      const eyeIcon = document.getElementById('pwd-eye-icon');
       if (pwdInput.type === 'password') {
         pwdInput.type = 'text';
       } else {
@@ -987,6 +1154,7 @@
         closeLoginModal();
         updateAuthUi();
         switchView('admin');
+        showToast('Bienvenido al Panel de Administración');
       } else {
         errorBox.classList.remove('hidden');
       }
@@ -996,6 +1164,7 @@
       sessionStorage.removeItem('ingelab_admin_logged_in');
       updateAuthUi();
       switchView('form');
+      showToast('Sesión de administrador cerrada');
     }
 
     function updateAuthUi() {
@@ -1028,7 +1197,6 @@
       const btnAdmin = document.getElementById('nav-btn-admin');
 
       if (view === 'admin') {
-        // Verificar si está autenticado
         if (sessionStorage.getItem('ingelab_admin_logged_in') !== 'true') {
           openLoginModal();
           return;
@@ -1046,7 +1214,6 @@
         adminView.classList.add('hidden');
         successView.classList.remove('hidden');
       } else {
-        // Vista Formulario
         adminView.classList.add('hidden');
         successView.classList.add('hidden');
         formView.classList.remove('hidden');
@@ -1087,15 +1254,15 @@
 
     function getStoredAttendees() {
       try {
-        const stored = localStorage.getItem('ingelab_attendees_v3');
+        const stored = localStorage.getItem('ingelab_attendees_v4');
         if (stored) return JSON.parse(stored);
       } catch (e) {}
-      localStorage.setItem('ingelab_attendees_v3', JSON.stringify(DEFAULT_RECORDS));
+      localStorage.setItem('ingelab_attendees_v4', JSON.stringify(DEFAULT_RECORDS));
       return DEFAULT_RECORDS;
     }
 
     function saveStoredAttendees(list) {
-      localStorage.setItem('ingelab_attendees_v3', JSON.stringify(list));
+      localStorage.setItem('ingelab_attendees_v4', JSON.stringify(list));
     }
 
     let allAttendeesCache = getStoredAttendees();
@@ -1182,7 +1349,7 @@
     }
 
     // ============================================================
-    // 7. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA (DESPLIEGA PANTALLA ÉXITO)
+    // 7. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA
     // ============================================================
     function generateConfirmationCode() {
       const rand = Math.floor(Math.random() * 90000 + 10000);
@@ -1240,7 +1407,7 @@
       if (supabaseClient) {
         supabaseClient.from('attendees').insert(supabasePayload).then(({ error }) => {
           if (error) {
-            console.warn('Supabase Client error, usando REST directo:', error.message);
+            console.warn('Supabase Client insert notice:', error.message);
             directSupabaseInsert(supabasePayload);
           } else {
             console.log('Guardado en Supabase con éxito!');
@@ -1298,12 +1465,11 @@
         }
       });
 
-      // Cambiar a la vista de éxito
       switchView('success');
     }
 
     // ============================================================
-    // 8. PANEL ADMINISTRADOR: CARGA Y KPIs
+    // 8. PANEL ADMINISTRADOR: GESTIÓN CRUD (CREAR, EDITAR, BORRAR)
     // ============================================================
     async function loadAdminData() {
       allAttendeesCache = getStoredAttendees();
@@ -1328,6 +1494,7 @@
               ticket_count: d.ticket_count || 1,
               ticket_list: Array.isArray(d.ticket_list) ? d.ticket_list : (d.ticket_list ? d.ticket_list.split(',') : ['05802']),
               attending: d.attending || 'yes',
+              comments: d.comments || '',
               created_at: d.created_at
             }));
             saveStoredAttendees(allAttendeesCache);
@@ -1361,6 +1528,7 @@
                 ticket_count: d.ticket_count || 1,
                 ticket_list: Array.isArray(d.ticket_list) ? d.ticket_list : (d.ticket_list ? d.ticket_list.split(',') : ['05802']),
                 attending: d.attending || 'yes',
+                comments: d.comments || '',
                 created_at: d.created_at
               }));
               saveStoredAttendees(allAttendeesCache);
@@ -1389,6 +1557,7 @@
               ticket_count: s.ticket_count || 1,
               ticket_list: Array.isArray(s.ticket_list) ? s.ticket_list : (s.ticket_list ? s.ticket_list.split(',').map(t => t.trim()) : ['05802']),
               attending: s.attending,
+              comments: s.comments || '',
               created_at: s.created_at
             }));
             saveStoredAttendees(allAttendeesCache);
@@ -1421,6 +1590,208 @@
       if (badgeTotal) badgeTotal.innerText = total;
       const filterCount = document.getElementById('filter-count');
       if (filterCount) filterCount.innerText = total;
+    }
+
+    // ABRIR Y GUARDAR CREACIÓN MANUAL (ADMIN)
+    function openCreateModal() {
+      document.getElementById('create-attendee-form').reset();
+      document.getElementById('create-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCreateModal() {
+      document.getElementById('create-modal').classList.add('hidden');
+    }
+
+    async function handleAdminCreate(e) {
+      e.preventDefault();
+      const btn = document.getElementById('create-submit-btn');
+      btn.disabled = true;
+      btn.innerText = 'GUARDANDO...';
+
+      const code = generateConfirmationCode();
+      const newRecord = {
+        id: Date.now(),
+        full_name: document.getElementById('create-name').value.trim().toUpperCase(),
+        ci: document.getElementById('create-ci').value.trim(),
+        email: document.getElementById('create-email').value.trim().toLowerCase(),
+        phone: document.getElementById('create-phone').value.trim(),
+        institution: document.getElementById('create-institution').value.trim(),
+        position: document.getElementById('create-position').value.trim(),
+        attending: document.getElementById('create-attending').value,
+        ticket_count: 1,
+        ticket_list: [code],
+        comments: document.getElementById('create-comments').value.trim(),
+        created_at: new Date().toISOString()
+      };
+
+      allAttendeesCache.unshift(newRecord);
+      saveStoredAttendees(allAttendeesCache);
+
+      // Guardar en Supabase
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('attendees').insert([{
+            full_name: newRecord.full_name,
+            ci: newRecord.ci,
+            email: newRecord.email,
+            phone: newRecord.phone,
+            institution: newRecord.institution,
+            position: newRecord.position,
+            attending: newRecord.attending,
+            ticket_count: 1,
+            ticket_list: [code],
+            comments: newRecord.comments
+          }]);
+        } catch (err) {
+          console.warn('Supabase create notice:', err);
+        }
+      }
+
+      // Guardar en backend
+      try {
+        fetch('/api/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newRecord)
+        }).catch(() => {});
+      } catch(err) {}
+
+      closeCreateModal();
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i><span>Guardar Registro</span>';
+      lucide.createIcons();
+      showToast('Participante creado exitosamente');
+    }
+
+    // ABRIR Y GUARDAR EDICIÓN (ADMIN)
+    function openEditModal(id) {
+      const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
+      if (!item) return;
+
+      document.getElementById('edit-id').value = item.id;
+      const code = (item.ticket_list && item.ticket_list[0]) ? item.ticket_list[0] : (item.ticket_list || '-');
+      document.getElementById('edit-header-code').innerText = `CÓDIGO: ${code}`;
+      document.getElementById('edit-name').value = item.full_name || '';
+      document.getElementById('edit-ci').value = item.ci || '';
+      document.getElementById('edit-phone').value = item.phone || '';
+      document.getElementById('edit-email').value = item.email || '';
+      document.getElementById('edit-institution').value = item.institution || '';
+      document.getElementById('edit-position').value = item.position || '';
+      document.getElementById('edit-attending').value = item.attending || 'yes';
+      document.getElementById('edit-comments').value = item.comments || '';
+
+      document.getElementById('edit-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    async function handleAdminEdit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('edit-submit-btn');
+      btn.disabled = true;
+      btn.innerText = 'ACTUALIZANDO...';
+
+      const rawId = document.getElementById('edit-id').value;
+      const id = isNaN(rawId) ? rawId : parseInt(rawId);
+
+      const updatedFields = {
+        full_name: document.getElementById('edit-name').value.trim().toUpperCase(),
+        ci: document.getElementById('edit-ci').value.trim(),
+        email: document.getElementById('edit-email').value.trim().toLowerCase(),
+        phone: document.getElementById('edit-phone').value.trim(),
+        institution: document.getElementById('edit-institution').value.trim(),
+        position: document.getElementById('edit-position').value.trim(),
+        attending: document.getElementById('edit-attending').value,
+        comments: document.getElementById('edit-comments').value.trim()
+      };
+
+      // 1. Actualizar en caché local
+      const index = allAttendeesCache.findIndex(a => a.id === id || String(a.id) === String(rawId));
+      if (index !== -1) {
+        allAttendeesCache[index] = { ...allAttendeesCache[index], ...updatedFields };
+        saveStoredAttendees(allAttendeesCache);
+      }
+
+      // 2. Actualizar en Supabase
+      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+      if (url && key) {
+        try {
+          await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': key,
+              'Authorization': `Bearer ${key}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedFields)
+          });
+        } catch(err) {
+          console.warn('Supabase patch notice:', err);
+        }
+      }
+
+      // 3. Actualizar en backend de Vercel
+      try {
+        fetch(`/api/attendees/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedFields)
+        }).catch(() => {});
+      } catch(err) {}
+
+      closeEditModal();
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Registro</span>';
+      lucide.createIcons();
+      showToast('Participante modificado con éxito');
+    }
+
+    // ELIMINAR REGISTRO (ADMIN)
+    async function deleteRecord(id) {
+      const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
+      const name = item ? item.full_name : 'este participante';
+      if (!confirm(`¿Está seguro de eliminar a "${name}" de la lista oficial de participantes? Esta acción no se puede deshacer.`)) {
+        return;
+      }
+
+      // 1. Eliminar de caché local
+      allAttendeesCache = allAttendeesCache.filter(a => a.id !== id && String(a.id) !== String(id));
+      saveStoredAttendees(allAttendeesCache);
+
+      // 2. Eliminar de Supabase
+      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+      if (url && key) {
+        try {
+          await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
+            method: 'DELETE',
+            headers: {
+              'apikey': key,
+              'Authorization': `Bearer ${key}`
+            }
+          });
+        } catch(err) {
+          console.warn('Supabase delete notice:', err);
+        }
+      }
+
+      // 3. Eliminar de backend de Vercel
+      try {
+        fetch(`/api/attendees/${id}`, { method: 'DELETE' }).catch(() => {});
+      } catch(err) {}
+
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
+      showToast('Participante eliminado del sistema');
     }
 
     // ============================================================
@@ -1492,11 +1863,19 @@
               </span>
             </td>
 
-            <!-- GESTIÓN -->
+            <!-- ACCIONES: VER, EDITAR, ELIMINAR -->
             <td class="py-4 px-4 align-middle text-center">
-              <button onclick="viewCredentialAdmin(${a.id})" title="Ver comprobante oficial" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-navy hover:bg-slate-100 transition-colors">
-                <i data-lucide="external-link" class="w-4 h-4"></i>
-              </button>
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="viewCredentialAdmin(${a.id})" title="Ver comprobante oficial" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-navy hover:bg-slate-100 transition-colors">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openEditModal(${a.id})" title="Modificar datos" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-green hover:bg-emerald-50 transition-colors">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <button onclick="deleteRecord(${a.id})" title="Eliminar registro" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
             </td>
 
           </tr>
@@ -1507,7 +1886,7 @@
     }
 
     function viewCredentialAdmin(id) {
-      const record = allAttendeesCache.find(a => a.id === id);
+      const record = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
       if (record) {
         showSuccessScreen(record);
       }
@@ -1551,6 +1930,25 @@
       link.href = URL.createObjectURL(blob);
       link.download = `Asistentes_INGELAB_EVOLUTION_${new Date().toISOString().slice(0,10)}.csv`;
       link.click();
+    }
+
+    // TOAST NOTIFICATION
+    function showToast(msg) {
+      let toast = document.getElementById('admin-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'admin-toast';
+        toast.className = 'fixed bottom-6 right-6 z-50 px-4 py-3 bg-slate-900 text-white text-xs font-mono font-bold rounded-xl shadow-2xl flex items-center gap-2 border border-slate-700 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-2';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-ingelab-green"></i><span>${msg}</span>`;
+      lucide.createIcons();
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 3000);
     }
 
     function escapeHtml(text) {

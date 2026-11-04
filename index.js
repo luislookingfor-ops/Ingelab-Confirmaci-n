@@ -23,7 +23,7 @@ app.use('/assets', express.static(__dirname));
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
-    service: 'INGELAB Confirmación de Asistencia',
+    service: 'INGELAB Confirmación de Asistencia - Ingelab Evolution',
     supabase: 'connected',
     eventDate: '2026-11-13'
   });
@@ -89,6 +89,65 @@ app.post('/api/confirm', async (req, res) => {
   }
 });
 
+// Endpoint para modificar asistente en Supabase
+app.put('/api/attendees/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const b = req.body;
+    const record = {};
+    if (b.full_name) record.full_name = b.full_name.trim().toUpperCase();
+    if (b.ci !== undefined) record.ci = b.ci.trim();
+    if (b.email) record.email = b.email.trim().toLowerCase();
+    if (b.phone) record.phone = b.phone.trim();
+    if (b.institution !== undefined) record.institution = b.institution.trim();
+    if (b.position !== undefined) record.position = b.position.trim();
+    if (b.attending) record.attending = b.attending;
+    if (b.comments !== undefined) record.comments = b.comments.trim();
+
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(record)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return res.json({ success: true, attendee: data ? data[0] : null });
+    }
+    const errText = await response.text();
+    res.status(response.status).json({ success: false, error: errText });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Endpoint para eliminar asistente en Supabase
+app.delete('/api/attendees/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    if (response.ok) {
+      return res.json({ success: true });
+    }
+    const errText = await response.text();
+    res.status(response.status).json({ success: false, error: errText });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Todas las demás peticiones van a index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -104,5 +163,4 @@ if (!process.env.VERCEL && process.env.NODE_ENV !== 'test') {
   } catch(e) {}
 }
 
-// Exportación requerida para Vercel Serverless Functions / Express
 export default app;
