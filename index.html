@@ -714,7 +714,7 @@
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="relative w-full sm:w-80">
-              <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar asistente, C.I., email, empresa..." 
+              <input type="search" id="search-input" onkeyup="filterTable()" placeholder="Buscar asistente, C.I., email, empresa..." autocomplete="off" name="search_attendees_query" 
                 class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ingelab-green">
             </div>
 
@@ -878,7 +878,7 @@
         </button>
       </div>
 
-      <form id="edit-attendee-form" onsubmit="handleAdminEdit(event)" class="space-y-4 text-xs font-mono">
+      <form id="edit-attendee-form" onsubmit="handleEditSubmit(event)" class="space-y-4 text-xs font-mono">
         <input type="hidden" id="edit-id" />
 
         <div>
@@ -1269,19 +1269,58 @@
       return deletedList.includes(String(record.id));
     }
 
+    // ============================================================
+    // DEDUPLICACIÓN ESTRICTA: UN SOLO REGISTRO POR ASISTENTE (EL ÚLTIMO)
+    // ============================================================
+    function deduplicateAttendees(list) {
+      if (!Array.isArray(list)) return [];
+      // Ordenar cronológicamente descendente (los más recientes primero)
+      const sorted = [...list].sort((a, b) => {
+        const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        if (timeB !== timeA) return timeB - timeA;
+        return Number(b.id || 0) - Number(a.id || 0);
+      });
+
+      const seenEmails = new Set();
+      const seenCis = new Set();
+      const uniqueList = [];
+
+      for (const item of sorted) {
+        const emailKey = (item.email || '').trim().toLowerCase();
+        const ciKey = (item.ci || '').trim();
+
+        let isDuplicate = false;
+        if (emailKey && seenEmails.has(emailKey)) {
+          isDuplicate = true;
+        }
+        if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
+          isDuplicate = true;
+        }
+
+        if (!isDuplicate) {
+          if (emailKey) seenEmails.add(emailKey);
+          if (ciKey && ciKey.length >= 6) seenCis.add(ciKey);
+          uniqueList.push(item);
+        }
+      }
+
+      return uniqueList;
+    }
+
     function getStoredAttendees() {
       try {
         const stored = localStorage.getItem('ingelab_attendees_v6');
         if (stored) {
           const list = JSON.parse(stored);
-          return list.filter(a => !isRecordDeleted(a));
+          return deduplicateAttendees(list.filter(a => !isRecordDeleted(a)));
         }
       } catch (e) {}
       return [];
     }
 
     function saveStoredAttendees(list) {
-      const cleanList = (list || []).filter(a => !isRecordDeleted(a));
+      const cleanList = deduplicateAttendees((list || []).filter(a => !isRecordDeleted(a)));
       localStorage.setItem('ingelab_attendees_v6', JSON.stringify(cleanList));
     }
 
@@ -1414,7 +1453,20 @@
       };
 
       try {
-        allAttendeesCache.unshift(newRecord);
+        // Si el asistente ya existe por correo o documento, actualizar su registro existente en lugar de duplicar
+        const existingIdx = allAttendeesCache.findIndex(a => {
+          const emailMatch = a.email && newRecord.email && a.email.toLowerCase() === newRecord.email.toLowerCase();
+          const ciMatch = a.ci && newRecord.ci && a.ci.trim() === newRecord.ci.trim();
+          return emailMatch || ciMatch;
+        });
+
+        if (existingIdx !== -1) {
+          newRecord.id = allAttendeesCache[existingIdx].id;
+          allAttendeesCache[existingIdx] = { ...allAttendeesCache[existingIdx], ...newRecord };
+        } else {
+          allAttendeesCache.unshift(newRecord);
+        }
+        allAttendeesCache = deduplicateAttendees(allAttendeesCache);
         saveStoredAttendees(allAttendeesCache);
 
         showSuccessScreen(newRecord);
@@ -1511,6 +1563,40 @@
       };
 
       let saved = false;
+
+      // 0. Si ya existe en Supabase por email, actualizar mediante PATCH directo (evita duplicados incluso sin UNIQUE constraint)
+      if (url && key && record.email) {
+        try {
+          const checkRes = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
+            headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+          });
+          if (checkRes.ok) {
+            const existing = await checkRes.json();
+            if (existing && existing.length > 0) {
+              const existingId = existing[0].id;
+              record.id = existingId;
+              const patchRes = await fetch(`${url}/rest/v1/attendees?id=eq.${existingId}`, {
+                method: 'PATCH',
+                headers: {
+                  'apikey': key,
+                  'Authorization': `Bearer ${key}`,
+                  'Content-Type': 'application/json',
+                  'Prefer': 'return=representation'
+                },
+                body: JSON.stringify(payload)
+              });
+              if (patchRes.ok) {
+                saved = true;
+                allAttendeesCache = deduplicateAttendees(allAttendeesCache);
+                saveStoredAttendees(allAttendeesCache);
+                return true;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Check existing notice:', e);
+        }
+      }
 
       // 1. Inserción Idempotente vía Supabase Client SDK (Upsert por email con fallback)
       if (supabaseClient) {
@@ -1645,7 +1731,7 @@
 
           if (!error && data) {
             const filteredData = data.filter(d => !isRecordDeleted(d));
-            allAttendeesCache = filteredData.map(d => ({
+            allAttendeesCache = deduplicateAttendees(filteredData).map(d => ({
               id: d.id,
               full_name: d.full_name,
               ci: d.ci || '',
@@ -1679,7 +1765,7 @@
             const data = await res.json();
             if (Array.isArray(data)) {
               const filteredData = data.filter(d => !isRecordDeleted(d));
-              allAttendeesCache = filteredData.map(d => ({
+              allAttendeesCache = deduplicateAttendees(filteredData).map(d => ({
                 id: d.id,
                 full_name: d.full_name,
                 ci: d.ci || '',
@@ -1707,7 +1793,7 @@
             const data = await res.json();
             if (data.success && Array.isArray(data.attendees)) {
               const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
-              allAttendeesCache = filteredData.map(s => ({
+              allAttendeesCache = deduplicateAttendees(filteredData).map(s => ({
                 id: s.id,
                 full_name: s.full_name,
                 ci: s.ci || '',
@@ -1731,7 +1817,7 @@
     }
 
     function updateKpis(list) {
-      const cleanList = (list || []).filter(a => !isRecordDeleted(a));
+      const cleanList = deduplicateAttendees((list || []).filter(a => !isRecordDeleted(a)));
       const total = cleanList.length;
       let confirmed = 0;
       let declined = 0;
@@ -1741,9 +1827,13 @@
         else declined++;
       });
 
+      const rate = total > 0 ? Math.round((confirmed / total) * 100) : 0;
+
       document.getElementById('kpi-total').innerText = total;
       document.getElementById('kpi-confirmed').innerText = confirmed;
       document.getElementById('kpi-declined').innerText = declined;
+      const rateElem = document.getElementById('kpi-rate');
+      if (rateElem) rateElem.innerText = `${rate}%`;
     }
 
     // ABRIR MODAL CREAR NUEVO ASISTENTE
@@ -1824,13 +1914,13 @@
       document.getElementById('detail-modal').classList.add('hidden');
     }
 
-    // EDITAR ASISTENTE EXISTENTE
+    // EDITAR ASISTENTE EXISTENTE (CUALQUIER CAMPO)
     function openEditModal(id) {
       const item = allAttendeesCache.find(a => String(a.id) === String(id));
       if (!item) return;
 
       document.getElementById('edit-id').value = item.id;
-      document.getElementById('edit-fullname').value = item.full_name || '';
+      document.getElementById('edit-name').value = item.full_name || '';
       document.getElementById('edit-ci').value = item.ci || '';
       document.getElementById('edit-email').value = item.email || '';
       document.getElementById('edit-phone').value = item.phone || '';
@@ -1850,12 +1940,14 @@
     async function handleEditSubmit(e) {
       e.preventDefault();
       const id = document.getElementById('edit-id').value;
-      const btn = document.getElementById('save-edit-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<span>Guardando...</span>';
+      const btn = document.getElementById('edit-submit-btn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>Guardando cambios...</span>';
+      }
 
       const updatedFields = {
-        full_name: document.getElementById('edit-fullname').value.trim().toUpperCase(),
+        full_name: document.getElementById('edit-name').value.trim().toUpperCase(),
         ci: document.getElementById('edit-ci').value.trim(),
         email: document.getElementById('edit-email').value.trim().toLowerCase(),
         phone: document.getElementById('edit-phone').value.trim(),
@@ -1865,13 +1957,17 @@
         comments: document.getElementById('edit-comments').value.trim()
       };
 
+      // 1. Actualizar en caché local inmediatamente
       const idx = allAttendeesCache.findIndex(a => String(a.id) === String(id));
       if (idx !== -1) {
         allAttendeesCache[idx] = { ...allAttendeesCache[idx], ...updatedFields };
-        saveStoredAttendees(allAttendeesCache);
       }
+      allAttendeesCache = deduplicateAttendees(allAttendeesCache);
+      saveStoredAttendees(allAttendeesCache);
+      updateKpis(allAttendeesCache);
+      renderTable(allAttendeesCache);
 
-      // Actualizar en Supabase
+      // 2. Actualizar en Supabase
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
@@ -1883,34 +1979,36 @@
 
       if (url && key) {
         try {
-          fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
+          await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
             method: 'PATCH',
             headers: {
               'apikey': key,
               'Authorization': `Bearer ${key}`,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
             },
             body: JSON.stringify(updatedFields)
-          }).catch(() => {});
+          });
         } catch(err) {}
       }
 
       try {
-        fetch(`/api/attendees/${id}`, {
+        await fetch(`/api/attendees/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedFields)
-        }).catch(() => {});
+        });
       } catch(err) {}
 
       closeEditModal();
-      updateKpis(allAttendeesCache);
-      renderTable(allAttendeesCache);
-      btn.disabled = false;
-      btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Registro</span>';
-      lucide.createIcons();
-      showToast('Asistente modificado con éxito');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Registro</span>';
+        lucide.createIcons();
+      }
+      showToast('Registro actualizado exitosamente');
     }
+    window.handleAdminEdit = handleEditSubmit;
 
     // ELIMINAR ASISTENTE PERMANENTE (SOLO POR ID)
     async function deleteRecord(id) {
@@ -1964,7 +2062,9 @@
     // ============================================================
     function renderTable(list) {
       const tableBody = document.getElementById('attendees-table-body');
-      const cleanList = (list || []).filter(a => !isRecordDeleted(a));
+      const cleanList = deduplicateAttendees((list || []).filter(a => !isRecordDeleted(a)));
+      const countElem = document.getElementById('filter-count');
+      if (countElem) countElem.innerText = cleanList.length;
 
       if (cleanList.length === 0) {
         tableBody.innerHTML = `

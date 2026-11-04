@@ -181,6 +181,31 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
       comments: (b.comments || '').trim()
     };
 
+    // 2.1 Verificar si el asistente ya existe para ACTUALIZAR en vez de duplicar
+    const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(email)}&order=id.desc&limit=1`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (checkRes.ok) {
+      const existing = await checkRes.json();
+      if (existing && existing.length > 0) {
+        const existingId = existing[0].id;
+        const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${existingId}`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(record)
+        });
+        if (updateRes.ok) {
+          const updatedData = await updateRes.json();
+          return res.status(200).json({ success: true, attendee: updatedData ? updatedData[0] : { ...record, id: existingId } });
+        }
+      }
+    }
+
     // 3. Inserción Idempotente con Resolución de Conflictos (Upsert por email con fallback inteligente)
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 7000);
