@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INGELAB • Confirmación de Asistencia 2026</title>
+  <title>INGELAB • Ingelab Evolution 2026</title>
   
   <link rel="icon" type="image/png" href="logo_ingelab_hd.png">
 
@@ -80,7 +80,7 @@
       background-color: #f1f5f9;
     }
 
-    /* Fondo animado multicapa con los gradientes Ingelab */
+    /* Fondo animado multicapa con gradientes Ingelab */
     .bg {
       animation: slide 3s ease-in-out infinite alternate;
       background-image: linear-gradient(-60deg, #59A456 50%, #2C3E7C 50%);
@@ -183,24 +183,26 @@
 
     /* Tarjetas estilo Glassmorphic sobre el fondo animado */
     .glass-panel {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
 
     @media print {
       body * {
-        visibility: hidden;
+        visibility: hidden !important;
       }
-      #ticket-modal, #ticket-content, #ticket-content * {
-        visibility: visible;
+      #printable-credential, #printable-credential * {
+        visibility: visible !important;
       }
-      #ticket-modal {
+      #printable-credential {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
-        background: white;
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
       }
       .no-print {
         display: none !important;
@@ -211,7 +213,7 @@
 <body class="text-arch-black font-sans antialiased selection:bg-ingelab-green selection:text-white min-h-screen flex flex-col intro-lock">
 
   <!-- ============================================================ -->
-  <!-- FONDOS ANIMADOS MULTICAPA SLIDE (LINEAR GRADIENT REQUERIDO)   -->
+  <!-- FONDOS ANIMADOS MULTICAPA SLIDE                              -->
   <!-- ============================================================ -->
   <div class="bg"></div>
   <div class="bg bg2"></div>
@@ -226,18 +228,22 @@
       
       <!-- Contenedor del Logo HD Ultra Nítido -->
       <div class="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200/80 shadow-2xl mb-6">
-        <img src="logo_ingelab_hd.png" alt="INGELAB" class="w-80 sm:w-96 md:w-[460px] h-auto object-contain logo-sharp">
+        <img src="logo_ingelab_hd.png" alt="INGELAB" class="w-72 sm:w-80 md:w-96 h-auto object-contain logo-sharp">
       </div>
 
-      <div class="flex items-center gap-3 text-xs tracking-ultra font-mono uppercase text-arch-subtle mb-3">
+      <div class="flex items-center gap-3 text-xs tracking-ultra font-mono uppercase text-arch-subtle mb-2">
         <span class="w-2.5 h-2.5 rounded-full bg-ingelab-green"></span>
-        <span class="font-bold text-slate-800">ENCUENTRO INSTITUCIONAL</span>
+        <span class="font-bold text-slate-800">INGELAB EVOLUTION</span>
         <span class="text-slate-300">•</span>
         <span class="text-ingelab-navy font-black">13.11.2026</span>
       </div>
 
-      <!-- Barra de progreso arquitectónica -->
-      <div class="w-52 sm:w-64 h-[3px] bg-slate-100 rounded-full overflow-hidden mt-4">
+      <p class="text-xs sm:text-sm text-slate-500 font-mono max-w-md mb-2">
+        Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
+      </p>
+
+      <!-- Barra de progreso -->
+      <div class="w-52 sm:w-64 h-[3px] bg-slate-100 rounded-full overflow-hidden mt-3">
         <div id="intro-bar" class="h-full bg-gradient-to-r from-ingelab-green via-ingelab-blue to-ingelab-navy w-0 transition-all duration-[1800ms] ease-out"></div>
       </div>
 
@@ -254,27 +260,49 @@
   <div id="app-container" class="flex-1 flex flex-col opacity-0 transition-opacity duration-500">
 
     <!-- ============================================================ -->
-    <!-- HEADER VIDRIO ESMERILADO SOBRE FONDO ANIMADO                 -->
+    <!-- HEADER VIDRIO ESMERILADO                                     -->
     <!-- ============================================================ -->
     <header class="sticky top-0 z-40 glass-panel border-b border-white/60 shadow-sm">
-      <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-24 flex items-center justify-between">
         
         <!-- Logo Ingelab HD Nítido -->
-        <a href="#" class="flex items-center group py-2">
-          <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-14 sm:h-16 md:h-20 w-auto object-contain logo-sharp">
+        <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-2">
+          <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-12 sm:h-16 md:h-18 w-auto object-contain logo-sharp">
         </a>
 
-        <!-- Navegación -->
-        <div class="flex items-center gap-4">
-          <div class="inline-flex p-1 rounded-xl bg-white/80 border border-slate-200/80 text-xs font-semibold font-mono shadow-sm">
-            <button id="nav-btn-form" onclick="switchView('form')" class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 bg-ingelab-navy text-white shadow-sm">
-              <i data-lucide="check-square" class="w-3.5 h-3.5 text-ingelab-green"></i>
-              <span>CONFIRMAR ASISTENCIA</span>
+        <!-- Navegación: Vista Pública vs Administrador -->
+        <div class="flex items-center gap-3">
+          
+          <!-- Estado Público: Badge y Botón de Acceso Admin -->
+          <div id="public-nav-group" class="flex items-center gap-2">
+            <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-bold tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-ingelab-green animate-pulse"></span>
+              INGELAB EVOLUTION
+            </span>
+
+            <button onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-xs">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-ingelab-navy"></i>
+              <span class="hidden xs:inline">ACCESO</span> ADMIN
             </button>
-            <button id="nav-btn-admin" onclick="switchView('admin')" class="px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-arch-subtle hover:text-arch-black">
-              <i data-lucide="database" class="w-3.5 h-3.5 text-ingelab-navy"></i>
-              <span>BASE DE DATOS</span>
-              <span id="badge-total-attendees" class="px-1.5 py-0.2 rounded bg-ingelab-green text-white text-[10px] font-mono font-bold">1</span>
+          </div>
+
+          <!-- Estado Logueado como Administrador -->
+          <div id="admin-nav-group" class="hidden flex items-center gap-2">
+            <div class="inline-flex p-1 rounded-xl bg-white/90 border border-slate-200 text-xs font-semibold font-mono shadow-sm">
+              <button id="nav-btn-form" onclick="switchView('form')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">FORMULARIO</span>
+              </button>
+              <button id="nav-btn-admin" onclick="switchView('admin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm">
+                <i data-lucide="database" class="w-3.5 h-3.5 text-ingelab-green"></i>
+                <span>PANEL ADMIN</span>
+                <span id="badge-total-attendees" class="px-1.5 py-0.2 rounded bg-ingelab-green text-white text-[10px] font-mono font-bold">0</span>
+              </button>
+            </div>
+
+            <button onclick="logoutAdmin()" title="Cerrar Sesión de Administrador" class="p-2 sm:px-3 sm:py-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-mono font-bold flex items-center gap-1.5 transition-colors">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <span class="hidden md:inline">SALIR</span>
             </button>
           </div>
 
@@ -287,18 +315,18 @@
     </header>
 
     <!-- ============================================================ -->
-    <!-- VISTA FORMULARIO: PANELES FLOTANTES SOBRE GRADIENTES         -->
+    <!-- VISTA FORMULARIO: CONFIRMACIÓN DE ASISTENCIA                  -->
     <!-- ============================================================ -->
-    <main id="view-form" class="flex-1 py-12 px-4 sm:px-6">
+    <main id="view-form" class="flex-1 py-8 sm:py-12 px-4 sm:px-6">
       
-      <div class="max-w-4xl mx-auto space-y-8">
+      <div class="max-w-3xl mx-auto space-y-8">
         
-        <!-- HERO CARD TRANSLÚCIDA -->
-        <div class="glass-panel border border-white/80 rounded-3xl p-8 sm:p-12 shadow-xl">
+        <!-- HERO CARD: INGELAB EVOLUTION -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-xl">
           
-          <div class="flex flex-wrap items-center gap-3 text-[11px] font-mono tracking-widest uppercase text-arch-subtle mb-4">
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] font-mono tracking-widest uppercase text-arch-subtle mb-4">
             <span class="px-3 py-1 rounded-md bg-ingelab-green text-white font-bold">
-              EVENTO OFICIAL
+              INGELAB EVOLUTION
             </span>
             <span class="font-bold text-slate-700">EDICIÓN 2026</span>
             <span class="text-slate-300">/</span>
@@ -306,15 +334,14 @@
           </div>
 
           <h1 class="text-3xl sm:text-5xl font-bold font-display tracking-tight text-arch-black leading-[1.1] mb-4">
-            Confirmación de <br class="hidden sm:inline">
-            <span class="text-ingelab-navy">Asistencia Institucional</span>
+            Ingelab Evolution
           </h1>
 
-          <p class="text-sm sm:text-base text-arch-subtle font-normal leading-relaxed mb-8 max-w-2xl">
-            Acompáñanos a una jornada de relacionamiento y avances tecnológicos junto a directores técnicos, bioquímicos y aliados estratégicos de INGELAB.
+          <p class="text-base sm:text-lg text-slate-700 font-medium leading-relaxed mb-8 max-w-2xl">
+            Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
           </p>
 
-          <!-- Ficha Técnica -->
+          <!-- Ficha Técnica del Evento -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
             <div class="p-4 rounded-2xl bg-white/90 border border-slate-200/80 flex items-center gap-3.5 shadow-sm">
               <div class="w-10 h-10 rounded-xl bg-ingelab-green-light text-ingelab-green flex items-center justify-center shrink-0">
@@ -357,7 +384,7 @@
               <span class="text-ingelab-green font-bold">13.11.2026</span>
             </div>
 
-            <div class="grid grid-cols-4 gap-3 text-center" id="countdown-timer">
+            <div class="grid grid-cols-4 gap-2 sm:gap-3 text-center" id="countdown-timer">
               <div class="bg-slate-50/80 p-3 rounded-xl border border-slate-200/60">
                 <div id="days" class="text-2xl sm:text-3xl font-mono font-bold text-arch-black">00</div>
                 <div class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle mt-1">DÍAS</div>
@@ -379,27 +406,24 @@
 
         </div>
 
-        <!-- FORMULARIO FLOTANTE (COMPATIBLE CON NETLIFY FORMS Y LOCAL) -->
-        <div class="glass-panel border border-white/80 rounded-3xl p-8 sm:p-12 shadow-xl">
+        <!-- FORMULARIO LIMPIO Y RÁPIDO (HEURÍSTICAS DE USABILIDAD) -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-xl">
           
           <div class="pb-6 border-b border-slate-200/80 mb-8">
             <span class="text-[11px] font-mono uppercase tracking-ultra text-ingelab-green font-bold block mb-1">
               REGISTRO DIGITAL
             </span>
             <h2 class="text-2xl sm:text-3xl font-bold font-display text-arch-black">
-              Pase Oficial de Asistencia
+              Confirmación de Asistencia
             </h2>
             <p class="text-sm text-arch-subtle mt-1">
-              Por favor complete los campos para su acreditación y asignación de boletos.
+              Por favor complete los campos para su acreditación oficial en Ingelab Evolution.
             </p>
           </div>
 
-          <form id="attendance-form" name="registro-asistencia" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)" class="space-y-8">
+          <form id="attendance-form" onsubmit="handleSubmit(event)" class="space-y-6 sm:space-y-8">
             
-            <input type="hidden" name="form-name" value="registro-asistencia" />
-            <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-
-            <!-- SECCIÓN 01: DATOS PERSONALES Y C.I. -->
+            <!-- SECCIÓN 01: INFORMACIÓN DEL PARTICIPANTE -->
             <div>
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">01</span>
@@ -417,7 +441,7 @@
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
-                <!-- Cédula de Identidad (C.I. / Documento) -->
+                <!-- Cédula de Identidad (C.I.) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
                     C.I. / Documento de Identidad <span class="text-ingelab-green">*</span>
@@ -444,26 +468,10 @@
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
                 </div>
 
-                <!-- Cantidad de Boletos / Pases -->
-                <div class="sm:col-span-2">
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ticketCount">
-                    Cantidad de Boletos / Cupos Solicitados
-                  </label>
-                  <select id="ticketCount" name="ticketCount" 
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ingelab-green transition-all shadow-sm">
-                    <option value="1">1 Boleto (Pase Individual)</option>
-                    <option value="2">2 Boletos (Con Acompañante)</option>
-                    <option value="3">3 Boletos</option>
-                    <option value="4">4 Boletos</option>
-                    <option value="5">5 Boletos</option>
-                    <option value="10" selected>10 Boletos (Delegación Institucional)</option>
-                  </select>
-                </div>
-
               </div>
             </div>
 
-            <!-- SECCIÓN 02: INSTITUCIÓN Y CARGO -->
+            <!-- SECCIÓN 02: AFILIACIÓN PROFESIONAL -->
             <div class="pt-6 border-t border-slate-200/80">
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
@@ -491,20 +499,20 @@
               </div>
             </div>
 
-            <!-- SECCIÓN 03: CONFIRMACIÓN Y CATERING -->
+            <!-- SECCIÓN 03: CONFIRMACIÓN DE ASISTENCIA -->
             <div class="pt-6 border-t border-slate-200/80">
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">03</span>
                 <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Confirmación de Asistencia</h3>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <label class="relative flex items-center p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-ingelab-green bg-white has-[:checked]:border-ingelab-green has-[:checked]:bg-ingelab-green-light shadow-sm">
                   <input type="radio" name="attending" value="yes" checked class="w-4 h-4 text-ingelab-green focus:ring-ingelab-green border-slate-300">
                   <div class="ml-3">
                     <span class="block text-sm font-bold text-arch-black">Confirmo mi Asistencia</span>
-                    <span class="block text-xs text-arch-subtle">Reserva de plaza y emisión de boletos</span>
+                    <span class="block text-xs text-arch-subtle">Acreditación personal confirmada</span>
                   </div>
                 </label>
 
@@ -517,47 +525,14 @@
                 </label>
 
               </div>
-
-              <div>
-                <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-2.5">
-                  Requerimientos Dietéticos para Servicio de Cóctel
-                </label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
-                    <input type="checkbox" name="dietary" value="Menú Estándar" checked class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                    <span>Menú Estándar</span>
-                  </label>
-                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
-                    <input type="checkbox" name="dietary" value="Vegetariano" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                    <span>Vegetariano</span>
-                  </label>
-                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
-                    <input type="checkbox" name="dietary" value="Vegano" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                    <span>Vegano</span>
-                  </label>
-                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
-                    <input type="checkbox" name="dietary" value="Libre de Gluten" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                    <span>Libre de Gluten</span>
-                  </label>
-                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
-                    <input type="checkbox" name="dietary" value="Libre de Lactosa" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                    <span>Libre de Lactosa</span>
-                  </label>
-                  <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 text-xs font-medium cursor-pointer hover:bg-slate-50 bg-white shadow-sm">
-                    <input type="checkbox" name="dietary" value="Sin Mariscos" class="rounded text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                    <span>Sin Mariscos</span>
-                  </label>
-                </div>
-              </div>
-
             </div>
 
-            <!-- SECCIÓN 04: COMENTARIOS -->
+            <!-- SECCIÓN 04: OBSERVACIONES -->
             <div class="pt-6 border-t border-slate-200/80">
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="comments">
                 Observaciones o Consultas Especiales (Opcional)
               </label>
-              <textarea id="comments" name="comments" rows="3" placeholder="Indique cualquier requerimiento logístico o consulta especial."
+              <textarea id="comments" name="comments" rows="2" placeholder="Indique cualquier requerimiento logístico o consulta especial."
                 class="w-full p-4 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green transition-all shadow-sm"></textarea>
             </div>
 
@@ -565,7 +540,7 @@
             <div class="pt-2">
               <button type="submit" id="submit-btn" 
                 class="w-full py-4 px-8 rounded-xl bg-gradient-to-r from-ingelab-green to-ingelab-green-dark hover:from-ingelab-green-dark hover:to-ingelab-navy text-white font-mono font-bold text-xs uppercase tracking-ultra transition-all shadow-lg shadow-ingelab-green/20 flex items-center justify-center gap-3">
-                <span id="submit-btn-text">CONFIRMAR Y EMITIR BOLETOS</span>
+                <span id="submit-btn-text">CONFIRMAR ASISTENCIA</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
 
@@ -584,25 +559,126 @@
     </main>
 
     <!-- ============================================================ -->
-    <!-- VISTA BASE DE DATOS (EXACTA A LA REFERENCIA VISUAL)          -->
+    <!-- VISTA ÉXITO: PANTALLA COMPLETA DE REGISTRO REALIZADO CON ÉXITO-->
     <!-- ============================================================ -->
-    <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-6 py-10 w-full">
+    <main id="view-success" class="flex-1 hidden py-8 sm:py-12 px-4 sm:px-6">
+      <div class="max-w-2xl mx-auto space-y-6">
+        
+        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-2xl text-center animate-content-in">
+          
+          <!-- Ícono de Verificación en Círculo Verde Ingelab -->
+          <div class="w-20 h-20 rounded-full bg-emerald-50 border-2 border-emerald-500/30 text-emerald-600 flex items-center justify-center mx-auto mb-6 shadow-inner">
+            <i data-lucide="check" class="w-10 h-10 stroke-[2.5]"></i>
+          </div>
+
+          <span class="px-3 py-1 rounded-md bg-ingelab-green text-white text-[11px] font-mono font-bold tracking-widest uppercase inline-block mb-3">
+            ACREDITACIÓN CONFIRMADA
+          </span>
+
+          <h2 class="text-2xl sm:text-4xl font-bold font-display text-arch-black tracking-tight mb-3">
+            Registro realizado con éxito
+          </h2>
+
+          <p class="text-sm sm:text-base text-slate-600 max-w-md mx-auto leading-relaxed mb-8">
+            Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
+          </p>
+
+          <!-- Comprobante Digital Oficial con QR -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 text-left shadow-md space-y-5" id="printable-credential">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-10 w-auto object-contain logo-sharp">
+              <div class="text-right font-mono text-[11px]">
+                <span class="text-slate-400 block text-[10px] uppercase">EVENTO OFICIAL</span>
+                <span class="font-bold text-ingelab-navy">INGELAB EVOLUTION</span>
+              </div>
+            </div>
+
+            <!-- Resumen de Participante -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Nombre del Participante:</span>
+                <span id="success-display-name" class="font-bold text-arch-black text-sm block mt-0.5">-</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">C.I. / Documento:</span>
+                <span id="success-display-ci" class="font-bold text-slate-800 text-sm block mt-0.5">-</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Correo Electrónico:</span>
+                <span id="success-display-email" class="text-slate-700 block mt-0.5 truncate">-</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Teléfono Móvil:</span>
+                <span id="success-display-phone" class="text-slate-700 block mt-0.5">-</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Institución / Laboratorio:</span>
+                <span id="success-display-institution" class="text-slate-700 block mt-0.5 truncate">-</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Cargo / Especialidad:</span>
+                <span id="success-display-position" class="text-slate-700 block mt-0.5">-</span>
+              </div>
+            </div>
+
+            <!-- Código QR y Datos del Evento -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
+              <div class="shrink-0 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center">
+                <canvas id="success-qr-canvas" class="rounded-lg"></canvas>
+              </div>
+              <div class="space-y-2 text-xs font-mono text-center sm:text-left flex-1">
+                <div>
+                  <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Código de Acreditación:</span>
+                  <span id="success-display-code" class="text-xl font-bold text-ingelab-navy">05802</span>
+                </div>
+                <div class="pt-1.5 border-t border-slate-200 text-[11px] text-slate-600 space-y-0.5">
+                  <div><strong>Fecha:</strong> Viernes, 13 de Noviembre 2026</div>
+                  <div><strong>Hora:</strong> 18:30 hrs (Recepción)</div>
+                  <div><strong>Lugar:</strong> Centro de Convenciones</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-8 no-print">
+            <button onclick="window.print()" class="flex-1 py-3.5 px-6 rounded-xl bg-white border border-slate-200 text-arch-black hover:bg-slate-50 font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm">
+              <i data-lucide="printer" class="w-4 h-4 text-ingelab-navy"></i>
+              <span>Imprimir Comprobante</span>
+            </button>
+            <button onclick="resetToNewConfirmation()" class="flex-1 py-3.5 px-6 rounded-xl bg-ingelab-green hover:bg-ingelab-green-dark text-white font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>Registrar Otra Confirmación</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- VISTA PANEL ADMINISTRADOR (SOLO ACCESIBLE CON LOGIN)         -->
+    <!-- ============================================================ -->
+    <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full">
       
-      <div class="glass-panel border border-white/80 rounded-3xl p-8 shadow-xl">
+      <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl">
         
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
           <div>
             <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-ingelab-navy text-white text-[10px] font-mono font-bold tracking-wider">REGISTROS</span>
-              <span id="supabase-status-badge" class="px-2 py-0.5 rounded bg-slate-200 text-slate-600 text-[10px] font-mono font-bold tracking-wider">MODO LOCAL / NUBE</span>
-              <h1 class="text-2xl font-bold font-display text-arch-black">Base de Datos de Participantes</h1>
+              <span class="px-2 py-0.5 rounded bg-ingelab-navy text-white text-[10px] font-mono font-bold tracking-wider">PANEL ADMINISTRADOR</span>
+              <span id="supabase-status-badge" class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-mono font-bold tracking-wider">SUPABASE ACTIVO</span>
+              <h1 class="text-xl sm:text-2xl font-bold font-display text-arch-black">Base de Datos de Participantes</h1>
             </div>
             <p class="text-xs font-mono text-arch-subtle mt-1">
-              LISTA OFICIAL DE ACREDITACIONES Y BOLETOS ASIGNADOS
+              INGELAB EVOLUTION • GESTIÓN OFICIAL DE ASISTENCIA
             </p>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-2.5">
             <button onclick="loadAdminData()" class="px-3.5 py-2 bg-white border border-slate-200 text-arch-black rounded-lg text-xs font-mono font-semibold flex items-center gap-2 hover:bg-slate-50 shadow-sm">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-ingelab-navy"></i>
               <span>ACTUALIZAR</span>
@@ -613,29 +689,24 @@
               <span>EXPORTAR EXCEL (CSV)</span>
             </button>
 
-            <button onclick="openSupabaseModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-2 transition-all shadow-md">
-              <i data-lucide="database"></i>
-              <span id="supabase-btn-label">CONECTAR SUPABASE</span>
+            <button onclick="openSupabaseModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition-all">
+              <i data-lucide="database" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>CONFIG. SUPABASE</span>
             </button>
           </div>
         </div>
 
-        <!-- KPIs Resumen -->
+        <!-- KPIs Resumen de Gestión -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 my-8">
           
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-            <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">TOTAL PARTICIPANTES</span>
-            <span id="kpi-total" class="text-3xl font-mono font-bold text-arch-black block mt-1">1</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">TOTAL REGISTRADOS</span>
+            <span id="kpi-total" class="text-3xl font-mono font-bold text-arch-black block mt-1">0</span>
           </div>
 
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-green block">BOLETOS EMITIDOS</span>
-            <span id="kpi-tickets" class="text-3xl font-mono font-bold text-ingelab-green block mt-1">10</span>
-          </div>
-
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-navy block">CONFIRMADOS (SÍ)</span>
-            <span id="kpi-confirmed" class="text-3xl font-mono font-bold text-ingelab-navy block mt-1">1</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-green block">CONFIRMADOS (SÍ)</span>
+            <span id="kpi-confirmed" class="text-3xl font-mono font-bold text-ingelab-green block mt-1">0</span>
           </div>
 
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
@@ -643,18 +714,23 @@
             <span id="kpi-declined" class="text-3xl font-mono font-bold text-slate-400 block mt-1">0</span>
           </div>
 
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-navy block">TASA DE ASISTENCIA</span>
+            <span id="kpi-rate" class="text-3xl font-mono font-bold text-ingelab-navy block mt-1">100%</span>
+          </div>
+
         </div>
 
-        <!-- TABLA CON EL FORMATO EXACTO DE LA CAPTURA -->
+        <!-- TABLA ADMINISTRATIVA -->
         <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="relative w-full sm:w-80">
-              <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar participante, C.I., email..." 
+              <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar participante, C.I., email, empresa..." 
                 class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ingelab-green">
             </div>
 
-            <span class="text-xs font-mono text-slate-400">Total mostrados: <strong id="filter-count" class="text-slate-700">1</strong></span>
+            <span class="text-xs font-mono text-slate-400">Total mostrados: <strong id="filter-count" class="text-slate-700">0</strong></span>
           </div>
 
           <div class="overflow-x-auto">
@@ -663,8 +739,9 @@
                 <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-mono text-[11px] uppercase tracking-wider">
                   <th class="py-4 px-6 font-semibold">PARTICIPANTE (DOC.)</th>
                   <th class="py-4 px-6 font-semibold">INFORMACIÓN DE CONTACTO</th>
-                  <th class="py-4 px-4 font-semibold text-center">CANT. BOLETOS</th>
-                  <th class="py-4 px-6 font-semibold">LISTA DE BOLETOS</th>
+                  <th class="py-4 px-6 font-semibold">INSTITUCIÓN / CARGO</th>
+                  <th class="py-4 px-4 font-semibold text-center">ESTADO</th>
+                  <th class="py-4 px-4 font-semibold text-center">CÓDIGO</th>
                   <th class="py-4 px-4 font-semibold text-center">GESTIÓN</th>
                 </tr>
               </thead>
@@ -680,68 +757,74 @@
 
     </main>
 
-    <!-- ============================================================ -->
-    <!-- MODAL / CREDENCIAL DIGITAL NÍTIDA                            -->
-    <!-- ============================================================ -->
-    <div id="ticket-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE LOGIN PARA ADMINISTRADOR                            -->
+  <!-- ============================================================ -->
+  <div id="login-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-6">
       
-      <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden border border-slate-200 shadow-2xl" id="ticket-modal-card">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-ingelab-navy-light text-ingelab-navy flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 font-display">Acceso Administrativo</h3>
+            <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION • GESTIÓN</p>
+          </div>
+        </div>
+        <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-800 p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs font-mono">
         
-        <div class="border-b border-slate-100 p-6 flex items-center justify-between bg-white">
-          <img src="logo_ingelab_hd.png" alt="INGELAB" class="h-10 w-auto object-contain logo-sharp">
-          <button onclick="closeTicketModal()" class="no-print p-1 text-slate-400 hover:text-arch-black">
-            <i data-lucide="x" class="w-5 h-5"></i>
+        <div id="login-error-msg" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-sans">
+          Credenciales incorrectas. Verifique el correo institucional y la contraseña.
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1.5" for="admin-email">
+            Correo Institucional
+          </label>
+          <input type="email" id="admin-email" required placeholder="pasante@ingelabcorp.com" autocomplete="username"
+            class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-ingelab-green">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1.5" for="admin-password">
+            Contraseña
+          </label>
+          <div class="relative">
+            <input type="password" id="admin-password" required placeholder="••••••••••••" autocomplete="current-password"
+              class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-ingelab-green pr-10">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <i data-lucide="eye" id="pwd-eye-icon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2 flex gap-3">
+          <button type="button" onclick="closeLoginModal()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-xs font-bold rounded-xl transition-all">
+            Cancelar
+          </button>
+          <button type="submit" class="flex-1 py-3 px-4 bg-ingelab-navy hover:bg-slate-900 text-white font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+            <span>Ingresar al Panel</span>
           </button>
         </div>
 
-        <div class="p-6 space-y-5 text-center" id="ticket-content">
-          
-          <div class="p-4 border border-dashed border-slate-300 rounded-2xl bg-slate-50">
-            <div id="ticket-qr-container" class="flex justify-center mb-3">
-              <canvas id="ticket-qr-canvas" class="rounded-lg shadow-sm"></canvas>
-            </div>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-arch-subtle block">CÓDIGO PRINCIPAL</span>
-            <span id="ticket-code-display" class="text-xl font-mono font-bold text-ingelab-navy block">05802</span>
-          </div>
-
-          <div class="text-left space-y-2 border border-slate-200 p-4 rounded-xl text-xs font-mono bg-slate-50">
-            <div>
-              <span class="text-slate-400 block text-[10px] uppercase">Participante:</span>
-              <span id="ticket-name-display" class="font-bold text-arch-black block">-</span>
-            </div>
-            <div>
-              <span class="text-slate-400 block text-[10px] uppercase">Documento / C.I.:</span>
-              <span id="ticket-ci-display" class="font-bold text-slate-700 block">-</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
-              <div>
-                <span class="text-slate-400 block text-[10px] uppercase">Fecha:</span>
-                <span class="font-bold text-ingelab-green block">13.11.2026</span>
-              </div>
-              <div>
-                <span class="text-slate-400 block text-[10px] uppercase">Boletos:</span>
-                <span id="ticket-count-display" class="font-bold text-slate-700 block">1</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex gap-2 pt-2 no-print">
-            <button onclick="window.print()" class="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-arch-black rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2">
-              <i data-lucide="printer" class="w-4 h-4"></i>
-              <span>IMPRIMIR / PDF</span>
-            </button>
-            <button onclick="closeTicketModal()" class="flex-1 py-3 px-4 bg-ingelab-green hover:bg-ingelab-green-dark text-white rounded-xl text-xs font-mono font-bold">
-              <span>CONTINUAR</span>
-            </button>
-          </div>
-
-        </div>
-
-      </div>
+      </form>
 
     </div>
+  </div>
 
-    <!-- MODAL CONEXIÓN SUPABASE -->
+  <!-- ============================================================ -->
+  <!-- MODAL CONEXIÓN SUPABASE                                      -->
+  <!-- ============================================================ -->
   <div id="supabase-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-8 border border-slate-200 shadow-2xl space-y-6">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -760,17 +843,17 @@
       <div class="space-y-4 text-xs font-mono">
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1.5">Project URL (Supabase)</label>
-          <input type="text" id="input-supabase-url" placeholder="https://xyzcompany.supabase.co" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <input type="text" id="input-supabase-url" placeholder="https://hfxgmeykdxnoapqdspzn.supabase.co" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1.5">Anon Public Key (API Key)</label>
-          <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <label class="block font-bold text-slate-700 uppercase mb-1.5">Publishable Key (API Key)</label>
+          <input type="password" id="input-supabase-key" placeholder="sb_publishable_..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500">
         </div>
 
         <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-100 text-[11px] text-emerald-800 space-y-1 font-sans">
-          <span class="font-bold block">Consejo:</span>
-          <span>Pega estas credenciales desde tu panel de Supabase (Project Settings ➔ API). Las confirmaciones se guardarán directamente en tu base de datos PostgreSQL de Supabase.</span>
+          <span class="font-bold block">Conexión activa:</span>
+          <span>Las confirmaciones de asistencia se guardan directamente en tiempo real en la base de datos PostgreSQL de Supabase.</span>
         </div>
       </div>
 
@@ -778,33 +861,20 @@
         <button onclick="saveSupabaseCredentials()" class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-mono font-bold text-xs uppercase rounded-xl transition-all shadow-md">
           Guardar y Conectar
         </button>
-        <button onclick="disconnectSupabase()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-xs rounded-xl transition-all">
-          Desconectar
+        <button onclick="closeSupabaseModal()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-mono text-xs rounded-xl transition-all">
+          Cerrar
         </button>
       </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-    <footer class="glass-panel border-t border-white/60 py-8 text-xs font-mono text-arch-subtle mt-auto">
-      <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <img src="logo_ingelab_hd.png" alt="Ingelab" class="h-8 w-auto logo-sharp">
-          <span>EQUIPOS, REACTIVOS E INSUMOS PARA LABORATORIO CLÍNICO</span>
-        </div>
-        <div>
-          <span>VIERNES, 13 DE NOVIEMBRE DE 2026 • INGELAB</span>
-        </div>
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- JAVASCRIPT: AUTÓNOMO, COMPATIBLE CON NETLIFY DROP Y SERVIDOR LOCAL -->
+  <!-- JAVASCRIPT: LÓGICA COMPLETA, SUPABASE Y CONTROL DE ROLES -->
   <script>
     lucide.createIcons();
 
-    // GESTIÓN DE SUPABASE CLIENT
+    // ============================================================
+    // 1. CONFIGURACIÓN Y CLIENTE DE SUPABASE
+    // ============================================================
     const DEFAULT_SUPABASE_URL = 'https://hfxgmeykdxnoapqdspzn.supabase.co';
     const DEFAULT_SUPABASE_KEY = 'sb_publishable_cx0IDgIzs4N6hIbhcklc2A_SEh2yPrQ';
     let supabaseClient = null;
@@ -813,7 +883,6 @@
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       const badge = document.getElementById('supabase-status-badge');
-      const btnLabel = document.getElementById('supabase-btn-label');
 
       if (window.supabase && url && key) {
         try {
@@ -822,13 +891,9 @@
             badge.innerText = 'SUPABASE ACTIVO';
             badge.className = 'px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-mono font-bold tracking-wider';
           }
-          if (btnLabel) btnLabel.innerText = 'CONFIG. SUPABASE';
         } catch (e) {
           console.warn('Error Supabase:', e);
         }
-      } else if (url && key && badge) {
-        badge.innerText = 'SUPABASE ACTIVO';
-        badge.className = 'px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-mono font-bold tracking-wider';
       }
     }
 
@@ -868,7 +933,7 @@
       const key = document.getElementById('input-supabase-key').value.trim();
 
       if (!url || !key) {
-        alert('Por favor ingrese tanto la URL como la Anon Key de Supabase.');
+        alert('Por favor ingrese la URL y la clave de Supabase.');
         return;
       }
 
@@ -876,25 +941,134 @@
       localStorage.setItem('ingelab_supabase_key', key);
       initSupabase();
       closeSupabaseModal();
-      alert('¡Supabase conectado exitosamente! Sincronizando datos...');
+      alert('Supabase conectado exitosamente.');
       await loadAdminData();
     }
 
-    function disconnectSupabase() {
-      localStorage.removeItem('ingelab_supabase_url');
-      localStorage.removeItem('ingelab_supabase_key');
-      supabaseClient = null;
-      const badge = document.getElementById('supabase-status-badge');
-      if (badge) {
-        badge.innerText = 'MODO LOCAL';
-        badge.className = 'px-2 py-0.5 rounded bg-slate-200 text-slate-600 text-[10px] font-mono font-bold tracking-wider';
-      }
-      closeSupabaseModal();
-      loadAdminData();
+    // ============================================================
+    // 2. AUTENTICACIÓN Y ROLES: PÚBLICO VS ADMINISTRADOR
+    // ============================================================
+    const ADMIN_USER = 'pasante@ingelabcorp.com';
+    const ADMIN_PASS = 'Jco13855182';
+
+    function openLoginModal() {
+      document.getElementById('login-error-msg').classList.add('hidden');
+      document.getElementById('admin-email').value = '';
+      document.getElementById('admin-password').value = '';
+      document.getElementById('login-modal').classList.remove('hidden');
+      lucide.createIcons();
+      setTimeout(() => document.getElementById('admin-email').focus(), 100);
     }
 
+    function closeLoginModal() {
+      document.getElementById('login-modal').classList.add('hidden');
+    }
 
-    // REGISTRO INICIAL POR DEFECTO (EL DE TU IMAGEN DE REFERENCIA)
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('admin-password');
+      const eyeIcon = document.getElementById('pwd-eye-icon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+      } else {
+        pwdInput.type = 'password';
+      }
+      lucide.createIcons();
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value;
+      const errorBox = document.getElementById('login-error-msg');
+
+      if (email === ADMIN_USER && password === ADMIN_PASS) {
+        sessionStorage.setItem('ingelab_admin_logged_in', 'true');
+        errorBox.classList.add('hidden');
+        closeLoginModal();
+        updateAuthUi();
+        switchView('admin');
+      } else {
+        errorBox.classList.remove('hidden');
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('ingelab_admin_logged_in');
+      updateAuthUi();
+      switchView('form');
+    }
+
+    function updateAuthUi() {
+      const isLoggedIn = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
+      const adminNavGroup = document.getElementById('admin-nav-group');
+      const publicNavGroup = document.getElementById('public-nav-group');
+
+      if (isLoggedIn) {
+        if (adminNavGroup) adminNavGroup.classList.remove('hidden');
+        if (publicNavGroup) publicNavGroup.classList.add('hidden');
+      } else {
+        if (adminNavGroup) adminNavGroup.classList.add('hidden');
+        if (publicNavGroup) publicNavGroup.classList.remove('hidden');
+        const adminView = document.getElementById('view-admin');
+        if (adminView && !adminView.classList.contains('hidden')) {
+          switchView('form');
+        }
+      }
+      lucide.createIcons();
+    }
+
+    // ============================================================
+    // 3. NAVEGACIÓN ENTRE VISTAS
+    // ============================================================
+    function switchView(view) {
+      const formView = document.getElementById('view-form');
+      const successView = document.getElementById('view-success');
+      const adminView = document.getElementById('view-admin');
+      const btnForm = document.getElementById('nav-btn-form');
+      const btnAdmin = document.getElementById('nav-btn-admin');
+
+      if (view === 'admin') {
+        // Verificar si está autenticado
+        if (sessionStorage.getItem('ingelab_admin_logged_in') !== 'true') {
+          openLoginModal();
+          return;
+        }
+        formView.classList.add('hidden');
+        successView.classList.add('hidden');
+        adminView.classList.remove('hidden');
+
+        if (btnAdmin) btnAdmin.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm';
+        if (btnForm) btnForm.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black';
+
+        loadAdminData();
+      } else if (view === 'success') {
+        formView.classList.add('hidden');
+        adminView.classList.add('hidden');
+        successView.classList.remove('hidden');
+      } else {
+        // Vista Formulario
+        adminView.classList.add('hidden');
+        successView.classList.add('hidden');
+        formView.classList.remove('hidden');
+
+        if (btnForm) btnForm.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm';
+        if (btnAdmin) btnAdmin.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function resetToNewConfirmation() {
+      document.getElementById('attendance-form').reset();
+      switchView('form');
+      setTimeout(() => {
+        document.getElementById('fullName').focus();
+      }, 200);
+    }
+
+    // ============================================================
+    // 4. ALMACENAMIENTO LOCAL Y CACHÉ
+    // ============================================================
     const DEFAULT_RECORDS = [
       {
         id: 1,
@@ -902,32 +1076,33 @@
         ci: '0500597661',
         email: 'sergioeloyg@hotmail.com',
         phone: '0984246768',
-        ticket_count: 10,
-        ticket_list: ['05802', '12237', '15956', '19811', '31773', '33248', '36966', '42525', '50553', '55962'],
+        institution: 'Laboratorio Clínico San Rafael',
+        position: 'Director',
+        ticket_count: 1,
+        ticket_list: ['05802'],
         attending: 'yes',
         created_at: new Date().toISOString()
       }
     ];
 
-    // Cargar datos locales desde localStorage o valor inicial
     function getStoredAttendees() {
       try {
-        const stored = localStorage.getItem('ingelab_attendees_v2');
-        if (stored) {
-          return JSON.parse(stored);
-        }
+        const stored = localStorage.getItem('ingelab_attendees_v3');
+        if (stored) return JSON.parse(stored);
       } catch (e) {}
-      localStorage.setItem('ingelab_attendees_v2', JSON.stringify(DEFAULT_RECORDS));
+      localStorage.setItem('ingelab_attendees_v3', JSON.stringify(DEFAULT_RECORDS));
       return DEFAULT_RECORDS;
     }
 
     function saveStoredAttendees(list) {
-      localStorage.setItem('ingelab_attendees_v2', JSON.stringify(list));
+      localStorage.setItem('ingelab_attendees_v3', JSON.stringify(list));
     }
 
     let allAttendeesCache = getStoredAttendees();
 
-    // 1. MANEJO DE INTRO NÍTIDA
+    // ============================================================
+    // 5. INTRO ZOOM-IN NÍTIDO
+    // ============================================================
     function runIntro() {
       document.body.classList.add('intro-lock');
       const introScreen = document.getElementById('intro-screen');
@@ -976,13 +1151,9 @@
       runIntro();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      runIntro();
-      initSupabase();
-      loadAdminData();
-    });
-
-    // 2. CUENTA REGRESIVA
+    // ============================================================
+    // 6. CUENTA REGRESIVA
+    // ============================================================
     function initCountdown() {
       const eventDate = new Date('2026-11-13T18:30:00').getTime();
 
@@ -1009,61 +1180,29 @@
       updateTimer();
       setInterval(updateTimer, 1000);
     }
-    initCountdown();
 
-    // 3. NAVEGACIÓN Y VISTAS
-    function switchView(view) {
-      const formView = document.getElementById('view-form');
-      const adminView = document.getElementById('view-admin');
-      const btnForm = document.getElementById('nav-btn-form');
-      const btnAdmin = document.getElementById('nav-btn-admin');
-
-      if (view === 'admin') {
-        formView.classList.add('hidden');
-        adminView.classList.remove('hidden');
-
-        btnAdmin.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 bg-ingelab-navy text-white shadow-sm';
-        btnForm.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-arch-subtle hover:text-arch-black';
-        
-        loadAdminData();
-      } else {
-        adminView.classList.add('hidden');
-        formView.classList.remove('hidden');
-
-        btnForm.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 bg-ingelab-navy text-white shadow-sm';
-        btnAdmin.className = 'px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-arch-subtle hover:text-arch-black';
-      }
-      lucide.createIcons();
+    // ============================================================
+    // 7. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA (DESPLIEGA PANTALLA ÉXITO)
+    // ============================================================
+    function generateConfirmationCode() {
+      const rand = Math.floor(Math.random() * 90000 + 10000);
+      return String(rand);
     }
 
-    if (window.location.hash === '#admin') {
-      switchView('admin');
-    }
-
-    // 4. GENERADOR DE BOLETOS DE 5 DÍGITOS (EJ: 05802, 12237)
-    function generateTicketNumbers(count) {
-      const tickets = new Set();
-      while (tickets.size < count) {
-        const rand = Math.floor(Math.random() * 90000 + 1000);
-        tickets.add(String(rand).padStart(5, '0'));
-      }
-      return Array.from(tickets).sort((a, b) => parseInt(a) - parseInt(b));
-    }
-
-    // 5. ENVÍO DEL FORMULARIO Y GUARDADO GARANTIZADO
     async function handleSubmit(e) {
       e.preventDefault();
 
       const submitBtn = document.getElementById('submit-btn');
-      const originalText = submitBtn.innerHTML;
+      const submitText = document.getElementById('submit-btn-text');
+      const originalText = submitText.innerText;
 
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>REGISTRANDO EN BASE DE DATOS...</span>`;
+      submitBtn.classList.add('opacity-80');
+      submitText.innerText = 'REGISTRANDO EN BASE DE DATOS...';
 
       const form = e.target;
       const formData = new FormData(form);
-      const count = parseInt(formData.get('ticketCount')) || 1;
-      const ticketNumbers = generateTicketNumbers(count);
+      const confirmCode = generateConfirmationCode();
 
       const newRecord = {
         id: Date.now(),
@@ -1071,77 +1210,57 @@
         ci: (formData.get('ci') || '').trim(),
         email: (formData.get('email') || '').trim().toLowerCase(),
         phone: (formData.get('phone') || '').trim(),
-        ticket_count: count,
-        ticket_list: ticketNumbers,
         institution: (formData.get('institution') || '').trim(),
         position: (formData.get('position') || '').trim(),
         attending: formData.get('attending') || 'yes',
-        dietary: Array.from(document.querySelectorAll('input[name="dietary"]:checked')).map(cb => cb.value),
+        ticket_count: 1,
+        ticket_list: [confirmCode],
         comments: (formData.get('comments') || '').trim(),
         created_at: new Date().toISOString()
       };
 
-      // Guardar inmediatamente en almacenamiento local (para Netlify Drop)
+      // 1. Guardar en memoria / localStorage local
       allAttendeesCache.unshift(newRecord);
       saveStoredAttendees(allAttendeesCache);
 
-      // Guardar en la nube Supabase (con fallback dual)
+      // 2. Guardar en Supabase (dual: Client SDK + Direct REST)
       const supabasePayload = [{
         full_name: newRecord.full_name,
         ci: newRecord.ci,
         email: newRecord.email,
         phone: newRecord.phone,
-        ticket_count: newRecord.ticket_count,
-        ticket_list: newRecord.ticket_list,
         institution: newRecord.institution,
         position: newRecord.position,
         attending: newRecord.attending,
-        dietary: newRecord.dietary,
+        ticket_count: 1,
+        ticket_list: [confirmCode],
         comments: newRecord.comments
       }];
 
       if (supabaseClient) {
         supabaseClient.from('attendees').insert(supabasePayload).then(({ error }) => {
           if (error) {
-            console.warn('Supabase client insert:', error.message);
+            console.warn('Supabase Client error, usando REST directo:', error.message);
             directSupabaseInsert(supabasePayload);
           } else {
-            console.log('Guardado en Supabase!');
+            console.log('Guardado en Supabase con éxito!');
           }
         }).catch(() => directSupabaseInsert(supabasePayload));
       } else {
         directSupabaseInsert(supabasePayload);
       }
 
-      // Si existe un servidor Node.js backend activo, enviar también allá
+      // 3. Enviar a backend Express de Vercel como respaldo
       try {
         fetch('/api/confirm', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fullName: newRecord.full_name,
-            ci: newRecord.ci,
-            email: newRecord.email,
-            phone: newRecord.phone,
-            ticketCount: newRecord.ticket_count,
-            ticketList: newRecord.ticket_list,
-            institution: newRecord.institution,
-            position: newRecord.position,
-            attending: newRecord.attending,
-            dietary: newRecord.dietary,
-            comments: newRecord.comments
-          })
+          body: JSON.stringify(newRecord)
         }).catch(() => {});
       } catch (err) {}
 
-      // Si estamos en Netlify, enviar también como formulario de Netlify
-      try {
-        fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString()
-        }).catch(() => {});
-      } catch (e) {}
+      // 4. Mostrar Pantalla Completa de Éxito
+      showSuccessScreen(newRecord);
 
       // Éxito: Confeti
       confetti({
@@ -1151,29 +1270,27 @@
         colors: ['#59A456', '#2C3E7C', '#4079B8']
       });
 
-      // Mostrar Modal con Boleto
-      showTicketModal(newRecord);
-
-      // Limpiar formulario y actualizar tabla
-      form.reset();
-      loadAdminData();
-
+      // Restaurar botón
       submitBtn.disabled = false;
-      submitBtn.innerHTML = originalText;
-      lucide.createIcons();
+      submitBtn.classList.remove('opacity-80');
+      submitText.innerText = originalText;
     }
 
-    // 6. MOSTRAR MODAL CON CÓDIGO QR
-    function showTicketModal(attendee) {
-      const mainTicket = attendee.ticket_list[0] || '05802';
-      document.getElementById('ticket-code-display').innerText = mainTicket;
-      document.getElementById('ticket-name-display').innerText = attendee.full_name;
-      document.getElementById('ticket-ci-display').innerText = attendee.ci ? `C.I: ${attendee.ci}` : '-';
-      document.getElementById('ticket-count-display').innerText = `${attendee.ticket_count} Boletos emitidos`;
+    function showSuccessScreen(record) {
+      document.getElementById('success-display-name').innerText = record.full_name || '-';
+      document.getElementById('success-display-ci').innerText = record.ci ? `C.I: ${record.ci}` : '-';
+      document.getElementById('success-display-email').innerText = record.email || '-';
+      document.getElementById('success-display-phone').innerText = record.phone || '-';
+      document.getElementById('success-display-institution').innerText = record.institution || 'No especificada';
+      document.getElementById('success-display-position').innerText = record.position || 'Profesional de la Salud';
+      
+      const code = (record.ticket_list && record.ticket_list[0]) ? record.ticket_list[0] : '05802';
+      document.getElementById('success-display-code').innerText = code;
 
-      const qrCanvas = document.getElementById('ticket-qr-canvas');
-      QRCode.toCanvas(qrCanvas, `INGELAB-2026|${mainTicket}|${attendee.full_name}|CI:${attendee.ci}`, {
-        width: 140,
+      // Generar código QR dinámico
+      const canvas = document.getElementById('success-qr-canvas');
+      QRCode.toCanvas(canvas, `INGELAB-EVOLUTION-2026|${code}|${record.full_name}|CI:${record.ci}`, {
+        width: 130,
         margin: 1,
         color: {
           dark: '#1C2852',
@@ -1181,16 +1298,13 @@
         }
       });
 
-      const modal = document.getElementById('ticket-modal');
-      modal.classList.remove('hidden');
+      // Cambiar a la vista de éxito
+      switchView('success');
     }
 
-    function closeTicketModal() {
-      const modal = document.getElementById('ticket-modal');
-      modal.classList.add('hidden');
-    }
-
-    // 7. CARGA DE DATOS EN LA TABLA ADMIN
+    // ============================================================
+    // 8. PANEL ADMINISTRADOR: CARGA Y KPIs
+    // ============================================================
     async function loadAdminData() {
       allAttendeesCache = getStoredAttendees();
 
@@ -1209,6 +1323,8 @@
               ci: d.ci || '',
               email: d.email,
               phone: d.phone,
+              institution: d.institution || '',
+              position: d.position || '',
               ticket_count: d.ticket_count || 1,
               ticket_list: Array.isArray(d.ticket_list) ? d.ticket_list : (d.ticket_list ? d.ticket_list.split(',') : ['05802']),
               attending: d.attending || 'yes',
@@ -1240,6 +1356,8 @@
                 ci: d.ci || '',
                 email: d.email,
                 phone: d.phone,
+                institution: d.institution || '',
+                position: d.position || '',
                 ticket_count: d.ticket_count || 1,
                 ticket_list: Array.isArray(d.ticket_list) ? d.ticket_list : (d.ticket_list ? d.ticket_list.split(',') : ['05802']),
                 attending: d.attending || 'yes',
@@ -1254,7 +1372,7 @@
         }
       }
 
-      // 3. Fallback: Cargar de endpoint backend si está disponible
+      // 3. Fallback: Endpoint backend de Vercel
       if (!cloudLoaded) {
         try {
           const res = await fetch('/api/attendees');
@@ -1266,8 +1384,10 @@
               ci: s.ci || '',
               email: s.email,
               phone: s.phone,
+              institution: s.institution || '',
+              position: s.position || '',
               ticket_count: s.ticket_count || 1,
-              ticket_list: Array.isArray(s.ticket_list) ? s.ticket_list : (s.ticket_list ? s.ticket_list.split(',').map(t => t.trim()) : [s.ticket_code]),
+              ticket_list: Array.isArray(s.ticket_list) ? s.ticket_list : (s.ticket_list ? s.ticket_list.split(',').map(t => t.trim()) : ['05802']),
               attending: s.attending,
               created_at: s.created_at
             }));
@@ -1281,34 +1401,39 @@
     }
 
     function updateKpis(list) {
-      const totalPart = list.length;
-      let totalTickets = 0;
+      const total = list.length;
       let confirmed = 0;
       let declined = 0;
 
       list.forEach(a => {
-        totalTickets += parseInt(a.ticket_count) || 1;
         if (a.attending === 'yes') confirmed++;
         else declined++;
       });
 
-      document.getElementById('kpi-total').innerText = totalPart;
-      document.getElementById('kpi-tickets').innerText = totalTickets;
+      const rate = total > 0 ? Math.round((confirmed / total) * 100) : 100;
+
+      document.getElementById('kpi-total').innerText = total;
       document.getElementById('kpi-confirmed').innerText = confirmed;
       document.getElementById('kpi-declined').innerText = declined;
-      document.getElementById('badge-total-attendees').innerText = totalPart;
-      document.getElementById('filter-count').innerText = totalPart;
+      document.getElementById('kpi-rate').innerText = `${rate}%`;
+
+      const badgeTotal = document.getElementById('badge-total-attendees');
+      if (badgeTotal) badgeTotal.innerText = total;
+      const filterCount = document.getElementById('filter-count');
+      if (filterCount) filterCount.innerText = total;
     }
 
-    // 8. RENDERIZADO EXACTO DE LA TABLA DE TU IMAGEN
+    // ============================================================
+    // 9. RENDERIZADO DE TABLA ADMINISTRATIVA
+    // ============================================================
     function renderTable(list) {
       const tableBody = document.getElementById('attendees-table-body');
       
       if (!list || list.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="5" class="text-center py-8 text-slate-400 font-mono">
-              No hay participantes registrados.
+            <td colspan="6" class="text-center py-8 text-slate-400 font-mono">
+              No hay participantes registrados todavía.
             </td>
           </tr>
         `;
@@ -1316,14 +1441,8 @@
       }
 
       tableBody.innerHTML = list.map(a => {
-        const tickets = Array.isArray(a.ticket_list) ? a.ticket_list : (a.ticket_list ? a.ticket_list.split(',') : ['05802']);
-        
-        // Generar píldoras de boletos redondeadas como en tu imagen
-        const ticketPills = tickets.map(t => `
-          <span class="inline-block px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-[11px] font-mono text-slate-700 shadow-xs">
-            ${escapeHtml(t.trim())}
-          </span>
-        `).join(' ');
+        const code = (a.ticket_list && a.ticket_list[0]) ? a.ticket_list[0] : (a.ticket_list || '05802');
+        const isConfirmed = a.attending === 'yes';
 
         return `
           <tr class="hover:bg-slate-50/70 transition-colors">
@@ -1331,7 +1450,7 @@
             <!-- PARTICIPANTE (DOC.) -->
             <td class="py-4 px-6 align-middle">
               <span class="font-black text-slate-900 block text-xs tracking-tight">${escapeHtml(a.full_name)}</span>
-              ${a.ci ? `<span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-500 border border-slate-200">C.I: ${escapeHtml(a.ci)}</span>` : ''}
+              ${a.ci ? `<span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-600 border border-slate-200">C.I: ${escapeHtml(a.ci)}</span>` : ''}
             </td>
 
             <!-- INFORMACIÓN DE CONTACTO -->
@@ -1346,24 +1465,37 @@
               </div>
             </td>
 
-            <!-- CANT. BOLETOS (INSIGNIA CIRCULAR COMO EN LA IMAGEN) -->
-            <td class="py-4 px-4 align-middle text-center">
-              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-50 border border-rose-200 text-rose-900 font-mono font-extrabold text-xs">
-                ${a.ticket_count || tickets.length}
-              </span>
+            <!-- INSTITUCIÓN / CARGO -->
+            <td class="py-4 px-6 align-middle">
+              <span class="font-semibold text-slate-800 block text-xs">${escapeHtml(a.institution || 'Particular')}</span>
+              <span class="text-slate-400 block text-[11px] font-mono">${escapeHtml(a.position || 'Profesional')}</span>
             </td>
 
-            <!-- LISTA DE BOLETOS -->
-            <td class="py-4 px-6 align-middle">
-              <div class="flex flex-wrap gap-1.5 max-w-md">
-                ${ticketPills}
-              </div>
+            <!-- ESTADO -->
+            <td class="py-4 px-4 align-middle text-center">
+              ${isConfirmed ? `
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-mono font-bold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  CONFIRMADO
+                </span>
+              ` : `
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-mono font-bold">
+                  NO ASISTE
+                </span>
+              `}
+            </td>
+
+            <!-- CÓDIGO -->
+            <td class="py-4 px-4 align-middle text-center">
+              <span class="inline-block px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-[11px] font-mono font-bold text-ingelab-navy">
+                ${escapeHtml(String(code).trim())}
+              </span>
             </td>
 
             <!-- GESTIÓN -->
             <td class="py-4 px-4 align-middle text-center">
-              <button onclick="deleteRecord(${a.id})" title="Eliminar registro" class="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <button onclick="viewCredentialAdmin(${a.id})" title="Ver comprobante oficial" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-navy hover:bg-slate-100 transition-colors">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
               </button>
             </td>
 
@@ -1374,41 +1506,41 @@
       lucide.createIcons();
     }
 
-    // 9. FILTRO EN TIEMPO REAL
+    function viewCredentialAdmin(id) {
+      const record = allAttendeesCache.find(a => a.id === id);
+      if (record) {
+        showSuccessScreen(record);
+      }
+    }
+
     function filterTable() {
       const q = document.getElementById('search-input').value.toLowerCase();
       const filtered = allAttendeesCache.filter(item => {
         return item.full_name.toLowerCase().includes(q) ||
                (item.ci && item.ci.toLowerCase().includes(q)) ||
                item.email.toLowerCase().includes(q) ||
-               item.phone.toLowerCase().includes(q);
+               item.phone.toLowerCase().includes(q) ||
+               (item.institution && item.institution.toLowerCase().includes(q));
       });
       document.getElementById('filter-count').innerText = filtered.length;
       renderTable(filtered);
     }
 
-    // 10. ELIMINAR REGISTRO
-    function deleteRecord(id) {
-      if (!confirm('¿Desea eliminar este registro de la base de datos?')) return;
-      allAttendeesCache = allAttendeesCache.filter(a => a.id !== id);
-      saveStoredAttendees(allAttendeesCache);
-      loadAdminData();
-    }
-
-    // 11. EXPORTAR A EXCEL (CSV UTF-8 BOM)
     function exportToCsv() {
-      const headers = ['PARTICIPANTE', 'C.I. / DOCUMENTO', 'CORREO', 'TELEFONO', 'CANT. BOLETOS', 'LISTA DE BOLETOS', 'FECHA'];
+      const headers = ['PARTICIPANTE', 'C.I. / DOCUMENTO', 'CORREO', 'TELEFONO', 'INSTITUCION', 'CARGO', 'ESTADO', 'CODIGO_REGISTRO', 'FECHA'];
       let csv = '\uFEFF' + headers.join(';') + '\n';
 
       allAttendeesCache.forEach(a => {
-        const tickets = Array.isArray(a.ticket_list) ? a.ticket_list.join(' ') : (a.ticket_list || '');
+        const code = (a.ticket_list && a.ticket_list[0]) ? a.ticket_list[0] : (a.ticket_list || '');
         const row = [
           `"${a.full_name}"`,
           `"${a.ci || ''}"`,
           `"${a.email}"`,
           `"${a.phone}"`,
-          a.ticket_count || 1,
-          `"${tickets}"`,
+          `"${a.institution || ''}"`,
+          `"${a.position || ''}"`,
+          `"${a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE'}"`,
+          `"${code}"`,
           `"${a.created_at || ''}"`
         ];
         csv += row.join(';') + '\n';
@@ -1417,7 +1549,7 @@
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `Asistentes_INGELAB_${new Date().toISOString().slice(0,10)}.csv`;
+      link.download = `Asistentes_INGELAB_EVOLUTION_${new Date().toISOString().slice(0,10)}.csv`;
       link.click();
     }
 
@@ -1430,6 +1562,14 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
     }
+
+    // Inicialización al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      runIntro();
+      initCountdown();
+      initSupabase();
+      updateAuthUi();
+    });
   </script>
 </body>
 </html>
