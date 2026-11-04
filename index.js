@@ -158,27 +158,55 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
     const email = (b.email || '').trim().toLowerCase();
     const phone = (b.phone || '').trim();
 
-    // 2. Validación estricta en servidor
+    // 2. Validación estricta en servidor (Todos obligatorios excepto fecha de nacimiento)
     if (!fullName || fullName.length < 3) {
-      return res.status(400).json({ success: false, error: 'El nombre completo debe tener al menos 3 caracteres.' });
+      return res.status(400).json({ success: false, error: 'El nombre completo es obligatorio.' });
+    }
+    const ci = (b.ci || '').trim();
+    if (!ci || ci.length < 6) {
+      return res.status(400).json({ success: false, error: 'La C.I. o documento de identidad es obligatorio.' });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
-      return res.status(400).json({ success: false, error: 'Por favor ingrese una dirección de correo válida.' });
+      return res.status(400).json({ success: false, error: 'El correo electrónico es obligatorio y debe ser válido.' });
     }
+    if (!phone || phone.replace(/\D/g, '').length < 7) {
+      return res.status(400).json({ success: false, error: 'El teléfono móvil es obligatorio.' });
+    }
+    const institution = (b.institution || '').trim();
+    if (!institution) {
+      return res.status(400).json({ success: false, error: 'La institución o laboratorio es obligatorio.' });
+    }
+    const position = (b.position || '').trim();
+    if (!position) {
+      return res.status(400).json({ success: false, error: 'El cargo o especialidad es obligatorio.' });
+    }
+
+    // Fecha de nacimiento: Único campo no obligatorio, pero si se envía debe ser real
+    const birthDate = (b.birth_date || '').trim();
+    if (birthDate) {
+      const parts = birthDate.split('-');
+      const y = parseInt(parts[0], 10);
+      if (parts.length !== 3 || isNaN(y) || y < 1920 || y > 2012) {
+        return res.status(400).json({ success: false, error: 'La fecha de nacimiento debe ser real (año 1920 a 2012).' });
+      }
+    }
+
+    const cleanComments = (b.comments || '').replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+    const combinedComments = birthDate ? `[F.Nac: ${birthDate}] ${cleanComments}`.trim() : cleanComments;
 
     const record = {
       full_name: fullName,
-      ci: (b.ci || '').trim(),
+      ci: ci,
       email: email,
       phone: phone,
       ticket_count: 1,
       ticket_list: [],
-      institution: (b.institution || '').trim(),
-      position: (b.position || '').trim(),
+      institution: institution,
+      position: position,
       attending: b.attending || 'yes',
       dietary: [],
-      comments: (b.comments || '').trim()
+      comments: combinedComments
     };
 
     // 2.1 Verificar si el asistente ya existe para ACTUALIZAR en vez de duplicar
@@ -267,7 +295,12 @@ app.put('/api/attendees/:id', async (req, res) => {
     if (b.institution !== undefined) record.institution = b.institution.trim();
     if (b.position !== undefined) record.position = b.position.trim();
     if (b.attending) record.attending = b.attending;
-    if (b.comments !== undefined) record.comments = b.comments.trim();
+    if (b.comments !== undefined || b.birth_date !== undefined) {
+      const rawComments = b.comments !== undefined ? b.comments.trim() : '';
+      const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+      const birthDate = b.birth_date !== undefined ? b.birth_date.trim() : '';
+      record.comments = birthDate ? `[F.Nac: ${birthDate}] ${cleanComments}`.trim() : cleanComments;
+    }
 
     const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
       method: 'PATCH',

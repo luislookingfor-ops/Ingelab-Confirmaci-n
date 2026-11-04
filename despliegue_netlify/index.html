@@ -422,37 +422,46 @@
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                <!-- Nombre Completo -->
-                <div>
+                <!-- Nombre Completo (OBLIGATORIO) -->
+                <div class="sm:col-span-2">
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="fullName">
-                    Nombre y Apellidos completos <span class="text-ingelab-green">*</span>
+                    Nombre y Apellidos completos <span class="text-rose-500 font-bold">*</span>
                   </label>
-                  <input type="text" id="fullName" name="fullName" required placeholder="Ej: Juan Carlos Pérez" 
+                  <input type="text" id="fullName" name="fullName" required placeholder="Ej: Dr. Juan Carlos Pérez" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
-                <!-- Cédula de Identidad (C.I.) -->
+                <!-- Cédula de Identidad (C.I.) (OBLIGATORIO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
-                    C.I. / Documento de Identidad <span class="text-ingelab-green">*</span>
+                    C.I. / Documento de Identidad <span class="text-rose-500 font-bold">*</span>
                   </label>
                   <input type="text" id="ci" name="ci" required placeholder="Ej: 1712345678" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
                 </div>
 
-                <!-- Correo Electrónico -->
+                <!-- Fecha de Nacimiento (ÚNICO CAMPO NO OBLIGATORIO - DEBE ACEPTAR UNA FECHA REAL) -->
+                <div>
+                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="birthDate">
+                    Fecha de Nacimiento <span class="text-slate-400 font-normal lowercase">(opcional)</span>
+                  </label>
+                  <input type="date" id="birthDate" name="birth_date" min="1920-01-01" max="2012-12-31" 
+                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono text-slate-700">
+                </div>
+
+                <!-- Correo Electrónico (OBLIGATORIO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="email">
-                    Correo Electrónico <span class="text-ingelab-green">*</span>
+                    Correo Electrónico <span class="text-rose-500 font-bold">*</span>
                   </label>
                   <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
-                <!-- Teléfono / WhatsApp -->
+                <!-- Teléfono / WhatsApp (OBLIGATORIO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
-                    Teléfono Móvil / WhatsApp <span class="text-ingelab-green">*</span>
+                    Teléfono Móvil / WhatsApp <span class="text-rose-500 font-bold">*</span>
                   </label>
                   <input type="tel" id="phone" name="phone" required placeholder="Ej: 0991234567" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
@@ -461,7 +470,7 @@
               </div>
             </div>
 
-            <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL -->
+            <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL (OBLIGATORIA) -->
             <div class="pt-6 border-t border-slate-200/80">
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
@@ -470,30 +479,32 @@
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
+                <!-- Institución / Laboratorio (OBLIGATORIO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="institution">
-                    Institución o Laboratorio Clínico
+                    Institución o Laboratorio Clínico <span class="text-rose-500 font-bold">*</span>
                   </label>
-                  <input type="text" id="institution" name="institution" placeholder="Hospital / Laboratorio Clínico" 
+                  <input type="text" id="institution" name="institution" required placeholder="Ej: Hospital Metropolitano / Lab. Clínico" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
+                <!-- Cargo / Especialidad (OBLIGATORIO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="position">
-                    Cargo o Especialidad
+                    Cargo o Especialidad <span class="text-rose-500 font-bold">*</span>
                   </label>
-                  <input type="text" id="position" name="position" placeholder="Director Técnico / Bioquímico" 
+                  <input type="text" id="position" name="position" required placeholder="Ej: Director Técnico / Bioquímico" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
               </div>
             </div>
 
-            <!-- SECCIÓN 03: CONFIRMACIÓN DE ASISTENCIA -->
+            <!-- SECCIÓN 03: CONFIRMACIÓN DE ASISTENCIA (OBLIGATORIA) -->
             <div class="pt-6 border-t border-slate-200/80">
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">03</span>
-                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Confirmación de Asistencia</h3>
+                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Confirmación de Asistencia <span class="text-rose-500 font-bold">*</span></h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -515,15 +526,6 @@
                 </label>
 
               </div>
-            </div>
-
-            <!-- SECCIÓN 04: OBSERVACIONES -->
-            <div class="pt-6 border-t border-slate-200/80">
-              <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="comments">
-                Observaciones o Consultas Especiales (Opcional)
-              </label>
-              <textarea id="comments" name="comments" rows="2" placeholder="Indique cualquier requerimiento logístico o consulta especial."
-                class="w-full p-4 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green transition-all shadow-sm"></textarea>
             </div>
 
             <!-- BOTÓN DE ENVÍO -->
@@ -609,6 +611,10 @@
               <div>
                 <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Cargo / Especialidad:</span>
                 <span id="success-display-position" class="text-slate-700 block mt-0.5">-</span>
+              </div>
+              <div id="success-birthdate-box">
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Fecha de Nacimiento:</span>
+                <span id="success-display-birthdate" class="text-slate-700 block mt-0.5">-</span>
               </div>
             </div>
 
@@ -818,13 +824,18 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa</label>
-            <input type="text" id="create-institution" placeholder="Hospital / Laboratorio" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa *</label>
+            <input type="text" id="create-institution" required placeholder="Hospital / Laboratorio" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad</label>
-            <input type="text" id="create-position" placeholder="Bioquímico / Director" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
+            <input type="text" id="create-position" required placeholder="Bioquímico / Director" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Fecha de Nacimiento (Opcional)</label>
+          <input type="date" id="create-birthdate" min="1920-01-01" max="2012-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div>
@@ -900,13 +911,18 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa</label>
-            <input type="text" id="edit-institution" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa *</label>
+            <input type="text" id="edit-institution" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad</label>
-            <input type="text" id="edit-position" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
+            <input type="text" id="edit-position" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Fecha de Nacimiento (Opcional)</label>
+          <input type="date" id="edit-birthdate" min="1920-01-01" max="2012-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div>
@@ -1406,22 +1422,50 @@
     // ============================================================
     // 8. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA
     // ============================================================
+    // ============================================================
+    // VALIDACIÓN ESTRICTA DE CAMPOS OBLIGATORIOS Y FECHA REAL
+    // ============================================================
+    function validateBirthDateReal(dateStr) {
+      if (!dateStr) return true; // Es el único campo NO obligatorio
+      const regex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!regex.test(dateStr)) return false;
+
+      const parts = dateStr.split('-');
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const day = parseInt(parts[2], 10);
+
+      const d = new Date(year, month - 1, day);
+      if (d.getFullYear() !== year || d.getMonth() !== (month - 1) || d.getDate() !== day) {
+        return false;
+      }
+
+      const now = new Date();
+      if (d > now) return false; // No puede ser fecha futura
+
+      // Debe ser una fecha real (edad entre 14 y 106 años)
+      if (year < 1920 || year > (now.getFullYear() - 14)) {
+        return false;
+      }
+      return true;
+    }
+
+    function markInputError(id, msg) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
+      el.focus();
+      showToast(msg || 'Campo obligatorio incompleto');
+      setTimeout(() => {
+        el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
+      }, 4000);
+    }
+
     let isSubmittingForm = false;
 
     async function handleSubmit(e) {
       e.preventDefault();
       
-      if (isSubmittingForm) return;
-      isSubmittingForm = true;
-
-      const submitBtn = document.getElementById('submit-btn');
-      const submitText = document.getElementById('submit-btn-text');
-      const originalText = submitText.innerText;
-
-      submitBtn.disabled = true;
-      submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
-      submitText.innerText = 'REGISTRANDO EN BASE DE DATOS...';
-
       const form = e.target;
       const formData = new FormData(form);
 
@@ -1434,15 +1478,75 @@
         return;
       }
 
+      // 2. VALIDACIÓN ESTRICTA: TODOS LOS CAMPOS SON OBLIGATORIOS EXCEPTO FECHA DE NACIMIENTO
+      const fullName = (formData.get('fullName') || '').trim();
+      const ci = (formData.get('ci') || '').trim();
+      const email = (formData.get('email') || '').trim();
+      const phone = (formData.get('phone') || '').trim();
+      const institution = (formData.get('institution') || '').trim();
+      const position = (formData.get('position') || '').trim();
+      const birthDate = (formData.get('birth_date') || '').trim();
+      const attending = formData.get('attending') || 'yes';
+
+      if (!fullName || fullName.length < 3) {
+        markInputError('fullName', 'Por favor ingrese su Nombre y Apellidos completos (*)');
+        return;
+      }
+
+      if (!ci || ci.length < 6) {
+        markInputError('ci', 'Por favor ingrese su C.I. o Documento de Identidad (*)');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        markInputError('email', 'Por favor ingrese un Correo Electrónico válido (*)');
+        return;
+      }
+
+      const phoneDigits = phone.replace(/\D/g, '');
+      if (!phone || phoneDigits.length < 7) {
+        markInputError('phone', 'Por favor ingrese un Teléfono Móvil o WhatsApp válido (*)');
+        return;
+      }
+
+      if (!institution) {
+        markInputError('institution', 'Por favor ingrese su Institución o Laboratorio Clínico (*)');
+        return;
+      }
+
+      if (!position) {
+        markInputError('position', 'Por favor ingrese su Cargo o Especialidad (*)');
+        return;
+      }
+
+      // Validar Fecha de Nacimiento (Único campo NO obligatorio, pero si se ingresa debe ser real)
+      if (birthDate && !validateBirthDateReal(birthDate)) {
+        markInputError('birthDate', 'Fecha de nacimiento no válida. Ingrese una fecha real (año 1920 a 2012)');
+        return;
+      }
+
+      if (isSubmittingForm) return;
+      isSubmittingForm = true;
+
+      const submitBtn = document.getElementById('submit-btn');
+      const submitText = document.getElementById('submit-btn-text');
+      const originalText = submitText.innerText;
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+      submitText.innerText = 'REGISTRANDO EN BASE DE DATOS...';
+
       const newRecord = {
         id: Date.now(),
-        full_name: (formData.get('fullName') || '').trim().toUpperCase(),
-        ci: (formData.get('ci') || '').trim(),
-        email: (formData.get('email') || '').trim().toLowerCase(),
-        phone: (formData.get('phone') || '').trim(),
-        institution: (formData.get('institution') || '').trim(),
-        position: (formData.get('position') || '').trim(),
-        attending: formData.get('attending') || 'yes',
+        full_name: fullName.toUpperCase(),
+        ci: ci,
+        email: email.toLowerCase(),
+        phone: phone,
+        institution: institution,
+        position: position,
+        birth_date: birthDate || '',
+        attending: attending,
         ticket_count: 1,
         comments: (formData.get('comments') || '').trim(),
         created_at: new Date().toISOString()
@@ -1544,6 +1648,10 @@
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
+      // Empaquetar fecha de nacimiento en comments para persistencia permanente en Supabase
+      const cleanComments = (record.comments || '').replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+      const combinedComments = record.birth_date ? `[F.Nac: ${record.birth_date}] ${cleanComments}`.trim() : cleanComments;
+
       const payload = {
         full_name: record.full_name,
         ci: record.ci || '',
@@ -1555,7 +1663,7 @@
         ticket_count: 1,
         ticket_list: [],
         dietary: [],
-        comments: record.comments || ''
+        comments: combinedComments
       };
 
       let saved = false;
@@ -1727,19 +1835,26 @@
 
           if (!error && data) {
             const filteredData = data.filter(d => !isRecordDeleted(d));
-            allAttendeesCache = deduplicateAttendees(filteredData).map(d => ({
-              id: d.id,
-              full_name: d.full_name,
-              ci: d.ci || '',
-              email: d.email,
-              phone: d.phone,
-              institution: d.institution || '',
-              position: d.position || '',
-              ticket_count: d.ticket_count || 1,
-              attending: d.attending || 'yes',
-              comments: d.comments || '',
-              created_at: d.created_at
-            }));
+            allAttendeesCache = deduplicateAttendees(filteredData).map(d => {
+              const rawComments = d.comments || '';
+              const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
+              const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
+              const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+              return {
+                id: d.id,
+                full_name: d.full_name,
+                ci: d.ci || '',
+                email: d.email,
+                phone: d.phone,
+                institution: d.institution || '',
+                position: d.position || '',
+                birth_date: birthDate,
+                ticket_count: d.ticket_count || 1,
+                attending: d.attending || 'yes',
+                comments: cleanComments,
+                created_at: d.created_at
+              };
+            });
             saveStoredAttendees(allAttendeesCache);
             cloudLoaded = true;
           }
@@ -1865,6 +1980,7 @@
         phone: document.getElementById('create-phone').value.trim(),
         institution: document.getElementById('create-institution').value.trim(),
         position: document.getElementById('create-position').value.trim(),
+        birth_date: document.getElementById('create-birthdate') ? document.getElementById('create-birthdate').value.trim() : '',
         attending: document.getElementById('create-attending').value,
         ticket_count: 1,
         comments: document.getElementById('create-comments').value.trim(),
@@ -1922,6 +2038,9 @@
       document.getElementById('edit-phone').value = item.phone || '';
       document.getElementById('edit-institution').value = item.institution || '';
       document.getElementById('edit-position').value = item.position || '';
+      if (document.getElementById('edit-birthdate')) {
+        document.getElementById('edit-birthdate').value = item.birth_date || '';
+      }
       document.getElementById('edit-attending').value = item.attending || 'yes';
       document.getElementById('edit-comments').value = item.comments || '';
 
@@ -1949,6 +2068,7 @@
         phone: document.getElementById('edit-phone').value.trim(),
         institution: document.getElementById('edit-institution').value.trim(),
         position: document.getElementById('edit-position').value.trim(),
+        birth_date: document.getElementById('edit-birthdate') ? document.getElementById('edit-birthdate').value.trim() : '',
         attending: document.getElementById('edit-attending').value,
         comments: document.getElementById('edit-comments').value.trim()
       };
@@ -2183,6 +2303,7 @@
         'TELÉFONO': a.phone || '',
         'INSTITUCIÓN / EMPRESA': a.institution || 'Particular',
         'CARGO / ESPECIALIDAD': a.position || 'Profesional de la Salud',
+        'FECHA DE NACIMIENTO': a.birth_date || 'No especificada',
         'ESTADO': a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE',
         'OBSERVACIONES': a.comments || '',
         'FECHA DE REGISTRO': a.created_at ? new Date(a.created_at).toLocaleString('es-EC') : ''
