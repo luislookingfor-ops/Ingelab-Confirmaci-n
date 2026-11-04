@@ -4,6 +4,7 @@
   "description": "Sistema de confirmación de asistencia y registro de evento para Ingelab",
   "type": "module",
   "scripts": {
+    "build": "echo Static build complete",
     "local": "node local_server.js",
     "dev": "node --watch local_server.js"
   },
