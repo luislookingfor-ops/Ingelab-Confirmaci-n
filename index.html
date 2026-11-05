@@ -422,30 +422,32 @@
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                <!-- Nombre Completo (OBLIGATORIO) -->
+                <!-- Nombre Completo (OBLIGATORIO - SOLO TEXTO) -->
                 <div class="sm:col-span-2">
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="fullName">
-                    Nombre y Apellidos completos <span class="text-rose-500 font-bold">*</span>
+                    Nombre y Apellidos completos <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
                   </label>
                   <input type="text" id="fullName" name="fullName" required placeholder="Ej: Dr. Juan Carlos Pérez" 
+                    oninput="this.value = this.value.replace(/[0-9]/g, '')"
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
-                <!-- Cédula de Identidad (C.I.) (OBLIGATORIO) -->
+                <!-- Cédula de Identidad (C.I.) (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
-                    C.I. / Documento de Identidad <span class="text-rose-500 font-bold">*</span>
+                    C.I. / Documento de Identidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
                   </label>
-                  <input type="text" id="ci" name="ci" required placeholder="Ej: 1712345678" 
+                  <input type="text" id="ci" name="ci" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 1712345678)" 
+                    oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
                 </div>
 
-                <!-- Fecha de Nacimiento (ÚNICO CAMPO NO OBLIGATORIO - DEBE ACEPTAR UNA FECHA REAL) -->
+                <!-- Fecha de Nacimiento (ÚNICO CAMPO NO OBLIGATORIO - FECHA REAL NO FICTICIA NI LEJANA) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="birthDate">
-                    Fecha de Nacimiento <span class="text-slate-400 font-normal lowercase">(opcional)</span>
+                    Fecha de Nacimiento <span class="text-slate-400 font-normal lowercase">(opcional - fecha real)</span>
                   </label>
-                  <input type="date" id="birthDate" name="birth_date" min="1920-01-01" max="2012-12-31" 
+                  <input type="date" id="birthDate" name="birth_date" min="1935-01-01" max="2008-12-31" 
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono text-slate-700">
                 </div>
 
@@ -458,19 +460,20 @@
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
-                <!-- Teléfono / WhatsApp (OBLIGATORIO) -->
+                <!-- Teléfono / WhatsApp (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
-                    Teléfono Móvil / WhatsApp <span class="text-rose-500 font-bold">*</span>
+                    Teléfono Móvil / WhatsApp <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
                   </label>
-                  <input type="tel" id="phone" name="phone" required placeholder="Ej: 0991234567" 
+                  <input type="tel" id="phone" name="phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 0991234567)" 
+                    oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
                 </div>
 
               </div>
             </div>
 
-            <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL (OBLIGATORIA) -->
+            <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL (OBLIGATORIA - SOLO TEXTO) -->
             <div class="pt-6 border-t border-slate-200/80">
               <div class="flex items-center gap-3 mb-5">
                 <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
@@ -479,21 +482,23 @@
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
-                <!-- Institución / Laboratorio (OBLIGATORIO) -->
+                <!-- Institución / Laboratorio (OBLIGATORIO - SOLO TEXTO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="institution">
-                    Institución o Laboratorio Clínico <span class="text-rose-500 font-bold">*</span>
+                    Institución o Laboratorio Clínico <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
                   </label>
                   <input type="text" id="institution" name="institution" required placeholder="Ej: Hospital Metropolitano / Lab. Clínico" 
+                    oninput="this.value = this.value.replace(/[0-9]/g, '')"
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
-                <!-- Cargo / Especialidad (OBLIGATORIO) -->
+                <!-- Cargo / Especialidad (OBLIGATORIO - SOLO TEXTO) -->
                 <div>
                   <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="position">
-                    Cargo o Especialidad <span class="text-rose-500 font-bold">*</span>
+                    Cargo o Especialidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
                   </label>
                   <input type="text" id="position" name="position" required placeholder="Ej: Director Técnico / Bioquímico" 
+                    oninput="this.value = this.value.replace(/[0-9]/g, '')"
                     class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
                 </div>
 
@@ -803,17 +808,17 @@
       <form id="create-attendee-form" onsubmit="handleAdminCreate(event)" class="space-y-4 text-xs font-mono">
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
-          <input type="text" id="create-name" required placeholder="Ej: Dr. Roberto Mendoza" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          <input type="text" id="create-name" required placeholder="Ej: Dr. Roberto Mendoza" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">C.I. / Documento *</label>
-            <input type="text" id="create-ci" required placeholder="1712345678" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="create-ci" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
-            <input type="tel" id="create-phone" required placeholder="0991234567" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="tel" id="create-phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
@@ -825,17 +830,17 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa *</label>
-            <input type="text" id="create-institution" required placeholder="Hospital / Laboratorio" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="create-institution" required placeholder="Hospital / Laboratorio" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
-            <input type="text" id="create-position" required placeholder="Bioquímico / Director" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="create-position" required placeholder="Bioquímico / Director" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Fecha de Nacimiento (Opcional)</label>
-          <input type="date" id="create-birthdate" min="1920-01-01" max="2012-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          <input type="date" id="create-birthdate" min="1935-01-01" max="2008-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div>
@@ -890,17 +895,17 @@
 
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
-          <input type="text" id="edit-name" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          <input type="text" id="edit-name" required oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">C.I. / Documento *</label>
-            <input type="text" id="edit-ci" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="edit-ci" required maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
-            <input type="tel" id="edit-phone" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="tel" id="edit-phone" required maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
@@ -912,17 +917,17 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa *</label>
-            <input type="text" id="edit-institution" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="edit-institution" required oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
-            <input type="text" id="edit-position" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="edit-position" required oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">Fecha de Nacimiento (Opcional)</label>
-          <input type="date" id="edit-birthdate" min="1920-01-01" max="2012-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          <input type="date" id="edit-birthdate" min="1935-01-01" max="2008-12-31" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div>
@@ -1436,14 +1441,14 @@
 
       const d = new Date(year, month - 1, day);
       if (d.getFullYear() !== year || d.getMonth() !== (month - 1) || d.getDate() !== day) {
-        return false;
+        return false; // Fecha ficticia inexistente en el calendario
       }
 
       const now = new Date();
       if (d > now) return false; // No puede ser fecha futura
 
-      // Debe ser una fecha real (edad entre 14 y 106 años)
-      if (year < 1920 || year > (now.getFullYear() - 14)) {
+      // Fechas reales, no ficticias ni muy lejanas (año entre 1935 y 2008: 18 a 91 años)
+      if (year < 1935 || year > 2008) {
         return false;
       }
       return true;
@@ -1477,51 +1482,70 @@
         return;
       }
 
-      // 2. VALIDACIÓN ESTRICTA: TODOS LOS CAMPOS SON OBLIGATORIOS EXCEPTO FECHA DE NACIMIENTO
+      // 2. VALIDACIÓN ESTRICTA: 10 DÍGITOS EN CÉDULA Y TELÉFONO, SOLO TEXTO EN NOMBRE/INSTITUCIÓN/CARGO, FECHA REAL
       const fullName = (formData.get('fullName') || '').trim();
-      const ci = (formData.get('ci') || '').trim();
+      const ciRaw = (formData.get('ci') || '').trim();
       const email = (formData.get('email') || '').trim();
-      const phone = (formData.get('phone') || '').trim();
+      const phoneRaw = (formData.get('phone') || '').trim();
       const institution = (formData.get('institution') || '').trim();
       const position = (formData.get('position') || '').trim();
       const birthDate = (formData.get('birth_date') || '').trim();
       const attending = formData.get('attending') || 'yes';
 
+      // 2.1 Nombre y apellidos: obligatorio y solo texto (no números)
       if (!fullName || fullName.length < 3) {
         markInputError('fullName', 'Por favor ingrese su Nombre y Apellidos completos (*)');
         return;
       }
-
-      if (!ci || ci.length < 6) {
-        markInputError('ci', 'Por favor ingrese su C.I. o Documento de Identidad (*)');
+      if (/[0-9]/.test(fullName)) {
+        markInputError('fullName', 'El Nombre y Apellidos solo debe contener texto, no números (*)');
         return;
       }
 
+      // 2.2 Cédula de Identidad: obligatorio, solo dígitos, exactamente 10 dígitos numéricos
+      const ci = ciRaw.replace(/\D/g, '');
+      if (!ci || ci.length !== 10 || !/^\d{10}$/.test(ci)) {
+        markInputError('ci', 'La Cédula de Identidad debe tener exactamente 10 dígitos numéricos (*)');
+        return;
+      }
+
+      // 2.3 Correo Electrónico: obligatorio y válido
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!email || !emailRegex.test(email)) {
         markInputError('email', 'Por favor ingrese un Correo Electrónico válido (*)');
         return;
       }
 
-      const phoneDigits = phone.replace(/\D/g, '');
-      if (!phone || phoneDigits.length < 7) {
-        markInputError('phone', 'Por favor ingrese un Teléfono Móvil o WhatsApp válido (*)');
+      // 2.4 Teléfono Móvil: obligatorio, solo dígitos, exactamente 10 dígitos numéricos
+      const phone = phoneRaw.replace(/\D/g, '');
+      if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+        markInputError('phone', 'El Teléfono móvil debe tener exactamente 10 dígitos numéricos (*)');
         return;
       }
 
+      // 2.5 Institución o Laboratorio Clínico: obligatorio y solo texto (no números)
       if (!institution) {
         markInputError('institution', 'Por favor ingrese su Institución o Laboratorio Clínico (*)');
         return;
       }
+      if (/[0-9]/.test(institution)) {
+        markInputError('institution', 'La Institución o Laboratorio solo debe contener texto, no números (*)');
+        return;
+      }
 
+      // 2.6 Cargo o Especialidad: obligatorio y solo texto (no números)
       if (!position) {
         markInputError('position', 'Por favor ingrese su Cargo o Especialidad (*)');
         return;
       }
+      if (/[0-9]/.test(position)) {
+        markInputError('position', 'El Cargo o Especialidad solo debe contener texto, no números (*)');
+        return;
+      }
 
-      // Validar Fecha de Nacimiento (Único campo NO obligatorio, pero si se ingresa debe ser real)
+      // 2.7 Fecha de Nacimiento (Único campo NO obligatorio, pero si se ingresa debe ser real, no ficticia ni muy lejana)
       if (birthDate && !validateBirthDateReal(birthDate)) {
-        markInputError('birthDate', 'Fecha de nacimiento no válida. Ingrese una fecha real (año 1920 a 2012)');
+        markInputError('birthDate', 'Fecha de nacimiento no válida. Ingrese una fecha real y no ficticia (año entre 1935 y 2008)');
         return;
       }
 
@@ -2011,14 +2035,21 @@
 
       const nameEl = document.getElementById('create-name') || document.getElementById('create-fullname');
       const fullName = nameEl ? nameEl.value.trim().toUpperCase() : '';
-      const ci = document.getElementById('create-ci') ? document.getElementById('create-ci').value.trim() : '';
+      const ci = document.getElementById('create-ci') ? document.getElementById('create-ci').value.trim().replace(/\D/g, '') : '';
       const email = document.getElementById('create-email') ? document.getElementById('create-email').value.trim().toLowerCase() : '';
-      const phone = document.getElementById('create-phone') ? document.getElementById('create-phone').value.trim() : '';
+      const phone = document.getElementById('create-phone') ? document.getElementById('create-phone').value.trim().replace(/\D/g, '') : '';
       const institution = document.getElementById('create-institution') ? document.getElementById('create-institution').value.trim() : '';
       const position = document.getElementById('create-position') ? document.getElementById('create-position').value.trim() : '';
       const birthDate = document.getElementById('create-birthdate') ? document.getElementById('create-birthdate').value.trim() : '';
       const attending = document.getElementById('create-attending') ? document.getElementById('create-attending').value : 'yes';
       const comments = document.getElementById('create-comments') ? document.getElementById('create-comments').value.trim() : '';
+
+      if (/[0-9]/.test(fullName)) { alert('El Nombre Completo no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(ci)) { alert('La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(institution)) { alert('La Institución no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (birthDate && !validateBirthDateReal(birthDate)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
 
       const newRecord = {
         id: Date.now(),
@@ -2131,16 +2162,33 @@
         btn.innerHTML = '<span>Guardando cambios...</span>';
       }
 
+      const full_name = document.getElementById('edit-name').value.trim().toUpperCase();
+      const ci = document.getElementById('edit-ci').value.trim().replace(/\D/g, '');
+      const email = document.getElementById('edit-email').value.trim().toLowerCase();
+      const phone = document.getElementById('edit-phone').value.trim().replace(/\D/g, '');
+      const institution = document.getElementById('edit-institution').value.trim();
+      const position = document.getElementById('edit-position').value.trim();
+      const birth_date = document.getElementById('edit-birthdate') ? document.getElementById('edit-birthdate').value.trim() : '';
+      const attending = document.getElementById('edit-attending').value;
+      const comments = document.getElementById('edit-comments').value.trim();
+
+      if (/[0-9]/.test(full_name)) { alert('El Nombre Completo no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(ci)) { alert('La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(institution)) { alert('La Institución no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (birth_date && !validateBirthDateReal(birth_date)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
+
       const updatedFields = {
-        full_name: document.getElementById('edit-name').value.trim().toUpperCase(),
-        ci: document.getElementById('edit-ci').value.trim(),
-        email: document.getElementById('edit-email').value.trim().toLowerCase(),
-        phone: document.getElementById('edit-phone').value.trim(),
-        institution: document.getElementById('edit-institution').value.trim(),
-        position: document.getElementById('edit-position').value.trim(),
-        birth_date: document.getElementById('edit-birthdate') ? document.getElementById('edit-birthdate').value.trim() : '',
-        attending: document.getElementById('edit-attending').value,
-        comments: document.getElementById('edit-comments').value.trim()
+        full_name,
+        ci,
+        email,
+        phone,
+        institution,
+        position,
+        birth_date,
+        attending,
+        comments
       };
 
       // 1. Actualizar en caché local inmediatamente

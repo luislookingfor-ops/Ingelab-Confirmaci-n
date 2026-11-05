@@ -158,37 +158,55 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
     const email = (b.email || '').trim().toLowerCase();
     const phone = (b.phone || '').trim();
 
-    // 2. Validación estricta en servidor (Todos obligatorios excepto fecha de nacimiento)
+    // 2. Validación estricta en servidor: 10 dígitos numéricos en cédula y teléfono, solo texto en nombre/institución/cargo, fecha real
     if (!fullName || fullName.length < 3) {
       return res.status(400).json({ success: false, error: 'El nombre completo es obligatorio.' });
     }
-    const ci = (b.ci || '').trim();
-    if (!ci || ci.length < 6) {
-      return res.status(400).json({ success: false, error: 'La C.I. o documento de identidad es obligatorio.' });
+    if (/[0-9]/.test(fullName)) {
+      return res.status(400).json({ success: false, error: 'El nombre completo solo puede contener texto, no números.' });
     }
+
+    const ci = (b.ci || '').trim().replace(/\D/g, '');
+    if (!ci || ci.length !== 10 || !/^\d{10}$/.test(ci)) {
+      return res.status(400).json({ success: false, error: 'La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.' });
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       return res.status(400).json({ success: false, error: 'El correo electrónico es obligatorio y debe ser válido.' });
     }
-    if (!phone || phone.replace(/\D/g, '').length < 7) {
-      return res.status(400).json({ success: false, error: 'El teléfono móvil es obligatorio.' });
+
+    const phone = (b.phone || '').trim().replace(/\D/g, '');
+    if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+      return res.status(400).json({ success: false, error: 'El teléfono móvil debe tener exactamente 10 dígitos numéricos.' });
     }
+
     const institution = (b.institution || '').trim();
     if (!institution) {
       return res.status(400).json({ success: false, error: 'La institución o laboratorio es obligatorio.' });
     }
+    if (/[0-9]/.test(institution)) {
+      return res.status(400).json({ success: false, error: 'La institución o laboratorio solo puede contener texto, no números.' });
+    }
+
     const position = (b.position || '').trim();
     if (!position) {
       return res.status(400).json({ success: false, error: 'El cargo o especialidad es obligatorio.' });
     }
+    if (/[0-9]/.test(position)) {
+      return res.status(400).json({ success: false, error: 'El cargo o especialidad solo puede contener texto, no números.' });
+    }
 
-    // Fecha de nacimiento: Único campo no obligatorio, pero si se envía debe ser real
+    // Fecha de nacimiento: Único campo no obligatorio, pero si se envía debe ser real (no ficticia ni muy lejana: 1935 a 2008)
     const birthDate = (b.birth_date || '').trim();
     if (birthDate) {
       const parts = birthDate.split('-');
       const y = parseInt(parts[0], 10);
-      if (parts.length !== 3 || isNaN(y) || y < 1920 || y > 2012) {
-        return res.status(400).json({ success: false, error: 'La fecha de nacimiento debe ser real (año 1920 a 2012).' });
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const dateObj = new Date(y, m - 1, d);
+      if (parts.length !== 3 || isNaN(y) || y < 1935 || y > 2008 || dateObj.getFullYear() !== y || dateObj.getMonth() !== (m - 1) || dateObj.getDate() !== d) {
+        return res.status(400).json({ success: false, error: 'La fecha de nacimiento debe ser real y coherente (año 1935 a 2008).' });
       }
     }
 
