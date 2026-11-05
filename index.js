@@ -156,8 +156,7 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
 
     const fullName = (b.fullName || b.full_name || '').trim().toUpperCase();
     const email = (b.email || '').trim().toLowerCase();
-    const phone = (b.phone || '').trim();
-
+    
     // 2. Validación estricta en servidor: 10 dígitos numéricos en cédula y teléfono, solo texto en nombre/institución/cargo, fecha real
     if (!fullName || fullName.length < 3) {
       return res.status(400).json({ success: false, error: 'El nombre completo es obligatorio.' });
