@@ -411,6 +411,9 @@ app.delete('/api/attendees/:id', async (req, res) => {
     let fullName = b.full_name || '';
     let email = b.email || '';
     let ci = b.ci || '';
+    let phone = b.phone || '0000000000';
+    let institution = b.institution || 'Particular';
+    let position = b.position || 'Profesional';
 
     // Si no vino en el body, consultar de Supabase
     if (!fullName && !email) {
@@ -423,13 +426,16 @@ app.delete('/api/attendees/:id', async (req, res) => {
           if (rows && rows[0]) {
             fullName = rows[0].full_name;
             email = rows[0].email;
-            ci = rows[0].ci;
+            ci = rows[0].ci || '';
+            phone = rows[0].phone || '0000000000';
+            institution = rows[0].institution || 'Particular';
+            position = rows[0].position || 'Profesional';
           }
         }
       } catch (e) {}
     }
 
-    // Insertar tombstone de eliminación definitiva en Supabase
+    // Insertar tombstone de eliminación definitiva en Supabase con todas las columnas obligatorias
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
         method: 'POST',
@@ -443,9 +449,13 @@ app.delete('/api/attendees/:id', async (req, res) => {
           full_name: fullName,
           email: email,
           ci: ci || '',
+          phone: phone,
+          institution: institution,
+          position: position,
           attending: 'deleted',
           ticket_count: 0,
           ticket_list: [],
+          dietary: [],
           comments: '[DELETED]',
           created_at: new Date().toISOString()
         }])

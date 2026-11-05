@@ -2382,9 +2382,9 @@
         full_name: name || (item ? item.full_name : ''),
         ci: ci || '',
         email: email || '',
-        phone: item ? item.phone || '' : '',
-        institution: item ? item.institution || '' : '',
-        position: item ? item.position || '' : '',
+        phone: (item && item.phone) ? item.phone : '0000000000',
+        institution: (item && item.institution) ? item.institution : 'Particular',
+        position: (item && item.position) ? item.position : 'Profesional',
         attending: 'deleted',
         ticket_count: 0,
         ticket_list: [],
@@ -2436,7 +2436,14 @@
         await fetch(`/api/attendees/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ full_name: name, email, ci })
+          body: JSON.stringify({ 
+            full_name: name, 
+            email, 
+            ci, 
+            phone: (item && item.phone) ? item.phone : '0000000000',
+            institution: (item && item.institution) ? item.institution : 'Particular',
+            position: (item && item.position) ? item.position : 'Profesional'
+          })
         });
       } catch (err) {}
     }
