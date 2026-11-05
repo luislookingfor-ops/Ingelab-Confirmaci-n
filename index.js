@@ -117,6 +117,45 @@ app.get('/api/health', (req, res) => {
 });
 
 // Listado de asistentes
+// Función auxiliar para deduplicar y excluir registros eliminados en servidor
+function deduplicateAttendeesServer(list) {
+  if (!Array.isArray(list)) return [];
+  const sorted = [...list].sort((a, b) => {
+    const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+    const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+    if (timeB !== timeA) return timeB - timeA;
+    return Number(b.id || 0) - Number(a.id || 0);
+  });
+
+  const seenNames = new Set();
+  const seenEmails = new Set();
+  const seenCis = new Set();
+  const uniqueList = [];
+
+  for (const item of sorted) {
+    const nameKey = (item.full_name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
+    const emailKey = (item.email || '').trim().toLowerCase();
+    const ciKey = (item.ci || '').trim();
+
+    let isDuplicate = false;
+    if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) isDuplicate = true;
+    if (emailKey && seenEmails.has(emailKey)) isDuplicate = true;
+    if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) isDuplicate = true;
+
+    if (!isDuplicate) {
+      if (nameKey && nameKey.length >= 3) seenNames.add(nameKey);
+      if (emailKey) seenEmails.add(emailKey);
+      if (ciKey && ciKey.length >= 6) seenCis.add(ciKey);
+
+      const isDeleted = item.attending === 'deleted' || String(item.comments || '').includes('[DELETED]');
+      if (!isDeleted) {
+        uniqueList.push(item);
+      }
+    }
+  }
+  return uniqueList;
+}
+
 app.get('/api/attendees', async (req, res) => {
   try {
     const controller = new AbortController();
@@ -133,7 +172,8 @@ app.get('/api/attendees', async (req, res) => {
 
     if (response.ok) {
       const attendees = await response.json();
-      return res.json({ success: true, attendees: attendees || [] });
+      const cleanAttendees = deduplicateAttendeesServer(attendees || []);
+      return res.json({ success: true, attendees: cleanAttendees });
     }
     const errText = await response.text();
     res.status(response.status).json({ success: false, error: errText });
@@ -367,19 +407,60 @@ app.put('/api/attendees/:id', async (req, res) => {
 app.delete('/api/attendees/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
-      method: 'DELETE',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
+    const b = req.body || {};
+    let fullName = b.full_name || '';
+    let email = b.email || '';
+    let ci = b.ci || '';
 
-    if (response.ok) {
-      return res.json({ success: true });
+    // Si no vino en el body, consultar de Supabase
+    if (!fullName && !email) {
+      try {
+        const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}&limit=1`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (checkRes.ok) {
+          const rows = await checkRes.json();
+          if (rows && rows[0]) {
+            fullName = rows[0].full_name;
+            email = rows[0].email;
+            ci = rows[0].ci;
+          }
+        }
+      } catch (e) {}
     }
-    const errText = await response.text();
-    res.status(response.status).json({ success: false, error: errText });
+
+    // Insertar tombstone de eliminación definitiva en Supabase
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify([{
+          full_name: fullName,
+          email: email,
+          ci: ci || '',
+          attending: 'deleted',
+          ticket_count: 0,
+          ticket_list: [],
+          comments: '[DELETED]',
+          created_at: new Date().toISOString()
+        }])
+      });
+    } catch (e) {}
+
+    // Intentar DELETE físico
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+    } catch (e) {}
+
+    return res.json({ success: true, message: 'Asistente eliminado definitivamente' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

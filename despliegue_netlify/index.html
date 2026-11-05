@@ -1263,8 +1263,81 @@
       localStorage.removeItem('ingelab_deleted_registry');
     } catch (e) {}
 
+    // ============================================================
+    // GESTIÓN ROBUSTA DE REGISTROS ELIMINADOS DEFINITIVAMENTE (TOMBSTONES)
+    // ============================================================
+    function getDeletedTombstones() {
+      try {
+        return JSON.parse(localStorage.getItem('ingelab_deleted_tombstones_v1') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function addDeletedTombstone(item) {
+      if (!item) return;
+      try {
+        const tombstones = getDeletedTombstones();
+        const now = Date.now();
+        tombstones.push({
+          nameKey: normalizeAttendeeStr(item.full_name),
+          emailKey: (item.email || '').trim().toLowerCase(),
+          ciKey: (item.ci || '').trim(),
+          id: String(item.id || ''),
+          timestamp: now
+        });
+        localStorage.setItem('ingelab_deleted_tombstones_v1', JSON.stringify(tombstones));
+      } catch (e) {}
+    }
+
+    function clearTombstoneForAttendee(record) {
+      if (!record) return;
+      try {
+        let tombstones = getDeletedTombstones();
+        const nameKey = normalizeAttendeeStr(record.full_name);
+        const emailKey = (record.email || '').trim().toLowerCase();
+        const ciKey = (record.ci || '').trim();
+        const idKey = String(record.id || '');
+        tombstones = tombstones.filter(t => {
+          if (idKey && t.id === idKey) return false;
+          if (nameKey && t.nameKey === nameKey) return false;
+          if (emailKey && t.emailKey === emailKey) return false;
+          if (ciKey && t.ciKey === ciKey) return false;
+          return true;
+        });
+        localStorage.setItem('ingelab_deleted_tombstones_v1', JSON.stringify(tombstones));
+      } catch (e) {}
+    }
+
     function isRecordDeleted(record) {
-      return false; // El borrado es real y directo en base de datos. Ningún registro nuevo se oculta.
+      if (!record) return false;
+      if (record.attending === 'deleted' || String(record.comments || '').includes('[DELETED]')) {
+        return true;
+      }
+      const tombstones = getDeletedTombstones();
+      if (!tombstones || tombstones.length === 0) return false;
+
+      const recordTime = record.created_at ? new Date(record.created_at).getTime() : (Number(record.id) || 0);
+      const nameKey = normalizeAttendeeStr(record.full_name);
+      const emailKey = (record.email || '').trim().toLowerCase();
+      const ciKey = (record.ci || '').trim();
+      const idKey = String(record.id || '');
+
+      for (const t of tombstones) {
+        const matchId = idKey && t.id && idKey === t.id;
+        const matchName = nameKey && t.nameKey && nameKey === t.nameKey;
+        const matchEmail = emailKey && t.emailKey && emailKey === t.emailKey;
+        const matchCi = ciKey && t.ciKey && ciKey === t.ciKey;
+
+        if (matchId || matchName || matchEmail || matchCi) {
+          // Si el registro fue creado antes o durante el momento de borrado, se considera eliminado
+          // Si fue creado después, es un nuevo registro legítimo y no se oculta
+          if (!recordTime || recordTime <= t.timestamp + 1000) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
     // ============================================================
@@ -1317,7 +1390,15 @@
           if (nameKey && nameKey.length >= 3) seenNames.add(nameKey);
           if (emailKey) seenEmails.add(emailKey);
           if (ciKey && ciKey.length >= 6) seenCis.add(ciKey);
-          uniqueList.push(item);
+
+          // Si el último estado registrado es eliminación (tombstone), se descarta de la lista visible
+          // y sus claves quedan registradas para que registros anteriores de esa persona queden bloqueados
+          const isDeleted = item.attending === 'deleted' || 
+                            String(item.comments || '').includes('[DELETED]') ||
+                            isRecordDeleted(item);
+          if (!isDeleted) {
+            uniqueList.push(item);
+          }
         }
       }
 
@@ -1597,6 +1678,7 @@
         allAttendeesCache = deduplicateAttendees(allAttendeesCache);
         saveStoredAttendees(allAttendeesCache);
 
+        clearTombstoneForAttendee(newRecord);
         showSuccessScreen(newRecord);
         form.reset();
 
@@ -2040,6 +2122,7 @@
         allAttendeesCache.unshift(newRecord);
       }
 
+      clearTombstoneForAttendee(newRecord);
       allAttendeesCache = deduplicateAttendees(allAttendeesCache);
       saveStoredAttendees(allAttendeesCache);
 
@@ -2268,68 +2351,93 @@
       const item = allAttendeesCache.find(a => String(a.id) === String(id));
       const name = item ? item.full_name : '';
       const email = item ? item.email : '';
+      const ci = item ? item.ci : '';
       if (!confirm(`¿Está seguro de eliminar a "${name || 'este registro'}" de la lista oficial de participantes? Esta acción no se puede deshacer.`)) {
         return;
       }
 
-      // 1. Remover de caché local y actualizar interfaz de inmediato
+      // 1. Registrar tombstone local con marca de tiempo actual
+      if (item) {
+        addDeletedTombstone(item);
+      }
+
+      // 2. Remover de caché local y actualizar interfaz de inmediato (0ms latencia)
       allAttendeesCache = allAttendeesCache.filter(a => {
         if (String(a.id) === String(id)) return false;
         if (name && a.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(name)) return false;
         if (email && a.email && a.email.toLowerCase() === email.toLowerCase()) return false;
+        if (ci && a.ci && a.ci === ci) return false;
         return true;
       });
       saveStoredAttendees(allAttendeesCache);
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
-      showToast('Asistente eliminado');
+      showToast('Asistente eliminado definitivamente');
 
-      // 2. Eliminar de forma REAL y DIRECTA en Supabase Cloud
+      // 3. Persistir la eliminación definitiva en Supabase Cloud
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
+      const deletionPayload = {
+        full_name: name || (item ? item.full_name : ''),
+        ci: ci || '',
+        email: email || '',
+        phone: item ? item.phone || '' : '',
+        institution: item ? item.institution || '' : '',
+        position: item ? item.position || '' : '',
+        attending: 'deleted',
+        ticket_count: 0,
+        ticket_list: [],
+        dietary: [],
+        comments: '[DELETED]',
+        created_at: new Date().toISOString()
+      };
+
       if (url && key) {
+        // 3.1 Insertar registro con estado 'deleted' para sobreescribir cronológicamente cualquier registro anterior en toda la nube
+        try {
+          await fetch(`${url}/rest/v1/attendees`, {
+            method: 'POST',
+            headers: {
+              'apikey': key,
+              'Authorization': `Bearer ${key}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify([deletionPayload])
+          });
+        } catch (e) {
+          console.warn('Error al registrar eliminación en Supabase:', e);
+        }
+
+        // 3.2 Intentar además DELETE físico de filas en Supabase
         try {
           await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
             method: 'DELETE',
-            headers: {
-              'apikey': key,
-              'Authorization': `Bearer ${key}`
-            }
+            headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
           });
           if (name) {
             await fetch(`${url}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(name)}`, {
               method: 'DELETE',
-              headers: {
-                'apikey': key,
-                'Authorization': `Bearer ${key}`
-              }
+              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
             });
           }
           if (email) {
             await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(email)}`, {
               method: 'DELETE',
-              headers: {
-                'apikey': key,
-                'Authorization': `Bearer ${key}`
-              }
+              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
             });
           }
-        } catch (err) {
-          console.warn('Error al eliminar en Supabase:', err);
-        }
+        } catch (err) {}
       }
 
-      if (supabaseClient) {
-        try {
-          await supabaseClient.from('attendees').delete().eq('id', id);
-          if (name) await supabaseClient.from('attendees').delete().ilike('full_name', name);
-        } catch (e) {}
-      }
-
-      // 3. Eliminar en backend express
+      // 4. Notificar al backend Express
       try {
-        await fetch(`/api/attendees/${id}`, { method: 'DELETE' });
+        await fetch(`/api/attendees/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name: name, email, ci })
+        });
       } catch (err) {}
     }
 
