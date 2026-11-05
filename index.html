@@ -1676,9 +1676,9 @@
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
-      // Empaquetar fecha de nacimiento en comments para persistencia permanente en Supabase
       const cleanComments = (record.comments || '').replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
       const combinedComments = record.birth_date ? `[F.Nac: ${record.birth_date}] ${cleanComments}`.trim() : cleanComments;
+      const nowIso = record.created_at || new Date().toISOString();
 
       const payload = {
         full_name: record.full_name,
@@ -1691,17 +1691,17 @@
         ticket_count: 1,
         ticket_list: [],
         dietary: [],
-        comments: combinedComments
+        comments: combinedComments,
+        created_at: nowIso
       };
 
       let saved = false;
 
-      // 0. Si ya existe en Supabase por NOMBRE, EMAIL o CÉDULA, actualizar mediante PATCH directo (evita duplicados)
+      // 1. Intentar PATCH si existe
       if (url && key) {
         try {
           let existingId = null;
 
-          // 1. Buscar por email
           if (record.email) {
             const checkEmail = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
               headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
@@ -1712,7 +1712,6 @@
             }
           }
 
-          // 2. Si no se encontró por email, buscar por nombre exacto
           if (!existingId && record.full_name) {
             const checkName = await fetch(`${url}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(record.full_name)}&order=id.desc&limit=1`, {
               headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
@@ -1723,7 +1722,6 @@
             }
           }
 
-          // 3. Si no se encontró, buscar por C.I.
           if (!existingId && record.ci) {
             const checkCi = await fetch(`${url}/rest/v1/attendees?ci=eq.${encodeURIComponent(record.ci)}&order=id.desc&limit=1`, {
               headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
@@ -1734,9 +1732,7 @@
             }
           }
 
-          // Si existe, actualizar mediante PATCH garantizando un solo registro (el último)
           if (existingId) {
-            record.id = existingId;
             const patchRes = await fetch(`${url}/rest/v1/attendees?id=eq.${existingId}`, {
               method: 'PATCH',
               headers: {
@@ -1748,10 +1744,15 @@
               body: JSON.stringify(payload)
             });
             if (patchRes.ok) {
-              saved = true;
-              allAttendeesCache = deduplicateAttendees(allAttendeesCache);
-              saveStoredAttendees(allAttendeesCache);
-              return true;
+              const patchData = await patchRes.json().catch(() => []);
+              if (patchData && patchData.length > 0) {
+                saved = true;
+                record.id = existingId;
+                allAttendeesCache = deduplicateAttendees(allAttendeesCache);
+                saveStoredAttendees(allAttendeesCache);
+                return true;
+              }
+              // Si patchData está vacío ([]), RLS bloqueó el UPDATE: procedemos a insertar el registro
             }
           }
         } catch (e) {
@@ -1759,82 +1760,50 @@
         }
       }
 
-      // 1. Inserción Idempotente vía Supabase Client SDK (Upsert por email con fallback)
-      if (supabaseClient) {
-        try {
-          let { data, error } = await supabaseClient
-            .from('attendees')
-            .upsert([payload], { onConflict: 'email' })
-            .select();
-
-          if (error && (error.code === '42P10' || String(error.message).includes('ON CONFLICT'))) {
-            // Si la restricción única aún no se ejecuta en la BD, hacer insert estándar transparente
-            const insertRes = await supabaseClient.from('attendees').insert([payload]).select();
-            data = insertRes.data;
-            error = insertRes.error;
-          }
-
-          if (!error && data && data.length > 0) {
-            saved = true;
-            record.id = data[0].id;
-            record.created_at = data[0].created_at;
-            saveStoredAttendees(allAttendeesCache);
-            return true;
-          }
-        } catch (e) {
-          console.warn('Supabase SDK upsert fallback:', e);
-        }
-      }
-
-      // 2. Inserción Idempotente vía REST directa a Supabase con reintentos y tolerancia a 42P10
+      // 2. Inserción directa en Supabase (POST siempre permitido con HTTP 201)
       if (!saved && url && key) {
         for (let attempt = 1; attempt <= 2 && !saved; attempt++) {
           try {
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 6000);
 
-            let response = await fetch(`${url}/rest/v1/attendees?on_conflict=email`, {
+            let response = await fetch(`${url}/rest/v1/attendees`, {
               method: 'POST',
               headers: {
                 'apikey': key,
                 'Authorization': `Bearer ${key}`,
                 'Content-Type': 'application/json',
-                'Prefer': 'resolution=merge-duplicates,return=representation'
+                'Prefer': 'return=representation'
               },
               body: JSON.stringify([payload]),
               signal: controller.signal
             });
             clearTimeout(timeout);
 
-            if (!response.ok && response.status === 400) {
-              const errBody = await response.text();
-              if (errBody.includes('ON CONFLICT') || errBody.includes('42P10')) {
-                response = await fetch(`${url}/rest/v1/attendees`, {
-                  method: 'POST',
-                  headers: {
-                    'apikey': key,
-                    'Authorization': `Bearer ${key}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=representation'
-                  },
-                  body: JSON.stringify([payload])
-                });
-              }
-            }
-
             if (response.ok) {
-              const data = await response.json();
+              const data = await response.json().catch(() => []);
               if (data && data.length > 0) {
                 saved = true;
                 record.id = data[0].id;
                 record.created_at = data[0].created_at;
+                const idx = allAttendeesCache.findIndex(a => 
+                  (a.email && a.email.toLowerCase() === record.email.toLowerCase()) || 
+                  (a.ci && a.ci === record.ci) || 
+                  (normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(record.full_name))
+                );
+                if (idx !== -1) {
+                  allAttendeesCache[idx].id = data[0].id;
+                  allAttendeesCache[idx].created_at = data[0].created_at;
+                  allAttendeesCache[idx].attending = record.attending;
+                }
+                allAttendeesCache = deduplicateAttendees(allAttendeesCache);
                 saveStoredAttendees(allAttendeesCache);
                 return true;
               }
             }
           } catch (err) {
             console.warn(`Intento REST ${attempt} fallido:`, err);
-            if (attempt === 1) await new Promise(r => setTimeout(r, 1200));
+            if (attempt === 1) await new Promise(r => setTimeout(r, 800));
           }
         }
       }
@@ -1852,6 +1821,7 @@
             if (data.attendee && data.attendee.id) {
               saved = true;
               record.id = data.attendee.id;
+              allAttendeesCache = deduplicateAttendees(allAttendeesCache);
               saveStoredAttendees(allAttendeesCache);
               return true;
             }
@@ -1861,7 +1831,7 @@
         }
       }
 
-      // 4. Si todo falló por problemas de señal, encolar para sincronizar en línea
+      // 4. Si todo falló por problemas de red, encolar para sincronizar cuando vuelva la conexión
       if (!saved && allowQueue) {
         queueOfflineRecord(record);
       }
@@ -1882,46 +1852,8 @@
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       let cloudLoaded = false;
 
-      // 2. Cargar en segundo plano desde Supabase Client SDK
-      if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient
-            .from('attendees')
-            .select('*')
-            .order('id', { ascending: false });
-
-          if (!error && data) {
-            const filteredData = data.filter(d => !isRecordDeleted(d));
-            allAttendeesCache = deduplicateAttendees(filteredData).map(d => {
-              const rawComments = d.comments || '';
-              const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
-              const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
-              const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
-              return {
-                id: d.id,
-                full_name: d.full_name,
-                ci: d.ci || '',
-                email: d.email,
-                phone: d.phone,
-                institution: d.institution || '',
-                position: d.position || '',
-                birth_date: birthDate,
-                ticket_count: d.ticket_count || 1,
-                attending: d.attending || 'yes',
-                comments: cleanComments,
-                created_at: d.created_at
-              };
-            });
-            saveStoredAttendees(allAttendeesCache);
-            cloudLoaded = true;
-          }
-        } catch (e) {
-          console.warn('Supabase fetch notice:', e);
-        }
-      }
-
-      // 3. Fallback REST directo a Supabase
-      if (!cloudLoaded && url && key) {
+      // 2. Cargar en segundo plano desde Supabase Client SDK o REST
+      if (url && key) {
         try {
           const res = await fetch(`${url}/rest/v1/attendees?select=*&order=id.desc`, {
             headers: {
@@ -1933,27 +1865,40 @@
             const data = await res.json();
             if (Array.isArray(data)) {
               const filteredData = data.filter(d => !isRecordDeleted(d));
-              allAttendeesCache = deduplicateAttendees(filteredData).map(d => ({
-                id: d.id,
-                full_name: d.full_name,
-                ci: d.ci || '',
-                email: d.email,
-                phone: d.phone,
-                institution: d.institution || '',
-                position: d.position || '',
-                ticket_count: d.ticket_count || 1,
-                attending: d.attending || 'yes',
-                comments: d.comments || '',
-                created_at: d.created_at
-              }));
+              const cloudItems = filteredData.map(d => {
+                const rawComments = d.comments || '';
+                const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
+                const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
+                const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+                return {
+                  id: d.id,
+                  full_name: d.full_name,
+                  ci: d.ci || '',
+                  email: d.email,
+                  phone: d.phone,
+                  institution: d.institution || '',
+                  position: d.position || '',
+                  birth_date: birthDate,
+                  ticket_count: d.ticket_count || 1,
+                  attending: d.attending || 'yes',
+                  comments: cleanComments,
+                  created_at: d.created_at
+                };
+              });
+
+              // Combinar cloud y local respetando la versión más reciente por fecha/ID
+              const localCache = getStoredAttendees();
+              allAttendeesCache = deduplicateAttendees([...cloudItems, ...localCache]);
               saveStoredAttendees(allAttendeesCache);
               cloudLoaded = true;
             }
           }
-        } catch (e) {}
+        } catch (e) {
+          console.warn('Supabase fetch error:', e);
+        }
       }
 
-      // 4. Fallback Endpoint backend /api/attendees
+      // 3. Fallback Endpoint backend /api/attendees
       if (!cloudLoaded) {
         try {
           const res = await fetch('/api/attendees');
@@ -1961,23 +1906,33 @@
             const data = await res.json();
             if (data.success && Array.isArray(data.attendees)) {
               const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
-              allAttendeesCache = deduplicateAttendees(filteredData).map(s => ({
-                id: s.id,
-                full_name: s.full_name,
-                ci: s.ci || '',
-                email: s.email,
-                phone: s.phone,
-                institution: s.institution || '',
-                position: s.position || '',
-                ticket_count: s.ticket_count || 1,
-                attending: s.attending,
-                comments: s.comments || '',
-                created_at: s.created_at
-              }));
+              const cloudItems = filteredData.map(d => {
+                const rawComments = d.comments || '';
+                const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
+                const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
+                const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+                return {
+                  id: d.id,
+                  full_name: d.full_name,
+                  ci: d.ci || '',
+                  email: d.email,
+                  phone: d.phone,
+                  institution: d.institution || '',
+                  position: d.position || '',
+                  birth_date: birthDate,
+                  ticket_count: d.ticket_count || 1,
+                  attending: d.attending || 'yes',
+                  comments: cleanComments,
+                  created_at: d.created_at
+                };
+              });
+              const localCache = getStoredAttendees();
+              allAttendeesCache = deduplicateAttendees([...cloudItems, ...localCache]);
               saveStoredAttendees(allAttendeesCache);
+              cloudLoaded = true;
             }
           }
-        } catch (e) {}
+        } catch (err) {}
       }
 
       updateKpis(allAttendeesCache);
@@ -2179,6 +2134,10 @@
       if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
       if (birth_date && !validateBirthDateReal(birth_date)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
 
+      const nowIso = new Date().toISOString();
+      const cleanComments = comments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+      const combinedComments = birth_date ? `[F.Nac: ${birth_date}] ${cleanComments}`.trim() : cleanComments;
+
       const updatedFields = {
         full_name,
         ci,
@@ -2188,32 +2147,52 @@
         position,
         birth_date,
         attending,
-        comments
+        comments: cleanComments,
+        created_at: nowIso
       };
 
-      // 1. Actualizar en caché local inmediatamente
-      const idx = allAttendeesCache.findIndex(a => String(a.id) === String(id));
+      // 1. Actualizar en caché local inmediatamente con la fecha más reciente (gana en deduplicación)
+      const idx = allAttendeesCache.findIndex(a => 
+        String(a.id) === String(id) ||
+        (a.email && a.email.toLowerCase() === email.toLowerCase()) ||
+        (a.ci && a.ci === ci) ||
+        (a.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(full_name))
+      );
       if (idx !== -1) {
         allAttendeesCache[idx] = { ...allAttendeesCache[idx], ...updatedFields };
+      } else {
+        allAttendeesCache.unshift({ id, ...updatedFields });
       }
       allAttendeesCache = deduplicateAttendees(allAttendeesCache);
       saveStoredAttendees(allAttendeesCache);
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
 
-      // 2. Actualizar en Supabase
+      // 2. Persistir en Supabase Cloud
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
-      if (supabaseClient) {
-        try {
-          await supabaseClient.from('attendees').update(updatedFields).eq('id', id);
-        } catch(e) {}
-      }
+      const cloudPayload = {
+        full_name,
+        ci,
+        email,
+        phone,
+        institution,
+        position,
+        attending,
+        ticket_count: 1,
+        ticket_list: [],
+        dietary: [],
+        comments: combinedComments,
+        created_at: nowIso
+      };
 
-      if (url && key) {
+      let cloudSaved = false;
+
+      // 2.1 Intentar PATCH si el ID es numérico
+      if (url && key && !isNaN(Number(id)) && Number(id) < 1000000000) {
         try {
-          await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
+          const patchRes = await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
             method: 'PATCH',
             headers: {
               'apikey': key,
@@ -2221,11 +2200,51 @@
               'Content-Type': 'application/json',
               'Prefer': 'return=representation'
             },
-            body: JSON.stringify(updatedFields)
+            body: JSON.stringify(cloudPayload)
           });
+          if (patchRes.ok) {
+            const data = await patchRes.json().catch(() => []);
+            if (data && data.length > 0) {
+              cloudSaved = true;
+            }
+          }
         } catch(err) {}
       }
 
+      // 2.2 Si el PATCH no actualizó filas (por RLS en Supabase o ID nuevo), INSERTAR el registro con estado actualizado
+      if (!cloudSaved && url && key) {
+        try {
+          const insRes = await fetch(`${url}/rest/v1/attendees`, {
+            method: 'POST',
+            headers: {
+              'apikey': key,
+              'Authorization': `Bearer ${key}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify([cloudPayload])
+          });
+          if (insRes.ok) {
+            const data = await insRes.json().catch(() => []);
+            if (data && data[0]) {
+              cloudSaved = true;
+              const targetIdx = allAttendeesCache.findIndex(a => 
+                (a.email && a.email.toLowerCase() === email.toLowerCase()) || 
+                (a.ci && a.ci === ci) || 
+                (normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(full_name))
+              );
+              if (targetIdx !== -1) {
+                allAttendeesCache[targetIdx].id = data[0].id;
+                allAttendeesCache[targetIdx].created_at = data[0].created_at;
+                allAttendeesCache = deduplicateAttendees(allAttendeesCache);
+                saveStoredAttendees(allAttendeesCache);
+              }
+            }
+          }
+        } catch(err) {}
+      }
+
+      // 2.3 Sincronización secundaria vía backend Express
       try {
         await fetch(`/api/attendees/${id}`, {
           method: 'PUT',

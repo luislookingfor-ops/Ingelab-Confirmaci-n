@@ -272,54 +272,31 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
         body: JSON.stringify(record)
       });
       if (updateRes.ok) {
-        const updatedData = await updateRes.json();
-        return res.status(200).json({ success: true, attendee: updatedData ? updatedData[0] : { ...record, id: existingId } });
+        const updatedData = await updateRes.json().catch(() => []);
+        if (updatedData && updatedData.length > 0) {
+          return res.status(200).json({ success: true, attendee: updatedData[0] });
+        }
       }
     }
 
-    // 3. Inserción Idempotente con Resolución de Conflictos (Upsert por email con fallback inteligente)
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
-
-    let response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?on_conflict=email`, {
+    // Inserción directa en Supabase con fecha actual para garantizar persistencia y prevalencia del último registro
+    const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
       method: 'POST',
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`,
         'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates,return=representation'
+        'Prefer': 'return=representation'
       },
-      body: JSON.stringify([record]),
-      signal: controller.signal
+      body: JSON.stringify([{ ...record, created_at: new Date().toISOString() }])
     });
-    clearTimeout(timeout);
 
-    // Si la restricción UNIQUE en email aún no ha sido aplicada en la BD, PostgREST retorna 400 (42P10)
-    // En ese caso, ejecutamos la inserción estándar transparente sin que falle la petición
-    if (!response.ok && response.status === 400) {
-      const errText = await response.text();
-      if (errText.includes('ON CONFLICT') || errText.includes('42P10')) {
-        response = await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
-          method: 'POST',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify([record])
-        });
-      } else {
-        return res.status(response.status).json({ success: false, error: errText });
-      }
-    }
-
-    if (response.ok) {
-      const data = await response.json();
+    if (insertRes.ok) {
+      const data = await insertRes.json().catch(() => []);
       return res.status(201).json({ success: true, attendee: data ? data[0] : record });
     }
-    const errText = await response.text();
-    res.status(response.status).json({ success: false, error: errText });
+    const errText = await insertRes.text().catch(() => '');
+    res.status(insertRes.status || 400).json({ success: false, error: errText });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -345,7 +322,7 @@ app.put('/api/attendees/:id', async (req, res) => {
       record.comments = birthDate ? `[F.Nac: ${birthDate}] ${cleanComments}`.trim() : cleanComments;
     }
 
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
+    const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}`, {
       method: 'PATCH',
       headers: {
         'apikey': SUPABASE_KEY,
@@ -356,12 +333,31 @@ app.put('/api/attendees/:id', async (req, res) => {
       body: JSON.stringify(record)
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      return res.json({ success: true, attendee: data ? data[0] : null });
+    if (patchRes.ok) {
+      const patchData = await patchRes.json().catch(() => []);
+      if (patchData && patchData.length > 0) {
+        return res.json({ success: true, attendee: patchData[0] });
+      }
     }
-    const errText = await response.text();
-    res.status(response.status).json({ success: false, error: errText });
+
+    // Si el PATCH no actualizó filas en Supabase por RLS, insertar el registro con su estado actualizado
+    const insRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify([{ ...record, created_at: new Date().toISOString() }])
+    });
+
+    if (insRes.ok) {
+      const insData = await insRes.json().catch(() => []);
+      return res.json({ success: true, attendee: insData ? insData[0] : record });
+    }
+    const errText = await patchRes.text().catch(() => '');
+    res.status(patchRes.status || 400).json({ success: false, error: errText });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
