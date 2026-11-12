@@ -242,73 +242,73 @@
     <!-- HEADER CON LOGO OFICIAL INVITACION.PNG                       -->
     <!-- ============================================================ -->
     <header class="sticky top-0 z-40 glass-panel border-b border-white/60 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-24 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-20 flex items-center justify-between">
         
         <!-- Logo Ingelab Evolution (de INVITACION.png) Arriba a la Izquierda -->
-        <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-2 group">
-          <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-12 sm:h-16 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
+        <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-1 group">
+          <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-8 sm:h-12 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
         </a>
 
         <!-- Navegación: Vista Cliente/Pública vs Administrador -->
-        <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-1.5 sm:gap-3">
           
           <!-- NAVEGACIÓN CLIENTE / PÚBLICA (Solo puede ver: CHECK-IN, EVENTO, REGISTRAR y ACCESO ADMIN) -->
-          <div id="public-nav-group" class="flex items-center gap-2 sm:gap-3">
-            <div class="inline-flex p-1 rounded-2xl bg-white/95 border border-slate-200/90 text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
-                <i data-lucide="scan-line" class="w-4 h-4 text-emerald-400"></i>
+          <div id="public-nav-group" class="flex items-center gap-1.5 sm:gap-2.5">
+            <div class="inline-flex p-0.5 sm:p-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 text-[11px] sm:text-xs font-semibold font-mono shadow-sm">
+              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
+                <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
                 <span>CHECK-IN</span>
               </button>
-              <button id="nav-btn-landing-pub" onclick="switchView('landing')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
-                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+              <button id="nav-btn-landing-pub" onclick="switchView('landing')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
                 <span>EVENTO</span>
               </button>
             </div>
 
             <!-- Botón Registrar Asistencia (Abre Modal de Registro) -->
-            <button onclick="openRegistrationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs tracking-wider shadow-md hover:shadow-lg transition-all">
-              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+            <button onclick="openRegistrationModal()" class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-[11px] sm:text-xs tracking-wider shadow-sm hover:shadow-md transition-all">
+              <i data-lucide="user-plus" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
               <span>+ REGISTRAR</span>
             </button>
 
             <!-- Botón Acceso Admin -->
-            <button onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-xs">
-              <i data-lucide="lock" class="w-3.5 h-3.5 text-ingelab-navy"></i>
-              <span class="hidden xs:inline">ACCESO</span> ADMIN
+            <button onclick="openLoginModal()" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-[11px] sm:text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs">
+              <i data-lucide="lock" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-ingelab-navy"></i>
+              <span class="hidden sm:inline">ACCESO</span> ADMIN
             </button>
           </div>
 
           <!-- NAVEGACIÓN ADMINISTRADOR (Solo visible tras iniciar sesión como Admin) -->
-          <div id="admin-nav-group" class="hidden flex items-center gap-2 sm:gap-3">
-            <div class="inline-flex p-1 rounded-2xl bg-white/95 border border-slate-200/90 text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
-                <i data-lucide="scan-line" class="w-4 h-4 text-emerald-400"></i>
+          <div id="admin-nav-group" class="hidden flex items-center gap-1.5 sm:gap-2.5">
+            <div class="inline-flex p-0.5 sm:p-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 text-[11px] sm:text-xs font-semibold font-mono shadow-sm">
+              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
+                <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
                 <span>CHECK-IN</span>
               </button>
-              <button id="nav-btn-dashboard-adm" onclick="switchView('dashboard')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Pantalla de Control en Vivo">
-                <i data-lucide="activity" class="w-4 h-4 text-blue-500"></i>
+              <button id="nav-btn-dashboard-adm" onclick="switchView('dashboard')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Pantalla de Control en Vivo">
+                <i data-lucide="activity" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500"></i>
                 <span class="hidden xs:inline">EN VIVO</span>
               </button>
-              <button id="nav-btn-landing-adm" onclick="switchView('landing')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
-                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+              <button id="nav-btn-landing-adm" onclick="switchView('landing')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
                 <span class="hidden sm:inline">EVENTO</span>
               </button>
-              <button id="nav-btn-admin-adm" onclick="switchView('admin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Base de Datos y Asistentes">
-                <i data-lucide="database" class="w-4 h-4 text-slate-500"></i>
+              <button id="nav-btn-admin-adm" onclick="switchView('admin')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Base de Datos y Asistentes">
+                <i data-lucide="database" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500"></i>
                 <span class="hidden md:inline">BASE DE DATOS</span>
                 <span id="badge-total-attendees" class="px-1.5 py-0.2 rounded bg-ingelab-green text-white text-[10px] font-mono font-bold">227</span>
               </button>
             </div>
 
             <!-- Botón Registrar Asistencia (Abre Modal de Registro) -->
-            <button onclick="openRegistrationModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs tracking-wider shadow-md hover:shadow-lg transition-all">
+            <button onclick="openRegistrationModal()" class="hidden sm:inline-flex items-center gap-1 sm:gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs tracking-wider shadow-sm hover:shadow-md transition-all">
               <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
               <span>+ REGISTRAR</span>
             </button>
 
             <!-- Botón Cerrar Sesión Admin -->
-            <button onclick="logoutAdmin()" title="Cerrar Sesión de Administrador" class="p-2 sm:px-3 sm:py-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-mono font-bold flex items-center gap-1.5 transition-colors">
-              <i data-lucide="log-out" class="w-4 h-4"></i>
+            <button onclick="logoutAdmin()" title="Cerrar Sesión de Administrador" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition-colors">
+              <i data-lucide="log-out" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
               <span class="hidden md:inline">SALIR</span>
             </button>
           </div>
@@ -324,15 +324,15 @@
     <!-- ============================================================ -->
     <!-- VISTA FORMULARIO: CONFIRMACIÓN DE ASISTENCIA                  -->
     <!-- ============================================================ -->
-    <main id="view-form" class="flex-1 hidden py-8 sm:py-12 px-4 sm:px-6">
+    <main id="view-form" class="flex-1 hidden py-4 sm:py-10 px-3 sm:px-6">
       
-      <div class="max-w-3xl mx-auto space-y-8">
+      <div class="max-w-3xl mx-auto space-y-4 sm:space-y-8">
         
         <!-- HERO CARD: AFICHE OFICIAL INVITACION1.PNG Y FICHA TÉCNICA -->
-        <div class="glass-panel border border-white/80 rounded-3xl p-4 sm:p-8 shadow-xl overflow-hidden relative">
+        <div class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 shadow-xl overflow-hidden relative">
           
           <!-- Afiche Oficial INVITACION1.png -->
-          <div class="rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-white mb-8 cursor-pointer group" onclick="openInvitationModal()" title="Haga clic para ver invitación completa">
+          <div class="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-white mb-4 sm:mb-8 cursor-pointer group" onclick="openInvitationModal()" title="Haga clic para ver invitación completa">
             <img src="INVITACION1.png" alt="Ingelab Evolution - Invitación Oficial" class="w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]">
           </div>
 
@@ -536,173 +536,200 @@
     <!-- ============================================================ -->
     <!-- VISTA A: PANEL DE CHECK-IN Y CONTROL DE ACCESO              -->
     <!-- ============================================================ -->
-    <main id="view-checkin" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
+    <main id="view-checkin" class="flex-1 max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-6 w-full space-y-3 sm:space-y-5">
       
       <!-- Bar Superior del Operador -->
-      <div class="glass-panel border border-white/80 rounded-3xl p-4 sm:p-6 shadow-xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 pb-2.5 sm:pb-3 border-b border-slate-200/80">
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-mono font-bold uppercase tracking-wider mb-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider mb-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
               Control de Acceso
             </div>
-            <h2 class="text-xl sm:text-2xl font-bold font-display text-arch-black">Acreditación y Check-in en Tiempo Real</h2>
+            <h2 class="text-base sm:text-xl font-bold font-display text-arch-black">Acreditación y Check-in en Tiempo Real</h2>
           </div>
 
           <!-- Métricas Rápidas en Puerta (Solo visibles para el Administrador) -->
-          <div id="checkin-stats-bar" class="hidden items-center gap-3 font-mono">
-            <div class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
-              <span class="text-[10px] text-slate-500 uppercase block font-bold">En Sala</span>
-              <span id="checkin-quick-checked" class="text-lg font-bold text-emerald-600">0</span>
+          <div id="checkin-stats-bar" class="hidden items-center gap-2 sm:gap-3 font-mono">
+            <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
+              <span class="text-[9px] sm:text-[10px] text-slate-500 uppercase block font-bold">En Sala</span>
+              <span id="checkin-quick-checked" class="text-base sm:text-lg font-bold text-emerald-600">0</span>
             </div>
-            <div class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
-              <span class="text-[10px] text-slate-500 uppercase block font-bold">Aforo Total</span>
-              <span id="checkin-quick-total" class="text-lg font-bold text-slate-700">230</span>
+            <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
+              <span class="text-[9px] sm:text-[10px] text-slate-500 uppercase block font-bold">Aforo Total</span>
+              <span id="checkin-quick-total" class="text-base sm:text-lg font-bold text-slate-700">230</span>
             </div>
-            <div class="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center shadow-xs">
-              <span class="text-[10px] text-emerald-700 uppercase block font-bold">% Aforo</span>
-              <span id="checkin-quick-pct" class="text-lg font-bold text-emerald-700">0%</span>
+            <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center shadow-xs">
+              <span class="text-[9px] sm:text-[10px] text-emerald-700 uppercase block font-bold">% Aforo</span>
+              <span id="checkin-quick-pct" class="text-base sm:text-lg font-bold text-emerald-700">0%</span>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Contenido de los Modos -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <!-- Contenido de los Modos: Grilla Simétrica y Responsiva -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 items-stretch">
         
         <!-- Columna Izquierda: Input de Búsqueda por Cédula (5 cols) -->
         <div class="lg:col-span-5 flex flex-col h-full">
           
-          <!-- Contenedor Búsqueda Directa (CÉDULA / NOMBRE) -->
-          <div id="checkin-panel-manual" class="glass-panel border border-white/80 rounded-3xl p-5 sm:p-6 shadow-xl flex-1 flex flex-col justify-between min-h-[460px] h-full">
-            <div class="space-y-4 flex-1 flex flex-col">
+          <!-- Contenedor Búsqueda Directa (CÉDULA EXCLUSIVA) -->
+          <div id="checkin-panel-manual" class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-lg flex-1 flex flex-col justify-between lg:min-h-[440px] h-full">
+            <div class="space-y-3 flex-1 flex flex-col">
               <div>
-                <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  Número de Cédula o Nombre:
+                <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  Número de Cédula de Identidad:
                 </label>
                 <div class="relative">
-                  <i data-lucide="id-card" class="w-5 h-5 text-emerald-600 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                  <input type="text" id="checkin-manual-input" autofocus oninput="handleManualInput(this.value)" placeholder="Ej: 1723521918..." class="w-full pl-11 pr-10 py-3.5 rounded-2xl border-2 border-emerald-500/40 focus:border-emerald-500 bg-white text-base font-mono font-bold text-slate-800 placeholder-slate-400 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none transition-all shadow-sm">
-                  <button onclick="clearManualSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                  <i data-lucide="id-card" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2"></i>
+                  <input type="tel" id="checkin-manual-input" autofocus inputmode="numeric" maxlength="10" oninput="handleManualInput(this.value)" placeholder="10 dígitos numéricos..." class="w-full pl-9 sm:pl-11 pr-8 sm:pr-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border-2 border-emerald-500/40 focus:border-emerald-500 bg-white text-sm sm:text-base font-mono font-bold text-slate-800 placeholder-slate-400 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none transition-all shadow-sm">
+                  <button onclick="clearManualSearch()" class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
+                    <i data-lucide="x" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                   </button>
                 </div>
-                <p class="text-[11px] text-slate-500 font-mono mt-2">
-                  Escriba los <strong>10 dígitos de la cédula</strong> para cargar los datos de forma instantánea.
+                <p class="text-[10px] sm:text-[11px] text-slate-500 font-mono mt-1">
+                  Ingrese exactamente los <strong>10 dígitos</strong> de su cédula.
                 </p>
               </div>
 
-              <!-- Lista de Resultados de Búsqueda -->
-              <div id="checkin-search-results" class="space-y-2 max-h-60 sm:max-h-64 overflow-y-auto pr-1 flex-1 flex flex-col justify-center">
-                <div class="p-6 text-center text-xs font-mono text-slate-400">
-                  Escriba la cédula para autocompletar...
+              <!-- Contenedor de Estado de Verificación de Cédula -->
+              <div id="checkin-search-results" class="flex-1 flex flex-col justify-center min-h-[90px] sm:min-h-[110px]">
+                <div class="p-3 sm:p-4 text-center text-xs font-mono text-slate-400">
+                  Ingrese su cédula para autorizar su ingreso...
                 </div>
               </div>
             </div>
 
             <!-- Redes Sociales Oficiales INGELAB (Anclado al fondo para simetría perfecta) -->
-            <div class="pt-4 border-t border-slate-200/80 mt-6 shrink-0">
-              <div class="flex items-center justify-between mb-2.5 px-0.5">
-                <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                  <i data-lucide="share-2" class="w-3.5 h-3.5 text-emerald-600"></i> Redes Sociales Oficiales:
+            <div class="pt-2.5 sm:pt-3.5 border-t border-slate-200/80 mt-3 sm:mt-5 shrink-0">
+              <div class="flex items-center justify-between mb-2 px-0.5">
+                <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <i data-lucide="share-2" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600"></i> Redes Sociales Oficiales:
                 </span>
-                <span class="text-[10px] font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                <span class="text-[9px] sm:text-[10px] font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
                   INGELAB
                 </span>
               </div>
-              <div class="grid grid-cols-4 gap-2">
+              <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
                 <!-- Página Web Oficial -->
                 <a href="https://www.ingelabec.com/" target="_blank" rel="noopener noreferrer"
-                   class="group flex flex-col items-center justify-center p-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500 hover:bg-emerald-50/40 shadow-xs hover:shadow-md transition-all duration-200"
+                   class="group flex flex-col items-center justify-center p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500 hover:bg-emerald-50/40 shadow-xs hover:shadow-md transition-all duration-200"
                    title="Página Web Oficial: ingelabec.com">
-                  <div class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-emerald-600 flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-50 group-hover:bg-emerald-600 flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="2" y1="12" x2="22" y2="12"></line>
                       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
                     </svg>
                   </div>
-                  <span class="text-[10px] font-mono font-bold text-slate-600 group-hover:text-emerald-700 mt-1.5">Web</span>
+                  <span class="text-[9px] sm:text-[10px] font-mono font-bold text-slate-600 group-hover:text-emerald-700 mt-1">Web</span>
                 </a>
 
                 <!-- Facebook -->
                 <a href="https://www.facebook.com/Ingelab.ec/?locale=es_LA" target="_blank" rel="noopener noreferrer"
-                   class="group flex flex-col items-center justify-center p-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-[#1877F2] hover:bg-blue-50/40 shadow-xs hover:shadow-md transition-all duration-200"
+                   class="group flex flex-col items-center justify-center p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-200/90 hover:border-[#1877F2] hover:bg-blue-50/40 shadow-xs hover:shadow-md transition-all duration-200"
                    title="Facebook: Ingelab.ec">
-                  <div class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-[#1877F2] flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-50 group-hover:bg-[#1877F2] flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                   </div>
-                  <span class="text-[10px] font-mono font-bold text-slate-600 group-hover:text-[#1877F2] mt-1.5">Facebook</span>
+                  <span class="text-[9px] sm:text-[10px] font-mono font-bold text-slate-600 group-hover:text-[#1877F2] mt-1">Facebook</span>
                 </a>
 
                 <!-- Instagram -->
                 <a href="https://www.instagram.com/ingelab.ec/" target="_blank" rel="noopener noreferrer"
-                   class="group flex flex-col items-center justify-center p-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-[#E4405F] hover:bg-pink-50/40 shadow-xs hover:shadow-md transition-all duration-200"
+                   class="group flex flex-col items-center justify-center p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-200/90 hover:border-[#E4405F] hover:bg-pink-50/40 shadow-xs hover:shadow-md transition-all duration-200"
                    title="Instagram: @ingelab.ec">
-                  <div class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-gradient-to-tr group-hover:from-[#f09433] group-hover:via-[#dc2743] group-hover:to-[#bc1888] flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-50 group-hover:bg-gradient-to-tr group-hover:from-[#f09433] group-hover:via-[#dc2743] group-hover:to-[#bc1888] flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
                   </div>
-                  <span class="text-[10px] font-mono font-bold text-slate-600 group-hover:text-[#dc2743] mt-1.5">Instagram</span>
+                  <span class="text-[9px] sm:text-[10px] font-mono font-bold text-slate-600 group-hover:text-[#dc2743] mt-1">Instagram</span>
                 </a>
 
                 <!-- LinkedIn -->
                 <a href="https://www.linkedin.com/company/ingelabcorp/?originalSubdomain=ec" target="_blank" rel="noopener noreferrer"
-                   class="group flex flex-col items-center justify-center p-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-[#0A66C2] hover:bg-blue-50/40 shadow-xs hover:shadow-md transition-all duration-200"
+                   class="group flex flex-col items-center justify-center p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-200/90 hover:border-[#0A66C2] hover:bg-blue-50/40 shadow-xs hover:shadow-md transition-all duration-200"
                    title="LinkedIn: Ingelab Corp">
-                  <div class="w-9 h-9 rounded-xl bg-slate-50 group-hover:bg-[#0A66C2] flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-50 group-hover:bg-[#0A66C2] flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24">
                       <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                     </svg>
                   </div>
-                  <span class="text-[10px] font-mono font-bold text-slate-600 group-hover:text-[#0A66C2] mt-1.5">LinkedIn</span>
+                  <span class="text-[9px] sm:text-[10px] font-mono font-bold text-slate-600 group-hover:text-[#0A66C2] mt-1">LinkedIn</span>
                 </a>
               </div>
             </div>
+
           </div>
 
         </div>
 
         <!-- Columna Derecha: Tarjeta de Acreditación / Resultado de Check-in (7 cols) -->
         <div class="lg:col-span-7 flex flex-col h-full">
-          <div id="checkin-card-container" class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl flex-1 flex flex-col justify-between relative overflow-hidden min-h-[460px] h-full">
+          <div id="checkin-card-container" class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg flex-1 flex flex-col justify-between relative overflow-hidden lg:min-h-[440px] h-full">
             
-            <!-- Estado Vacío (Esperando Asistente) -->
-            <div id="checkin-empty-state" class="my-auto text-center py-12 space-y-4">
-              <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-inner">
-                <i data-lucide="id-card" class="w-8 h-8"></i>
+            <!-- Estado Vacío (Esperando Cédula) -->
+            <div id="checkin-empty-state" class="my-auto text-center py-6 sm:py-8 space-y-2 sm:space-y-3">
+              <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-inner">
+                <i data-lucide="id-card" class="w-6 h-6 sm:w-8 sm:h-8"></i>
               </div>
               <div>
-                <h3 class="text-lg font-bold font-display text-slate-700">Listo para Check-in</h3>
-                <p class="text-xs text-slate-500 font-mono mt-1 max-w-sm mx-auto">
-                  Ingrese el número de cédula del asistente para desplegar sus datos y autorizar su ingreso al evento.
+                <h3 class="text-base sm:text-lg font-bold font-display text-slate-700">Listo para Check-in</h3>
+                <p class="text-[11px] sm:text-xs text-slate-500 font-mono mt-1 max-w-sm mx-auto">
+                  Ingrese su número de cédula para validar su acreditación e ingresar al evento.
                 </p>
               </div>
             </div>
 
             <!-- Tarjeta de Asistente Seleccionado (Oculta por defecto) -->
-            <div id="checkin-attendee-card" class="hidden space-y-6">
+            <div id="checkin-attendee-card" class="hidden space-y-3 sm:space-y-4">
               
-              <!-- Banner de Alerta / Estado -->
-              <div id="checkin-status-banner" class="p-4 rounded-2xl flex items-center gap-3">
+              <!-- Vista Segura para Cliente cuando YA INGRESÓ (Protege privacidad) -->
+              <div id="checkin-already-client-panel" class="hidden p-4 sm:p-5 rounded-2xl bg-amber-50/90 border-2 border-amber-400 text-amber-950 text-center space-y-2.5 shadow-sm animate-content-in">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-500 text-white flex items-center justify-center mx-auto shadow-md">
+                  <i data-lucide="shield-alert" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                </div>
+                <div>
+                  <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full inline-block">
+                    ASISTENCIA REGISTRADA PREVIAMENTE
+                  </span>
+                  <h3 class="text-sm sm:text-base font-bold font-display text-amber-950 mt-1">Este pase ya fue acreditado</h3>
+                  <div class="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/90 border border-amber-300 font-mono text-xs font-bold text-amber-900">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-600"></i>
+                    <span>Hora de ingreso: <strong id="checkin-already-client-time">-</strong></span>
+                  </div>
+                </div>
+                <p class="text-[11px] text-amber-800/90 font-sans max-w-xs mx-auto leading-relaxed">
+                  Por políticas de confidencialidad y protección de datos, los detalles personales del asistente no son expuestos en esta pantalla pública.
+                </p>
+                <div class="pt-1">
+                  <button onclick="resetCheckinSelection()" class="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-colors">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                    <span>Ingresar Otra Cédula</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Banner de Alerta / Estado (Solo visible para Admin o ingreso válido) -->
+              <div id="checkin-status-banner" class="p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3">
                 <!-- Dinámico: verde o rojo/alerta -->
               </div>
 
               <!-- Ficha de Datos del Asistente -->
-              <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm space-y-4">
-                <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
-                  <div id="checkin-avatar" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ingelab-navy to-slate-900 text-white font-mono font-bold text-lg flex items-center justify-center shadow-md shrink-0">
+              <div id="checkin-attendee-details" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3.5 sm:p-4 shadow-sm space-y-3">
+                <div class="flex items-center gap-3 sm:gap-4 pb-3 border-b border-slate-100">
+                  <div id="checkin-avatar" class="w-11 h-11 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-gradient-to-br from-ingelab-navy to-slate-900 text-white font-mono font-bold text-base sm:text-lg flex items-center justify-center shadow-md shrink-0">
                     JD
                   </div>
                   <div class="min-w-0 flex-1">
-                    <span id="checkin-badge-type" class="text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 inline-block mb-1">
+                    <span id="checkin-badge-type" class="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 inline-block mb-0.5">
                       INVITADO ESPECIAL • 1 PASE
                     </span>
-                    <h3 id="checkin-display-name" class="text-lg sm:text-xl font-bold font-display text-arch-black truncate">
+                    <h3 id="checkin-display-name" class="text-base sm:text-lg font-bold font-display text-arch-black truncate">
                       -
                     </h3>
                     <p id="checkin-display-institution" class="text-xs text-slate-500 font-sans truncate">
@@ -711,95 +738,90 @@
                   </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Cédula de Identidad:</span>
-                    <span id="checkin-display-ci" class="font-bold text-slate-800 text-sm">-</span>
+                <div class="grid grid-cols-2 gap-2 sm:gap-2.5 text-xs font-mono">
+                  <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">Cédula:</span>
+                    <span id="checkin-display-ci" class="font-bold text-slate-800 text-xs sm:text-sm">-</span>
                   </div>
-                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Cargo / Especialidad:</span>
+                  <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">Especialidad:</span>
                     <span id="checkin-display-position" class="font-bold text-slate-800 text-xs truncate block">-</span>
                   </div>
-                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Teléfono Móvil:</span>
-                    <span id="checkin-display-phone" class="text-slate-700 text-xs block">-</span>
+                  <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">Teléfono:</span>
+                    <span id="checkin-display-phone" class="text-slate-700 text-xs block truncate">-</span>
                   </div>
-                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Hora de Ingreso:</span>
-                    <span id="checkin-display-time" class="text-slate-700 text-xs block font-bold">-</span>
+                  <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">Hora Ingreso:</span>
+                    <span id="checkin-display-time" class="text-slate-700 text-xs block font-bold truncate">-</span>
                   </div>
                 </div>
               </div>
 
               <!-- Botones de Acción (Confirmar Ingreso / Forzar / Siguiente) -->
-              <div id="checkin-actions-container" class="space-y-3 pt-2">
+              <div id="checkin-actions-container" class="space-y-2 sm:space-y-2.5 pt-1">
                 <!-- Botón Grande: Confirmar Ingreso -->
-                <button id="btn-confirm-entry" onclick="confirmCheckinAction(false)" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-mono font-bold text-base tracking-wider uppercase flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
-                  <i data-lucide="check-circle" class="w-6 h-6"></i>
+                <button id="btn-confirm-entry" onclick="confirmCheckinAction(false)" class="w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-mono font-bold text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                  <i data-lucide="check-circle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                   <span>CONFIRMAR INGRESO</span>
                 </button>
 
-                <!-- Botón Forzar Reingreso (solo visible si ya ingresó) -->
-                <button id="btn-force-entry" onclick="confirmCheckinAction(true)" class="hidden w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
-                  <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                <!-- Botón Forzar Reingreso (solo visible para admin si ya ingresó) -->
+                <button id="btn-force-entry" onclick="confirmCheckinAction(true)" class="hidden w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                   <span>PERMITIR REINGRESO / SOBREESCRIBIR</span>
                 </button>
 
-                <!-- Botón Anular Check-in (para revertir ingresos erróneos o pruebas) -->
-                <button id="btn-undo-checkin" onclick="undoCurrentCheckin()" class="hidden w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
-                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <!-- Botón Anular Check-in (solo admin) -->
+                <button id="btn-undo-checkin" onclick="undoCurrentCheckin()" class="hidden w-full py-2 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                   <span>ANULAR CHECK-IN (REVERTIR A NO INGRESADO)</span>
                 </button>
 
-                <button onclick="resetCheckinSelection()" class="w-full py-2.5 px-4 rounded-xl border border-slate-200 text-slate-600 hover:text-arch-black hover:bg-slate-50 font-mono text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
-                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <button onclick="resetCheckinSelection()" class="w-full py-2 px-3 rounded-lg sm:rounded-xl border border-slate-200 text-slate-600 hover:text-arch-black hover:bg-slate-50 font-mono text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors">
+                  <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
                   <span>Cancelar / Ingresar Otra Cédula</span>
                 </button>
               </div>
 
             </div>
 
-            <!-- ============================================================ -->
-            <!-- PANTALLA DE INGRESO EXITOSO CON HORA EXACTA (AL CONFIRMAR)   -->
-            <!-- ============================================================ -->
-            <div id="checkin-success-screen" class="hidden my-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 text-white shadow-2xl space-y-6 text-center animate-content-in">
-              
-              <!-- Check animado -->
-              <div class="w-20 h-20 rounded-full bg-white text-emerald-600 flex items-center justify-center mx-auto shadow-xl ring-8 ring-white/20">
-                <i data-lucide="check" class="w-12 h-12 stroke-[3]"></i>
+            <!-- Pantalla de Ingreso Exitoso Compacta y Centrada -->
+            <div id="checkin-success-screen" class="hidden my-auto p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 text-white shadow-xl space-y-3 sm:space-y-4 text-center animate-content-in">
+              <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white text-emerald-600 flex items-center justify-center mx-auto shadow-md ring-4 ring-white/20">
+                <i data-lucide="check" class="w-8 h-8 sm:w-10 sm:h-10 stroke-[3]"></i>
               </div>
 
               <div>
-                <span class="px-3.5 py-1 rounded-full bg-white/20 border border-white/30 text-emerald-100 text-xs font-mono font-bold tracking-widest uppercase inline-block mb-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-emerald-100 text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase inline-block mb-1">
                   ACCESO AUTORIZADO • INGELAB EVOLUTION
                 </span>
-                <h2 class="text-2xl sm:text-3xl font-bold font-display text-white tracking-tight" id="success-screen-name">
+                <h2 class="text-xl sm:text-2xl font-bold font-display text-white tracking-tight" id="success-screen-name">
                   -
                 </h2>
-                <p class="text-sm text-emerald-100 font-sans mt-1" id="success-screen-institution">
+                <p class="text-xs sm:text-sm text-emerald-100 font-sans mt-0.5" id="success-screen-institution">
                   -
                 </p>
-                <div class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-black/20 text-xs font-mono text-emerald-200">
+                <div class="mt-1.5 inline-flex items-center gap-2 px-2.5 py-0.5 rounded-lg bg-black/20 text-[11px] font-mono text-emerald-200">
                   <span>C.I:</span> <strong id="success-screen-ci" class="text-white">-</strong>
                 </div>
               </div>
 
-              <!-- HORA EXACTA DEL INGRESO CON RELOJ DIGITAL DESTACADO -->
-              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/20 max-w-sm mx-auto shadow-inner">
-                <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-300 block font-bold mb-1">
+              <!-- HORA EXACTA DEL INGRESO -->
+              <div class="bg-black/30 backdrop-blur-md rounded-xl p-3 sm:p-4 border border-white/20 max-w-xs mx-auto shadow-inner">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-300 block font-bold">
                   HORA EXACTA DE INGRESO
                 </span>
-                <div class="text-3xl sm:text-4xl font-mono font-bold text-white tracking-wider" id="success-screen-time">
+                <div class="text-2xl sm:text-3xl font-mono font-bold text-white tracking-wider my-0.5" id="success-screen-time">
                   16:00:00
                 </div>
-                <span class="text-[11px] font-mono text-emerald-200 block mt-1">13 de Noviembre de 2026 • Hilton Colón</span>
+                <span class="text-[10px] font-mono text-emerald-200 block">13 de Noviembre de 2026 • Hilton Colón</span>
               </div>
 
-              <!-- Botón Siguiente Asistente -->
-              <div class="pt-2">
-                <button onclick="resetCheckinSelection()" class="w-full py-4 px-6 rounded-2xl bg-white text-emerald-900 hover:bg-emerald-50 font-mono font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-xl transition-all transform hover:-translate-y-0.5">
-                  <i data-lucide="user-plus" class="w-5 h-5"></i>
-                  <span>REGISTRAR SIGUIENTE ASISTENTE</span>
+              <div class="pt-1">
+                <button onclick="resetCheckinSelection()" class="w-full py-3 px-4 rounded-xl bg-white text-emerald-900 hover:bg-emerald-50 font-mono font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg transition-all">
+                  <i data-lucide="user-plus" class="w-4 h-4"></i>
+                  <span>SIGUIENTE ASISTENTE</span>
                 </button>
               </div>
 
@@ -814,7 +836,7 @@
     <!-- ============================================================ -->
     <!-- VISTA B: DASHBOARD / CONTADOR EN VIVO (PANTALLAS O MONITORES) -->
     <!-- ============================================================ -->
-    <main id="view-dashboard" class="flex-1 hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
+    <main id="view-dashboard" class="flex-1 hidden max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-8 w-full space-y-3 sm:space-y-6">
       
       <!-- Encabezado del Muro de Control -->
       <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -947,7 +969,7 @@
 
     <!-- VISTA PANEL ADMINISTRADOR (GESTIÓN CRUD COMPLETA)            -->
     <!-- ============================================================ -->
-    <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full">
+    <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 w-full">
       
       <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl">
         
@@ -1067,7 +1089,7 @@
   <!-- MODAL DE CONFIRMACIÓN / REGISTRO DE ASISTENCIA               -->
   <!-- ============================================================ -->
   <div id="registration-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto" onclick="if(event.target === this) closeRegistrationModal()">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-slate-200/90 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto my-auto relative animate-content-in">
+    <div class="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-slate-200/90 shadow-2xl space-y-4 sm:space-y-6 max-h-[92vh] overflow-y-auto my-auto relative animate-content-in">
       
       <!-- Encabezado del Modal -->
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -1688,75 +1710,153 @@
       }
     }
 
+    let checkinAutoResetTimer = null;
+
     function handleManualInput(val) {
-      const cleanDigits = (val || '').replace(/\D/g, '');
-      if (cleanDigits.length === 10) {
-        const match = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits);
-        if (match) {
-          selectAttendeeForCheckin(match);
-          return;
-        }
+      // 1. Limpieza estricta: solo dígitos numéricos, máximo 10 dígitos de cédula
+      const cleanDigits = (val || '').replace(/\D/g, '').slice(0, 10);
+      const inputEl = document.getElementById('checkin-manual-input');
+      if (inputEl && inputEl.value !== cleanDigits) {
+        inputEl.value = cleanDigits;
       }
-      handleManualSearch(val);
-    }
 
-    let searchTimer = null;
-    function handleManualSearch(val) {
-      clearTimeout(searchTimer);
+      if (checkinAutoResetTimer) {
+        clearTimeout(checkinAutoResetTimer);
+        checkinAutoResetTimer = null;
+      }
+
       const container = document.getElementById('checkin-search-results');
-      if (!container) return;
+      const emptyState = document.getElementById('checkin-empty-state');
+      const card = document.getElementById('checkin-attendee-card');
+      const successScreen = document.getElementById('checkin-success-screen');
 
-      const query = (val || '').trim().toLowerCase();
-      if (query.length < 2) {
-        container.innerHTML = '<div class="p-6 text-center text-xs font-mono text-slate-400">Escriba una cédula o nombre para buscar...</div>';
+      // Mientras tenga menos de 10 dígitos:
+      if (cleanDigits.length < 10) {
+        if (card) card.classList.add('hidden');
+        if (successScreen) successScreen.classList.add('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
+
+        if (container) {
+          if (cleanDigits.length === 0) {
+            container.innerHTML = `
+              <div class="p-3 sm:p-4 text-center text-xs font-mono text-slate-400">
+                Ingrese su cédula para autorizar su ingreso...
+              </div>
+            `;
+          } else {
+            container.innerHTML = `
+              <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-center space-y-1.5 animate-content-in">
+                <div class="flex items-center justify-between text-xs font-mono">
+                  <span class="text-slate-500 font-bold">Cédula:</span>
+                  <span class="font-bold text-emerald-700 tracking-wider font-mono text-sm">${cleanDigits}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold font-mono">
+                    ${cleanDigits.length} / 10
+                  </span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-emerald-500 h-full transition-all duration-200" style="width: ${(cleanDigits.length / 10) * 100}%"></div>
+                </div>
+                <p class="text-[10px] sm:text-[11px] font-mono text-slate-400">
+                  ${10 - cleanDigits.length === 1 ? 'Falta 1 dígito numérico...' : `Faltan ${10 - cleanDigits.length} dígitos numéricos...`}
+                </p>
+              </div>
+            `;
+          }
+          lucide.createIcons();
+        }
         return;
       }
 
-      searchTimer = setTimeout(() => {
-        const cleanDigits = query.replace(/\D/g, '');
-        const results = allAttendeesCache.filter(a => {
-          const matchName = (a.full_name || '').toLowerCase().includes(query);
-          const matchCi = cleanDigits && (a.ci || '').includes(cleanDigits);
-          const matchInst = (a.institution || '').toLowerCase().includes(query);
-          return matchName || matchCi || matchInst;
-        }).slice(0, 10);
-
-        if (results.length === 0) {
-          container.innerHTML = `<div class="p-6 text-center text-xs font-mono text-slate-400">No se encontraron asistentes con "${val}".</div>`;
+      // Exactamente 10 dígitos: búsqueda atómica por C.I.
+      if (cleanDigits.length === 10) {
+        const match = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits && !isRecordDeleted(a));
+        if (match) {
+          renderFoundBadge();
+          selectAttendeeForCheckin(match);
           return;
         }
 
-        container.innerHTML = results.map(a => {
-          const isChecked = Boolean(a.checked_in);
-          const badge = isChecked
-            ? '<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-mono text-[10px] font-bold">EN SALA</span>'
-            : '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-mono text-[10px] font-bold">LISTO</span>';
-
-          return `
-            <div onclick="selectAttendeeById(${a.id})" class="p-3 rounded-xl bg-white hover:bg-emerald-50/70 border border-slate-200 hover:border-emerald-400 cursor-pointer transition-all shadow-xs flex items-center justify-between gap-3">
-              <div class="min-w-0">
-                <span class="font-bold text-xs font-display text-arch-black block truncate">${escapeHtml(a.full_name || 'Sin Nombre')}</span>
-                <div class="flex items-center gap-2 text-[10px] font-mono text-slate-500 mt-0.5">
-                  <span>CI: <strong>${escapeHtml(a.ci || 'N/A')}</strong></span>
-                  <span>•</span>
-                  <span class="truncate">${escapeHtml(a.institution || 'Particular')}</span>
-                </div>
-              </div>
-              <div>${badge}</div>
+        // Si no está en caché local, consultar al servidor por sincronización entre dispositivos
+        if (container) {
+          container.innerHTML = `
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center flex items-center justify-center gap-2 text-xs font-mono text-slate-500 animate-content-in">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-600"></i>
+              <span>Verificando cédula en el sistema...</span>
             </div>
           `;
-        }).join('');
+          lucide.createIcons();
+        }
+
+        fetch('/api/attendees')
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && Array.isArray(data.attendees)) {
+              allAttendeesCache = deduplicateAttendees(data.attendees.filter(a => !isRecordDeleted(a)));
+              const remoteMatch = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits && !isRecordDeleted(a));
+              if (remoteMatch) {
+                renderFoundBadge();
+                selectAttendeeForCheckin(remoteMatch);
+                return;
+              }
+            }
+            renderNotFound(cleanDigits);
+          })
+          .catch(() => {
+            renderNotFound(cleanDigits);
+          });
+      }
+    }
+
+    function renderFoundBadge() {
+      const container = document.getElementById('checkin-search-results');
+      if (container) {
+        container.innerHTML = `
+          <div class="p-2 sm:p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-center space-y-0.5 animate-content-in">
+            <span class="text-xs font-mono font-bold text-emerald-800 flex items-center justify-center gap-1.5">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> Cédula Encontrada
+            </span>
+            <span class="text-[10px] font-mono text-emerald-700 block">Pase verificado en el sistema</span>
+          </div>
+        `;
         lucide.createIcons();
-      }, 120);
+      }
+    }
+
+    function renderNotFound(digits) {
+      const container = document.getElementById('checkin-search-results');
+      const card = document.getElementById('checkin-attendee-card');
+      const successScreen = document.getElementById('checkin-success-screen');
+      const emptyState = document.getElementById('checkin-empty-state');
+
+      if (container) {
+        container.innerHTML = `
+          <div class="p-3 rounded-xl bg-rose-50 border border-rose-300 text-center space-y-1 animate-content-in">
+            <span class="text-xs font-mono font-bold text-rose-800 flex items-center justify-center gap-1.5">
+              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i> Cédula No Registrada
+            </span>
+            <p class="text-[11px] font-mono text-rose-700">
+              No se encontró ningún registro para <strong>${escapeHtml(digits)}</strong>.
+            </p>
+            <p class="text-[10px] font-mono text-slate-500">
+              Verifique los números o regístrese como nuevo asistente.
+            </p>
+          </div>
+        `;
+        lucide.createIcons();
+      }
+      if (card) card.classList.add('hidden');
+      if (successScreen) successScreen.classList.add('hidden');
+      if (emptyState) emptyState.classList.remove('hidden');
+    }
     }
 
     function clearManualSearch() {
       const input = document.getElementById('checkin-manual-input');
       if (input) {
         input.value = '';
-        handleManualSearch('');
         input.focus();
       }
+      handleManualInput('');
     }
 
     function selectAttendeeById(id) {
@@ -1772,88 +1872,128 @@
       const card = document.getElementById('checkin-attendee-card');
       const successScreen = document.getElementById('checkin-success-screen');
       const statusBanner = document.getElementById('checkin-status-banner');
+      const attendeeDetails = document.getElementById('checkin-attendee-details');
+      const actionsContainer = document.getElementById('checkin-actions-container');
+      const alreadyClientPanel = document.getElementById('checkin-already-client-panel');
       const btnConfirm = document.getElementById('btn-confirm-entry');
       const btnForce = document.getElementById('btn-force-entry');
+      const btnUndo = document.getElementById('btn-undo-checkin');
 
       if (emptyState) emptyState.classList.add('hidden');
       if (successScreen) successScreen.classList.add('hidden');
       if (card) card.classList.remove('hidden');
 
-      // Restaurar estado limpio de los botones de acción para cada nuevo asistente
-      if (btnConfirm) {
-        btnConfirm.disabled = false;
-        btnConfirm.innerHTML = '<i data-lucide="check-circle" class="w-6 h-6"></i><span>CONFIRMAR INGRESO</span>';
-      }
-      if (btnForce) {
-        btnForce.disabled = false;
-        btnForce.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>PERMITIR REINGRESO / SOBREESCRIBIR</span>';
-      }
-      const btnUndo = document.getElementById('btn-undo-checkin');
-      if (btnUndo) btnUndo.classList.add('hidden');
+      const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
 
-      document.getElementById('checkin-display-name').textContent = attendee.full_name || 'Sin Nombre';
-      document.getElementById('checkin-display-institution').textContent = attendee.institution || 'Particular';
-      document.getElementById('checkin-display-ci').textContent = attendee.ci || 'No registrada';
-      document.getElementById('checkin-display-position').textContent = attendee.position || 'Profesional';
-      document.getElementById('checkin-display-phone').textContent = attendee.phone || '-';
-
-      const names = (attendee.full_name || 'IN').split(' ');
-      const initials = (names[0]?.[0] || '') + (names[1]?.[0] || '');
-      document.getElementById('checkin-avatar').textContent = initials.toUpperCase() || 'IN';
-
-      // VALIDACIÓN ESTRICTA DE DUPLICADOS
+      // 1. CASO ASISTENTE YA INGRESÓ (CHECK-IN PREVIO)
       if (attendee.checked_in) {
         playSound('duplicate');
         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 
-        const entryTime = attendee.checked_in_at ? new Date(attendee.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Hora previa';
-        let elapsedText = '';
-        if (attendee.checked_in_at) {
-          const elapsedMin = Math.round((Date.now() - new Date(attendee.checked_in_at).getTime()) / 60000);
-          elapsedText = elapsedMin > 0 ? ` (hace ${elapsedMin} min)` : ' (recién ingresado)';
+        const entryTime = attendee.checked_in_at ? new Date(attendee.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }) : 'Hora previa';
+
+        if (!isAdmin) {
+          // PROTECCIÓN TOTAL DE PRIVACIDAD EN MODO CLIENTE:
+          // No revelar nombre, teléfono ni datos personales a terceros en la fila
+          if (alreadyClientPanel) {
+            alreadyClientPanel.classList.remove('hidden');
+            const timeEl = document.getElementById('checkin-already-client-time');
+            if (timeEl) timeEl.textContent = entryTime;
+          }
+          if (attendeeDetails) attendeeDetails.classList.add('hidden');
+          if (actionsContainer) actionsContainer.classList.add('hidden');
+          if (statusBanner) statusBanner.classList.add('hidden');
+        } else {
+          // MODO ADMINISTRADOR: El admin sí puede ver detalles completos y opciones de forzar/anular
+          if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
+          if (attendeeDetails) attendeeDetails.classList.remove('hidden');
+          if (actionsContainer) actionsContainer.classList.remove('hidden');
+          if (statusBanner) statusBanner.classList.remove('hidden');
+
+          statusBanner.className = 'p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3 bg-rose-50 border-2 border-rose-500 text-rose-800 animate-pulse';
+          statusBanner.innerHTML = `
+            <div class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">⚠️ ASISTENTE YA INGRESÓ</span>
+              <span class="text-xs font-bold font-mono">Hora de ingreso: ${entryTime}</span>
+            </div>
+          `;
+
+          fillAttendeeCardData(attendee, entryTime + ' (REGISTRADO)');
+
+          if (btnConfirm) btnConfirm.classList.add('hidden');
+          if (btnForce) btnForce.classList.remove('hidden');
+          if (btnUndo) btnUndo.classList.remove('hidden');
         }
-
-        statusBanner.className = 'p-4 rounded-2xl flex items-center gap-3 bg-rose-50 border-2 border-rose-500 text-rose-800 animate-pulse';
-        statusBanner.innerHTML = `
-          <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0">
-            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
-          </div>
-          <div>
-            <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">⚠️ ADVERTENCIA: ESTE ASISTENTE YA INGRESÓ</span>
-            <span class="text-sm font-bold font-mono">Hora de ingreso: ${entryTime}${elapsedText}</span>
-          </div>
-        `;
-
-        document.getElementById('checkin-display-time').textContent = `${entryTime} (REGISTRADO)`;
-        document.getElementById('checkin-display-time').className = 'text-rose-600 text-xs block font-bold';
-
-        if (btnConfirm) btnConfirm.classList.add('hidden');
-        if (btnForce) btnForce.classList.remove('hidden');
-        const btnUndo = document.getElementById('btn-undo-checkin');
-        if (btnUndo) btnUndo.classList.remove('hidden');
       } else {
+        // 2. CASO ASISTENTE PENDIENTE DE INGRESO (VÁLIDO PARA AUTORIZAR)
         playSound('success');
-        statusBanner.className = 'p-4 rounded-2xl flex items-center gap-3 bg-emerald-50 border border-emerald-300 text-emerald-800';
+        if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
+        if (attendeeDetails) attendeeDetails.classList.remove('hidden');
+        if (actionsContainer) actionsContainer.classList.remove('hidden');
+        if (statusBanner) statusBanner.classList.remove('hidden');
+
+        statusBanner.className = 'p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3 bg-emerald-50 border border-emerald-300 text-emerald-800';
         statusBanner.innerHTML = `
-          <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
-            <i data-lucide="check" class="w-6 h-6"></i>
+          <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-5 h-5"></i>
           </div>
           <div>
             <span class="text-xs font-mono font-bold uppercase tracking-wider block text-emerald-700">ASISTENTE PRE-REGISTRADO</span>
-            <span class="text-sm font-bold">Pase válido • Listo para autorizar ingreso</span>
+            <span class="text-xs font-bold">Pase válido • Listo para autorizar ingreso</span>
           </div>
         `;
 
-        document.getElementById('checkin-display-time').textContent = 'Pendiente de ingreso';
-        document.getElementById('checkin-display-time').className = 'text-slate-500 text-xs block';
+        fillAttendeeCardData(attendee, 'Pendiente de ingreso');
 
-        if (btnConfirm) btnConfirm.classList.remove('hidden');
+        if (btnConfirm) {
+          btnConfirm.classList.remove('hidden');
+          btnConfirm.disabled = false;
+          btnConfirm.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5 sm:w-6 sm:h-6"></i><span>CONFIRMAR INGRESO</span>';
+        }
         if (btnForce) btnForce.classList.add('hidden');
-        const btnUndo = document.getElementById('btn-undo-checkin');
         if (btnUndo) btnUndo.classList.add('hidden');
       }
 
       lucide.createIcons();
+    }
+
+    function fillAttendeeCardData(attendee, timeText) {
+      const nameEl = document.getElementById('checkin-display-name');
+      const instEl = document.getElementById('checkin-display-institution');
+      const ciEl = document.getElementById('checkin-display-ci');
+      const posEl = document.getElementById('checkin-display-position');
+      const phoneEl = document.getElementById('checkin-display-phone');
+      const timeEl = document.getElementById('checkin-display-time');
+      const avatarEl = document.getElementById('checkin-avatar');
+
+      if (nameEl) nameEl.textContent = attendee.full_name || 'Sin Nombre';
+      if (instEl) instEl.textContent = attendee.institution || 'Particular';
+      if (ciEl) ciEl.textContent = attendee.ci || 'No registrada';
+      if (posEl) posEl.textContent = attendee.position || 'Profesional';
+      
+      // Ofuscar teléfono en pantalla pública si no es admin
+      const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
+      if (phoneEl) {
+        if (!isAdmin && attendee.phone && attendee.phone.length === 10) {
+          phoneEl.textContent = attendee.phone.slice(0, 3) + '****' + attendee.phone.slice(7);
+        } else {
+          phoneEl.textContent = attendee.phone || '-';
+        }
+      }
+
+      if (timeEl) {
+        timeEl.textContent = timeText;
+        timeEl.className = timeText.includes('REGISTRADO') ? 'text-rose-600 text-xs block font-bold truncate' : 'text-slate-700 text-xs block font-bold truncate';
+      }
+
+      if (avatarEl) {
+        const names = (attendee.full_name || 'IN').split(' ');
+        const initials = (names[0]?.[0] || '') + (names[1]?.[0] || '');
+        avatarEl.textContent = initials.toUpperCase() || 'IN';
+      }
     }
 
     async function confirmCheckinAction(force = false) {
@@ -1957,37 +2097,61 @@
         updateCheckinQuickCounters();
         showToast('Ingreso confirmado: ' + (attendee.full_name || ''));
         lucide.createIcons();
+
+        // AUTO-RESET TRAS 5 SEGUNDOS PARA PRIVACIDAD DEL SIGUIENTE EN LA FILA
+        if (checkinAutoResetTimer) clearTimeout(checkinAutoResetTimer);
+        checkinAutoResetTimer = setTimeout(() => {
+          resetCheckinSelection();
+        }, 5000);
       }
     }
 
     function resetCheckinSelection() {
+      if (checkinAutoResetTimer) {
+        clearTimeout(checkinAutoResetTimer);
+        checkinAutoResetTimer = null;
+      }
       currentCheckinAttendee = null;
       const emptyState = document.getElementById('checkin-empty-state');
       const card = document.getElementById('checkin-attendee-card');
       const successScreen = document.getElementById('checkin-success-screen');
+      const alreadyClientPanel = document.getElementById('checkin-already-client-panel');
+      const attendeeDetails = document.getElementById('checkin-attendee-details');
+      const actionsContainer = document.getElementById('checkin-actions-container');
       const btnConfirm = document.getElementById('btn-confirm-entry');
       const btnForce = document.getElementById('btn-force-entry');
+      const btnUndo = document.getElementById('btn-undo-checkin');
 
       if (emptyState) emptyState.classList.remove('hidden');
       if (card) card.classList.add('hidden');
       if (successScreen) successScreen.classList.add('hidden');
+      if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
+      if (attendeeDetails) attendeeDetails.classList.remove('hidden');
+      if (actionsContainer) actionsContainer.classList.remove('hidden');
 
       if (btnConfirm) {
         btnConfirm.disabled = false;
-        btnConfirm.innerHTML = '<i data-lucide="check-circle" class="w-6 h-6"></i><span>CONFIRMAR INGRESO</span>';
+        btnConfirm.classList.remove('hidden');
+        btnConfirm.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5 sm:w-6 sm:h-6"></i><span>CONFIRMAR INGRESO</span>';
       }
       if (btnForce) {
         btnForce.disabled = false;
-        btnForce.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>PERMITIR REINGRESO / SOBREESCRIBIR</span>';
+        btnForce.classList.add('hidden');
       }
-      const btnUndo = document.getElementById('btn-undo-checkin');
       if (btnUndo) btnUndo.classList.add('hidden');
 
-      clearManualSearch();
       const input = document.getElementById('checkin-manual-input');
       if (input) {
         input.value = '';
         setTimeout(() => input.focus(), 60);
+      }
+      const container = document.getElementById('checkin-search-results');
+      if (container) {
+        container.innerHTML = `
+          <div class="p-3 sm:p-4 text-center text-xs font-mono text-slate-400">
+            Ingrese su cédula para autorizar su ingreso...
+          </div>
+        `;
       }
       lucide.createIcons();
     }
