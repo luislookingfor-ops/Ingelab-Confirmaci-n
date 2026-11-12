@@ -127,29 +127,50 @@ function deduplicateAttendeesServer(list) {
     return Number(b.id || 0) - Number(a.id || 0);
   });
 
-  const seenNames = new Set();
-  const seenEmails = new Set();
-  const seenCis = new Set();
+  const seenNames = new Map();
+  const seenEmails = new Map();
+  const seenCis = new Map();
   const uniqueList = [];
 
   for (const item of sorted) {
+    const checkinMatch = (item.comments || '').match(/\[CHECKIN:\s*([^\]]+)\]/);
+    const checkedInAt = item.checked_in_at || (checkinMatch ? checkinMatch[1] : null);
+    item.checked_in = Boolean(checkedInAt || item.checked_in);
+    item.checked_in_at = checkedInAt;
+
     const nameKey = (item.full_name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
     const emailKey = (item.email || '').trim().toLowerCase();
     const ciKey = (item.ci || '').trim();
 
     let isDuplicate = false;
-    if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) isDuplicate = true;
-    if (emailKey && seenEmails.has(emailKey)) isDuplicate = true;
-    if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) isDuplicate = true;
+    let existingItem = null;
+    if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) {
+      isDuplicate = true;
+      existingItem = seenNames.get(nameKey);
+    } else if (emailKey && seenEmails.has(emailKey)) {
+      isDuplicate = true;
+      existingItem = seenEmails.get(emailKey);
+    } else if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
+      isDuplicate = true;
+      existingItem = seenCis.get(ciKey);
+    }
 
     if (!isDuplicate) {
-      if (nameKey && nameKey.length >= 3) seenNames.add(nameKey);
-      if (emailKey) seenEmails.add(emailKey);
-      if (ciKey && ciKey.length >= 6) seenCis.add(ciKey);
+      if (nameKey && nameKey.length >= 3) seenNames.set(nameKey, item);
+      if (emailKey) seenEmails.set(emailKey, item);
+      if (ciKey && ciKey.length >= 6) seenCis.set(ciKey, item);
 
       const isDeleted = item.attending === 'deleted' || String(item.comments || '').includes('[DELETED]');
       if (!isDeleted) {
         uniqueList.push(item);
+      }
+    } else if (existingItem && item.checked_in && !existingItem.checked_in) {
+      const checkinTime = new Date(item.checked_in_at || 0).getTime();
+      const existingCreatedTime = new Date(existingItem.created_at || 0).getTime();
+      // Solo heredar check-in si ocurrió DESPUÉS de la creación del registro actual
+      if (checkinTime > existingCreatedTime) {
+        existingItem.checked_in = true;
+        existingItem.checked_in_at = item.checked_in_at;
       }
     }
   }
@@ -179,6 +200,413 @@ app.get('/api/attendees', async (req, res) => {
     res.status(response.status).json({ success: false, error: errText });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==============================================================
+// MOTOR DE CONCURRENCIA Y CACHÉ EN MEMORIA PARA CHECK-IN SIMULTÁNEO
+// ==============================================================
+const activeCheckinLocks = new Set();
+const checkinMemoryCache = new Map(); // key: CI limpia o ID -> { checked_in_at, id, full_name }
+
+// Endpoint de Estadísticas en Vivo para Dashboard y Control de Acceso
+app.get('/api/checkin/stats', async (req, res) => {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=*&order=id.desc`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      return res.status(500).json({ success: false, error: 'Error al consultar Supabase' });
+    }
+
+    const rawList = await response.json();
+    const attendees = deduplicateAttendeesServer(rawList || []);
+
+    // Sincronizar estado en caché en memoria para validaciones a 0ms de latencia
+    for (const a of attendees) {
+      const cleanCi = (a.ci || '').trim().replace(/\D/g, '');
+      const existingCheckin = (a.comments || '').match(/\[CHECKIN:\s*([^\]]+)\]/);
+      if (a.checked_in || existingCheckin || a.checked_in_at) {
+        const timestamp = a.checked_in_at || (existingCheckin ? existingCheckin[1] : new Date().toISOString());
+        if (cleanCi) checkinMemoryCache.set(cleanCi, { checked_in_at: timestamp, id: a.id, full_name: a.full_name });
+        if (a.id) checkinMemoryCache.set(String(a.id), { checked_in_at: timestamp, id: a.id, full_name: a.full_name });
+      } else {
+        if (cleanCi) checkinMemoryCache.delete(cleanCi);
+        if (a.id) checkinMemoryCache.delete(String(a.id));
+      }
+    }
+
+    const totalRegistered = attendees.length;
+    const totalAttending = attendees.filter(a => a.attending === 'yes').length;
+    const checkedInList = attendees.filter(a => a.checked_in);
+    const totalCheckedIn = checkedInList.length;
+    const VENUE_CAPACITY = 230; // Aforo oficial del salón: 230 personas
+
+    // Calcular distribución por horas iniciando desde las 16:00
+    const hourlyCounts = {
+      '16:00': 0,
+      '17:00': 0,
+      '18:00': 0,
+      '19:00': 0,
+      '20:00': 0,
+      '21:00': 0,
+      '22:00': 0
+    };
+    for (const a of checkedInList) {
+      if (a.checked_in_at) {
+        const d = new Date(a.checked_in_at);
+        let h = d.getHours();
+        if (h < 16) h = 16;
+        if (h > 22) h = 22;
+        const hour = h.toString().padStart(2, '0') + ':00';
+        hourlyCounts[hour] = (hourlyCounts[hour] || 0) + 1;
+      }
+    }
+
+    // Ordenar cronológicamente las últimas entradas
+    const recentEntries = [...checkedInList]
+      .sort((a, b) => new Date(b.checked_in_at || 0) - new Date(a.checked_in_at || 0))
+      .slice(0, 15)
+      .map(a => ({
+        id: a.id,
+        full_name: a.full_name,
+        ci: a.ci || '',
+        institution: a.institution || 'Particular',
+        position: a.position || 'Profesional',
+        checked_in_at: a.checked_in_at
+      }));
+
+    return res.json({
+      success: true,
+      stats: {
+        totalRegistered,
+        totalAttending,
+        totalCheckedIn,
+        venueCapacity: VENUE_CAPACITY,
+        attendanceRate: Math.round((totalCheckedIn / VENUE_CAPACITY) * 100),
+        hourlyCounts,
+        recentEntries,
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Revertir TODOS los Check-ins de Prueba (Restablecer sala limpia a 0)
+app.post('/api/checkin/reset-all-tests', async (req, res) => {
+  try {
+    const getRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=*&order=id.desc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!getRes.ok) return res.status(500).json({ success: false, error: 'Error al consultar Supabase' });
+
+    const rawList = await getRes.json();
+    const cleanList = deduplicateAttendeesServer(rawList || []);
+    const checkedInList = cleanList.filter(a => a.checked_in);
+
+    const nowIso = new Date().toISOString();
+    let resetCount = 0;
+
+    for (const attendee of checkedInList) {
+      const cleanComments = (attendee.comments || '').replace(/\[CHECKIN:\s*[^\]]+\]\s*/g, '').trim();
+      const cleanCi = (attendee.ci || '').trim().replace(/\D/g, '');
+      if (cleanCi) checkinMemoryCache.delete(cleanCi);
+      checkinMemoryCache.delete(String(attendee.id));
+
+      await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([{
+          full_name: attendee.full_name,
+          ci: attendee.ci || '',
+          email: attendee.email || 'reset@ingelab.com',
+          phone: attendee.phone || '0000000000',
+          ticket_count: attendee.ticket_count || 1,
+          ticket_list: attendee.ticket_list || [],
+          institution: attendee.institution || 'Particular',
+          position: attendee.position || 'Profesional',
+          attending: attendee.attending || 'yes',
+          dietary: attendee.dietary || [],
+          comments: cleanComments,
+          created_at: nowIso
+        }])
+      });
+      resetCount++;
+    }
+
+    checkinMemoryCache.clear();
+
+    return res.json({ 
+      success: true, 
+      count: resetCount, 
+      message: `Se han restablecido exitosamente ${resetCount} check-in(s) de prueba a estado Pendiente.` 
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Revertir / Anular Check-In de un Asistente Específico
+app.post('/api/checkin/undo/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { ci } = req.body || {};
+    let attendee = null;
+
+    // Buscar asistente por ID o Cédula
+    try {
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}&limit=1`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      if (getRes.ok) {
+        const list = await getRes.json();
+        if (list && list.length > 0) attendee = list[0];
+      }
+    } catch (e) {}
+
+    const cleanCi = (ci || (attendee && attendee.ci) || '').trim().replace(/\D/g, '');
+
+    if (!attendee && cleanCi) {
+      try {
+        const getCiRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?ci=eq.${encodeURIComponent(cleanCi)}&order=id.desc&limit=1`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (getCiRes.ok) {
+          const listCi = await getCiRes.json();
+          if (listCi && listCi.length > 0) attendee = listCi[0];
+        }
+      } catch (e) {}
+    }
+
+    if (!attendee) {
+      return res.status(404).json({ success: false, error: 'Asistente no encontrado.' });
+    }
+
+    // Limpiar de la caché de memoria
+    if (cleanCi) checkinMemoryCache.delete(cleanCi);
+    checkinMemoryCache.delete(String(id));
+    if (attendee.id) checkinMemoryCache.delete(String(attendee.id));
+
+    const cleanComments = (attendee.comments || '').replace(/\[CHECKIN:\s*[^\]]+\]\s*/g, '').trim();
+    const nowIso = new Date().toISOString();
+
+    // Insertar registro limpio sin [CHECKIN] con fecha actual para que sea el vigente no ingresado
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([{
+          full_name: attendee.full_name,
+          ci: attendee.ci || cleanCi || '',
+          email: attendee.email || 'reset@ingelab.com',
+          phone: attendee.phone || '0000000000',
+          ticket_count: attendee.ticket_count || 1,
+          ticket_list: attendee.ticket_list || [],
+          institution: attendee.institution || 'Particular',
+          position: attendee.position || 'Profesional',
+          attending: attendee.attending || 'yes',
+          dietary: attendee.dietary || [],
+          comments: cleanComments,
+          created_at: nowIso
+        }])
+      });
+    } catch (e) {}
+
+    return res.json({ 
+      success: true, 
+      checked_in: false,
+      message: `Check-in de "${attendee.full_name}" anulado correctamente. Revertido a pendiente de ingreso.` 
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Endpoint de Registro de Entrada (Check-In) en Puerta con Protección de Concurrencia
+app.post('/api/checkin/:id', async (req, res) => {
+  const id = req.params.id;
+  const { force, ci, attendeeData } = req.body || {};
+  const cleanCi = (ci || (attendeeData && attendeeData.ci) || '').trim().replace(/\D/g, '');
+  const lockKey = cleanCi || String(id);
+
+  // 1. Detección instantánea de duplicados en memoria (< 1ms sin esperar a Supabase)
+  const cachedCheckin = checkinMemoryCache.get(cleanCi) || checkinMemoryCache.get(String(id));
+  if (cachedCheckin && !force) {
+    return res.status(200).json({
+      success: false,
+      already_checked_in: true,
+      checked_in_at: cachedCheckin.checked_in_at,
+      attendee: {
+        id: cachedCheckin.id || id,
+        full_name: cachedCheckin.full_name || (attendeeData && attendeeData.full_name) || 'Asistente',
+        ci: cleanCi,
+        checked_in: true,
+        checked_in_at: cachedCheckin.checked_in_at
+      },
+      message: `⚠️ Advertencia: Este asistente ya ingresó a las ${new Date(cachedCheckin.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })}`
+    });
+  }
+
+  // 2. Control de Concurrencia Simultánea: Previene peticiones en paralelo para el mismo asistente
+  if (activeCheckinLocks.has(lockKey) && !force) {
+    return res.status(200).json({
+      success: false,
+      already_checked_in: true,
+      message: '⚠️ Petición en proceso: Este asistente está siendo ingresado en otra puerta simultáneamente.'
+    });
+  }
+
+  activeCheckinLocks.add(lockKey);
+
+  try {
+    let attendee = null;
+
+    // Buscar por ID en Supabase con timeout de 3.5s
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3500);
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${id}&limit=1`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        },
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (getRes.ok) {
+        const list = await getRes.json();
+        if (list && list.length > 0) attendee = list[0];
+      }
+    } catch (e) {}
+
+    // Si no se encontró por ID y se pasó C.I., buscar por C.I.
+    if (!attendee && cleanCi) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3500);
+        const getCiRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?ci=eq.${encodeURIComponent(cleanCi)}&order=id.desc&limit=1`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          },
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+        if (getCiRes.ok) {
+          const listCi = await getCiRes.json();
+          if (listCi && listCi.length > 0) attendee = listCi[0];
+        }
+      } catch (e) {}
+    }
+
+    if (!attendee && attendeeData) {
+      attendee = attendeeData;
+    }
+
+    if (!attendee) {
+      return res.status(404).json({ success: false, error: 'Asistente no encontrado en la base de datos.' });
+    }
+
+    const existingCheckin = (attendee.comments || '').match(/\[CHECKIN:\s*([^\]]+)\]/);
+    const isAlreadyCheckedIn = Boolean(attendee.checked_in || existingCheckin || attendee.checked_in_at);
+    const checkedInAt = attendee.checked_in_at || (existingCheckin ? existingCheckin[1] : null);
+
+    if (isAlreadyCheckedIn && !force) {
+      const finalAt = checkedInAt || new Date().toISOString();
+      if (cleanCi) checkinMemoryCache.set(cleanCi, { checked_in_at: finalAt, id: attendee.id || id, full_name: attendee.full_name });
+      return res.status(200).json({
+        success: false,
+        already_checked_in: true,
+        checked_in_at: finalAt,
+        attendee: {
+          ...attendee,
+          checked_in: true,
+          checked_in_at: finalAt
+        },
+        message: `⚠️ Advertencia: Este asistente ya ingresó a las ${new Date(finalAt).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })}`
+      });
+    }
+
+    // Registrar nuevo check-in
+    const nowIso = new Date().toISOString();
+    const cleanComments = (attendee.comments || '').replace(/\[CHECKIN:\s*[^\]]+\]\s*/g, '').trim();
+    const updatedComments = `[CHECKIN: ${nowIso}] ${cleanComments}`.trim();
+
+    // Actualizar inmediatamente la caché en memoria para proteger peticiones concurrentes
+    if (cleanCi) checkinMemoryCache.set(cleanCi, { checked_in_at: nowIso, id: attendee.id || id, full_name: attendee.full_name });
+    checkinMemoryCache.set(String(id), { checked_in_at: nowIso, id: attendee.id || id, full_name: attendee.full_name });
+
+    let updatedRecord = null;
+    try {
+      const insController = new AbortController();
+      const insTimeout = setTimeout(() => insController.abort(), 3500);
+      const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify([{
+          full_name: attendee.full_name,
+          ci: attendee.ci || cleanCi || '',
+          email: attendee.email || 'checkin@ingelab.com',
+          phone: attendee.phone || '0000000000',
+          ticket_count: attendee.ticket_count || 1,
+          ticket_list: attendee.ticket_list || [],
+          institution: attendee.institution || 'Particular',
+          position: attendee.position || 'Profesional',
+          attending: attendee.attending || 'yes',
+          dietary: attendee.dietary || [],
+          comments: updatedComments,
+          created_at: nowIso
+        }]),
+        signal: insController.signal
+      });
+      clearTimeout(insTimeout);
+      if (insertRes.ok) {
+        const insData = await insertRes.json().catch(() => []);
+        updatedRecord = insData ? insData[0] : null;
+      }
+    } catch (e) {
+      console.warn('Error al guardar check-in en Supabase (mantenido en memoria):', e.message);
+    }
+
+    return res.status(200).json({
+      success: true,
+      checked_in: true,
+      checked_in_at: nowIso,
+      attendee: {
+        ...(updatedRecord || attendee),
+        checked_in: true,
+        checked_in_at: nowIso
+      },
+      message: '¡Entrada confirmada exitosamente!'
+    });
+  } catch (err) {
+    console.error('Checkin error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  } finally {
+    activeCheckinLocks.delete(lockKey);
   }
 });
 

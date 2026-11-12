@@ -249,43 +249,71 @@
           <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-12 sm:h-16 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
         </a>
 
-        <!-- Navegación: Vista Pública vs Administrador -->
-        <div class="flex items-center gap-3">
+        <!-- Navegación: Vista Cliente/Pública vs Administrador -->
+        <div class="flex items-center gap-2 sm:gap-3">
           
-          <!-- Estado Público: Botón Ver Invitación y Acceso Admin -->
-          <div id="public-nav-group" class="flex items-center gap-2">
-            <button onclick="openInvitationModal()" title="Ver Invitación Oficial" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-ingelab-navy hover:bg-slate-50 text-xs font-mono font-bold tracking-wider transition-all shadow-xs">
-              <i data-lucide="image" class="w-4 h-4 text-ingelab-green"></i>
-              <span>VER INVITACIÓN</span>
+          <!-- NAVEGACIÓN CLIENTE / PÚBLICA (Solo puede ver: CHECK-IN, EVENTO, REGISTRAR y ACCESO ADMIN) -->
+          <div id="public-nav-group" class="flex items-center gap-2 sm:gap-3">
+            <div class="inline-flex p-1 rounded-2xl bg-white/95 border border-slate-200/90 text-xs font-semibold font-mono shadow-sm">
+              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
+                <i data-lucide="scan-line" class="w-4 h-4 text-emerald-400"></i>
+                <span>CHECK-IN</span>
+              </button>
+              <button id="nav-btn-landing-pub" onclick="switchView('landing')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
+                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+                <span>EVENTO</span>
+              </button>
+            </div>
+
+            <!-- Botón Registrar Asistencia (Abre Modal de Registro) -->
+            <button onclick="openRegistrationModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs tracking-wider shadow-md hover:shadow-lg transition-all">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+              <span>+ REGISTRAR</span>
             </button>
 
-            <button onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-xs">
+            <!-- Botón Acceso Admin -->
+            <button onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-xs">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-ingelab-navy"></i>
               <span class="hidden xs:inline">ACCESO</span> ADMIN
             </button>
           </div>
 
-          <!-- Estado Logueado como Administrador -->
-          <div id="admin-nav-group" class="hidden flex items-center gap-2">
-            <div class="inline-flex p-1 rounded-xl bg-white/90 border border-slate-200 text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-form" onclick="switchView('form')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-                <span class="hidden sm:inline">FORMULARIO</span>
+          <!-- NAVEGACIÓN ADMINISTRADOR (Solo visible tras iniciar sesión como Admin) -->
+          <div id="admin-nav-group" class="hidden flex items-center gap-2 sm:gap-3">
+            <div class="inline-flex p-1 rounded-2xl bg-white/95 border border-slate-200/90 text-xs font-semibold font-mono shadow-sm">
+              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
+                <i data-lucide="scan-line" class="w-4 h-4 text-emerald-400"></i>
+                <span>CHECK-IN</span>
               </button>
-              <button id="nav-btn-admin" onclick="switchView('admin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm">
-                <i data-lucide="database" class="w-3.5 h-3.5 text-ingelab-green"></i>
-                <span>PANEL ADMIN</span>
-                <span id="badge-total-attendees" class="px-1.5 py-0.2 rounded bg-ingelab-green text-white text-[10px] font-mono font-bold">0</span>
+              <button id="nav-btn-dashboard-adm" onclick="switchView('dashboard')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Pantalla de Control en Vivo">
+                <i data-lucide="activity" class="w-4 h-4 text-blue-500"></i>
+                <span class="hidden xs:inline">EN VIVO</span>
+              </button>
+              <button id="nav-btn-landing-adm" onclick="switchView('landing')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
+                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+                <span class="hidden sm:inline">EVENTO</span>
+              </button>
+              <button id="nav-btn-admin-adm" onclick="switchView('admin')" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black" title="Base de Datos y Asistentes">
+                <i data-lucide="database" class="w-4 h-4 text-slate-500"></i>
+                <span class="hidden md:inline">BASE DE DATOS</span>
+                <span id="badge-total-attendees" class="px-1.5 py-0.2 rounded bg-ingelab-green text-white text-[10px] font-mono font-bold">227</span>
               </button>
             </div>
 
+            <!-- Botón Registrar Asistencia (Abre Modal de Registro) -->
+            <button onclick="openRegistrationModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs tracking-wider shadow-md hover:shadow-lg transition-all">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+              <span>+ REGISTRAR</span>
+            </button>
+
+            <!-- Botón Cerrar Sesión Admin -->
             <button onclick="logoutAdmin()" title="Cerrar Sesión de Administrador" class="p-2 sm:px-3 sm:py-2 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-mono font-bold flex items-center gap-1.5 transition-colors">
-              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <i data-lucide="log-out" class="w-4 h-4"></i>
               <span class="hidden md:inline">SALIR</span>
             </button>
           </div>
 
-          <button onclick="replayIntro()" title="Volver a ver apertura" class="hidden sm:inline-flex p-2.5 rounded-xl border border-slate-200/80 bg-white/80 text-slate-500 hover:text-arch-black hover:bg-white transition-colors shadow-sm">
+          <button onclick="replayIntro()" title="Volver a ver apertura" class="hidden sm:inline-flex p-2 rounded-xl border border-slate-200/80 bg-white text-slate-500 hover:text-arch-black hover:bg-slate-50 transition-colors shadow-xs">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
           </button>
         </div>
@@ -296,7 +324,7 @@
     <!-- ============================================================ -->
     <!-- VISTA FORMULARIO: CONFIRMACIÓN DE ASISTENCIA                  -->
     <!-- ============================================================ -->
-    <main id="view-form" class="flex-1 py-8 sm:py-12 px-4 sm:px-6">
+    <main id="view-form" class="flex-1 hidden py-8 sm:py-12 px-4 sm:px-6">
       
       <div class="max-w-3xl mx-auto space-y-8">
         
@@ -383,173 +411,25 @@
 
         </div>
 
-        <!-- FORMULARIO DE CONFIRMACIÓN -->
-        <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-xl">
-          
-          <div class="pb-6 border-b border-slate-200/80 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span class="text-[11px] font-mono uppercase tracking-ultra text-ingelab-green font-bold block mb-1">
-                REGISTRO DIGITAL
-              </span>
-              <h2 class="text-2xl sm:text-3xl font-bold font-display text-arch-black">
-                Confirmación de Asistencia
-              </h2>
-              <p class="text-sm text-arch-subtle mt-1">
-                Complete sus datos para acreditar su pase a Ingelab Evolution.
+        <!-- ============================================================ -->
+          <!-- BANNER CALL-TO-ACTION PARA CONFIRMAR ASISTENCIA              -->
+          <!-- ============================================================ -->
+          <div class="mt-8 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-ingelab-navy-dark via-ingelab-navy to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/10 text-left">
+            <div class="space-y-2">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Acceso Exclusivo • Cupos Limitados
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold font-display text-white">¿Asistirás a Ingelab Evolution?</h3>
+              <p class="text-xs sm:text-sm text-slate-300 font-sans max-w-lg">
+                Haga clic para completar sus datos y obtener su acreditación digital oficial para el lanzamiento de <strong>Ingelab Evolution</strong>.
               </p>
             </div>
-
-            <button type="button" onclick="openInvitationModal()" class="px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-semibold flex items-center gap-1.5 self-start sm:self-auto transition-all shadow-xs">
-              <i data-lucide="file-image" class="w-3.5 h-3.5 text-ingelab-navy"></i>
-              <span>Ver Invitación</span>
+            <button onclick="openRegistrationModal()" class="w-full sm:w-auto px-6 py-4 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 shrink-0 flex items-center justify-center gap-2.5">
+              <i data-lucide="ticket" class="w-5 h-5"></i>
+              <span>CONFIRMAR ASISTENCIA AQUÍ</span>
             </button>
           </div>
-
-          <form id="attendance-form" onsubmit="handleSubmit(event)" class="space-y-6 sm:space-y-8">
-            
-            <!-- CAMPO TRAMPA HONEYPOT (ANTI-BOTS / ANTI-SPAM) -->
-            <div style="opacity:0; position:absolute; top:0; left:0; height:0; width:0; z-index:-1; overflow:hidden;" aria-hidden="true">
-              <label for="website_url_hp">Por favor no complete este campo</label>
-              <input type="text" id="website_url_hp" name="website_url_hp" tabindex="-1" autocomplete="off">
-            </div>
-            
-            <!-- SECCIÓN 01: INFORMACIÓN DEL ASISTENTE -->
-            <div>
-              <div class="flex items-center gap-3 mb-5">
-                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">01</span>
-                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información del Asistente</h3>
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <!-- Nombre Completo (OBLIGATORIO - SOLO TEXTO) -->
-                <div class="sm:col-span-2">
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="fullName">
-                    Nombre y Apellidos completos <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
-                  </label>
-                  <input type="text" id="fullName" name="fullName" required placeholder="Ej: Dr. Juan Carlos Pérez" 
-                    oninput="this.value = this.value.replace(/[0-9]/g, '')"
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
-                </div>
-
-                <!-- Cédula de Identidad (C.I.) (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
-                    C.I. / Documento de Identidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
-                  </label>
-                  <input type="text" id="ci" name="ci" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 1712345678)" 
-                    oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
-                </div>
-
-                <!-- Fecha de Nacimiento (ÚNICO CAMPO NO OBLIGATORIO - FECHA REAL NO FICTICIA NI LEJANA) -->
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="birthDate">
-                    Fecha de Nacimiento <span class="text-slate-400 font-normal lowercase">(opcional - fecha real)</span>
-                  </label>
-                  <input type="date" id="birthDate" name="birth_date" min="1935-01-01" max="2008-12-31" 
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono text-slate-700">
-                </div>
-
-                <!-- Correo Electrónico (OBLIGATORIO) -->
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="email">
-                    Correo Electrónico <span class="text-rose-500 font-bold">*</span>
-                  </label>
-                  <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com" 
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
-                </div>
-
-                <!-- Teléfono / WhatsApp (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
-                    Teléfono Móvil / WhatsApp <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
-                  </label>
-                  <input type="tel" id="phone" name="phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 0991234567)" 
-                    oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
-                </div>
-
-              </div>
-            </div>
-
-            <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL (OBLIGATORIA - SOLO TEXTO) -->
-            <div class="pt-6 border-t border-slate-200/80">
-              <div class="flex items-center gap-3 mb-5">
-                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
-                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información Profesional</h3>
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <!-- Institución / Laboratorio (OBLIGATORIO - SOLO TEXTO) -->
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="institution">
-                    Institución o Laboratorio Clínico <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
-                  </label>
-                  <input type="text" id="institution" name="institution" required placeholder="Ej: Hospital Metropolitano / Lab. Clínico" 
-                    oninput="this.value = this.value.replace(/[0-9]/g, '')"
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
-                </div>
-
-                <!-- Cargo / Especialidad (OBLIGATORIO - SOLO TEXTO) -->
-                <div>
-                  <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="position">
-                    Cargo o Especialidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
-                  </label>
-                  <input type="text" id="position" name="position" required placeholder="Ej: Director Técnico / Bioquímico" 
-                    oninput="this.value = this.value.replace(/[0-9]/g, '')"
-                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
-                </div>
-
-              </div>
-            </div>
-
-            <!-- SECCIÓN 03: CONFIRMACIÓN DE ASISTENCIA (OBLIGATORIA) -->
-            <div class="pt-6 border-t border-slate-200/80">
-              <div class="flex items-center gap-3 mb-5">
-                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">03</span>
-                <h3 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Confirmación de Asistencia <span class="text-rose-500 font-bold">*</span></h3>
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <label class="relative flex items-center p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-ingelab-green bg-white has-[:checked]:border-ingelab-green has-[:checked]:bg-ingelab-green-light shadow-sm">
-                  <input type="radio" name="attending" value="yes" checked class="w-4 h-4 text-ingelab-green focus:ring-ingelab-green border-slate-300">
-                  <div class="ml-3">
-                    <span class="block text-sm font-bold text-arch-black">Confirmo mi Asistencia</span>
-                    <span class="block text-xs text-arch-subtle">Acreditación personal confirmada</span>
-                  </div>
-                </label>
-
-                <label class="relative flex items-center p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-slate-400 bg-white has-[:checked]:border-slate-400 has-[:checked]:bg-slate-100 shadow-sm">
-                  <input type="radio" name="attending" value="no" class="w-4 h-4 text-slate-600 focus:ring-slate-500 border-slate-300">
-                  <div class="ml-3">
-                    <span class="block text-sm font-bold text-arch-black">No podré asistir</span>
-                    <span class="block text-xs text-arch-subtle">Notificación al comité de INGELAB</span>
-                  </div>
-                </label>
-
-              </div>
-            </div>
-
-            <!-- BOTÓN DE ENVÍO -->
-            <div class="pt-2">
-              <button type="submit" id="submit-btn" 
-                class="w-full py-4 px-8 rounded-xl bg-gradient-to-r from-ingelab-green to-ingelab-green-dark hover:from-ingelab-green-dark hover:to-ingelab-navy text-white font-mono font-bold text-xs uppercase tracking-ultra transition-all shadow-lg shadow-ingelab-green/20 flex items-center justify-center gap-3">
-                <span id="submit-btn-text">CONFIRMAR ASISTENCIA</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              </button>
-
-              <div class="flex items-center justify-center gap-2 text-[11px] font-mono text-arch-subtle mt-4">
-                <i data-lucide="shield" class="w-3.5 h-3.5 text-ingelab-green"></i>
-                <span>REGISTRO OFICIAL Y ENCRIPTADO • SISTEMA DE ASISTENCIA INGELAB</span>
-              </div>
-            </div>
-
-          </form>
-
-        </div>
 
       </div>
 
@@ -652,6 +532,354 @@
     </main>
 
     <!-- ============================================================ -->
+    
+    <!-- ============================================================ -->
+    <!-- VISTA A: PANEL DE CHECK-IN Y CONTROL DE ACCESO              -->
+    <!-- ============================================================ -->
+    <main id="view-checkin" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
+      
+      <!-- Bar Superior del Operador -->
+      <div class="glass-panel border border-white/80 rounded-3xl p-4 sm:p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-mono font-bold uppercase tracking-wider mb-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              Control de Acceso
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold font-display text-arch-black">Acreditación y Check-in en Tiempo Real</h2>
+          </div>
+
+          <!-- Métricas Rápidas en Puerta (Solo visibles para el Administrador) -->
+          <div id="checkin-stats-bar" class="hidden items-center gap-3 font-mono">
+            <div class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
+              <span class="text-[10px] text-slate-500 uppercase block font-bold">En Sala</span>
+              <span id="checkin-quick-checked" class="text-lg font-bold text-emerald-600">0</span>
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
+              <span class="text-[10px] text-slate-500 uppercase block font-bold">Aforo Total</span>
+              <span id="checkin-quick-total" class="text-lg font-bold text-slate-700">230</span>
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center shadow-xs">
+              <span class="text-[10px] text-emerald-700 uppercase block font-bold">% Aforo</span>
+              <span id="checkin-quick-pct" class="text-lg font-bold text-emerald-700">0%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Contenido de los Modos -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Columna Izquierda: Input de Búsqueda por Cédula (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Contenedor Búsqueda Directa (CÉDULA / NOMBRE) -->
+          <div id="checkin-panel-manual" class="glass-panel border border-white/80 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
+            <div>
+              <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Número de Cédula o Nombre:
+              </label>
+              <div class="relative">
+                <i data-lucide="id-card" class="w-5 h-5 text-emerald-600 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="checkin-manual-input" autofocus oninput="handleManualInput(this.value)" placeholder="Ej: 1723521918..." class="w-full pl-11 pr-10 py-3.5 rounded-2xl border-2 border-emerald-500/40 focus:border-emerald-500 bg-white text-base font-mono font-bold text-slate-800 placeholder-slate-400 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none transition-all shadow-sm">
+                <button onclick="clearManualSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
+                  <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 font-mono mt-2">
+                Escriba los <strong>10 dígitos de la cédula</strong> para cargar los datos de forma instantánea.
+              </p>
+            </div>
+
+            <!-- Lista de Resultados de Búsqueda -->
+            <div id="checkin-search-results" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+              <div class="p-6 text-center text-xs font-mono text-slate-400">
+                Escriba la cédula para autocompletar...
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna Derecha: Tarjeta de Acreditación / Resultado de Check-in (7 cols) -->
+        <div class="lg:col-span-7">
+          <div id="checkin-card-container" class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl min-h-[440px] flex flex-col justify-between relative overflow-hidden">
+            
+            <!-- Estado Vacío (Esperando Asistente) -->
+            <div id="checkin-empty-state" class="my-auto text-center py-12 space-y-4">
+              <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-inner">
+                <i data-lucide="id-card" class="w-8 h-8"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold font-display text-slate-700">Listo para Check-in</h3>
+                <p class="text-xs text-slate-500 font-mono mt-1 max-w-sm mx-auto">
+                  Ingrese el número de cédula del asistente para desplegar sus datos y autorizar su ingreso al evento.
+                </p>
+              </div>
+            </div>
+
+            <!-- Tarjeta de Asistente Seleccionado (Oculta por defecto) -->
+            <div id="checkin-attendee-card" class="hidden space-y-6">
+              
+              <!-- Banner de Alerta / Estado -->
+              <div id="checkin-status-banner" class="p-4 rounded-2xl flex items-center gap-3">
+                <!-- Dinámico: verde o rojo/alerta -->
+              </div>
+
+              <!-- Ficha de Datos del Asistente -->
+              <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm space-y-4">
+                <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
+                  <div id="checkin-avatar" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ingelab-navy to-slate-900 text-white font-mono font-bold text-lg flex items-center justify-center shadow-md shrink-0">
+                    JD
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <span id="checkin-badge-type" class="text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 inline-block mb-1">
+                      INVITADO ESPECIAL • 1 PASE
+                    </span>
+                    <h3 id="checkin-display-name" class="text-lg sm:text-xl font-bold font-display text-arch-black truncate">
+                      -
+                    </h3>
+                    <p id="checkin-display-institution" class="text-xs text-slate-500 font-sans truncate">
+                      -
+                    </p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Cédula de Identidad:</span>
+                    <span id="checkin-display-ci" class="font-bold text-slate-800 text-sm">-</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Cargo / Especialidad:</span>
+                    <span id="checkin-display-position" class="font-bold text-slate-800 text-xs truncate block">-</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Teléfono Móvil:</span>
+                    <span id="checkin-display-phone" class="text-slate-700 text-xs block">-</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span class="text-[10px] text-slate-400 uppercase block font-bold">Hora de Ingreso:</span>
+                    <span id="checkin-display-time" class="text-slate-700 text-xs block font-bold">-</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botones de Acción (Confirmar Ingreso / Forzar / Siguiente) -->
+              <div id="checkin-actions-container" class="space-y-3 pt-2">
+                <!-- Botón Grande: Confirmar Ingreso -->
+                <button id="btn-confirm-entry" onclick="confirmCheckinAction(false)" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-mono font-bold text-base tracking-wider uppercase flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                  <i data-lucide="check-circle" class="w-6 h-6"></i>
+                  <span>CONFIRMAR INGRESO</span>
+                </button>
+
+                <!-- Botón Forzar Reingreso (solo visible si ya ingresó) -->
+                <button id="btn-force-entry" onclick="confirmCheckinAction(true)" class="hidden w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
+                  <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                  <span>PERMITIR REINGRESO / SOBREESCRIBIR</span>
+                </button>
+
+                <!-- Botón Anular Check-in (para revertir ingresos erróneos o pruebas) -->
+                <button id="btn-undo-checkin" onclick="undoCurrentCheckin()" class="hidden w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
+                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                  <span>ANULAR CHECK-IN (REVERTIR A NO INGRESADO)</span>
+                </button>
+
+                <button onclick="resetCheckinSelection()" class="w-full py-2.5 px-4 rounded-xl border border-slate-200 text-slate-600 hover:text-arch-black hover:bg-slate-50 font-mono text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                  <span>Cancelar / Ingresar Otra Cédula</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PANTALLA DE INGRESO EXITOSO CON HORA EXACTA (AL CONFIRMAR)   -->
+            <!-- ============================================================ -->
+            <div id="checkin-success-screen" class="hidden my-auto p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 text-white shadow-2xl space-y-6 text-center animate-content-in">
+              
+              <!-- Check animado -->
+              <div class="w-20 h-20 rounded-full bg-white text-emerald-600 flex items-center justify-center mx-auto shadow-xl ring-8 ring-white/20">
+                <i data-lucide="check" class="w-12 h-12 stroke-[3]"></i>
+              </div>
+
+              <div>
+                <span class="px-3.5 py-1 rounded-full bg-white/20 border border-white/30 text-emerald-100 text-xs font-mono font-bold tracking-widest uppercase inline-block mb-2">
+                  ACCESO AUTORIZADO • INGELAB EVOLUTION
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-bold font-display text-white tracking-tight" id="success-screen-name">
+                  -
+                </h2>
+                <p class="text-sm text-emerald-100 font-sans mt-1" id="success-screen-institution">
+                  -
+                </p>
+                <div class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-black/20 text-xs font-mono text-emerald-200">
+                  <span>C.I:</span> <strong id="success-screen-ci" class="text-white">-</strong>
+                </div>
+              </div>
+
+              <!-- HORA EXACTA DEL INGRESO CON RELOJ DIGITAL DESTACADO -->
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/20 max-w-sm mx-auto shadow-inner">
+                <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-300 block font-bold mb-1">
+                  HORA EXACTA DE INGRESO
+                </span>
+                <div class="text-3xl sm:text-4xl font-mono font-bold text-white tracking-wider" id="success-screen-time">
+                  16:00:00
+                </div>
+                <span class="text-[11px] font-mono text-emerald-200 block mt-1">13 de Noviembre de 2026 • Hilton Colón</span>
+              </div>
+
+              <!-- Botón Siguiente Asistente -->
+              <div class="pt-2">
+                <button onclick="resetCheckinSelection()" class="w-full py-4 px-6 rounded-2xl bg-white text-emerald-900 hover:bg-emerald-50 font-mono font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-xl transition-all transform hover:-translate-y-0.5">
+                  <i data-lucide="user-plus" class="w-5 h-5"></i>
+                  <span>REGISTRAR SIGUIENTE ASISTENTE</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- VISTA B: DASHBOARD / CONTADOR EN VIVO (PANTALLAS O MONITORES) -->
+    <!-- ============================================================ -->
+    <main id="view-dashboard" class="flex-1 hidden max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
+      
+      <!-- Encabezado del Muro de Control -->
+      <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-xs font-mono font-bold uppercase tracking-wider">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            Sincronización en Tiempo Real Activa
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-bold font-display text-arch-black tracking-tight">
+            Monitor de Asistencia en Sala
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 font-mono">
+            INGELAB EVOLUTION • QUITO • HOTEL HILTON COLÓN
+          </p>
+        </div>
+
+        <!-- Reloj en Vivo y Botón Pantalla Completa -->
+        <div class="flex items-center gap-4">
+          <div class="p-3 sm:p-4 rounded-2xl bg-slate-900 text-white font-mono text-right shadow-md border border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">HORA OFICIAL</span>
+            <span id="dashboard-clock" class="text-xl sm:text-2xl font-bold tracking-widest text-emerald-400">17:00:00</span>
+          </div>
+
+          <button onclick="toggleDashboardFullscreen()" title="Alternar Pantalla Completa" class="p-3.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:text-arch-black hover:bg-slate-50 transition-all shadow-sm">
+            <i data-lucide="maximize" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 TARJETAS KPI DE IMPACTO -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        
+        <!-- KPI 1: Total Registrados -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-5 sm:p-6 shadow-lg relative overflow-hidden bg-white">
+          <div class="flex items-center justify-between text-xs font-mono text-slate-500 uppercase tracking-wider mb-2 font-bold">
+            <span>Total Registrados</span>
+            <i data-lucide="users" class="w-5 h-5 text-slate-400"></i>
+          </div>
+          <div id="dash-kpi-registered" class="text-3xl sm:text-5xl font-mono font-bold text-arch-black">0</div>
+          <span class="text-[11px] text-slate-500 font-mono mt-1 block">Base de invitados</span>
+        </div>
+
+        <!-- KPI 2: Confirmados (Sí Asisten) -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-5 sm:p-6 shadow-lg relative overflow-hidden bg-white">
+          <div class="flex items-center justify-between text-xs font-mono text-slate-500 uppercase tracking-wider mb-2 font-bold">
+            <span>Confirmados (SÍ)</span>
+            <i data-lucide="thumbs-up" class="w-5 h-5 text-blue-500"></i>
+          </div>
+          <div id="dash-kpi-attending" class="text-3xl sm:text-5xl font-mono font-bold text-blue-600">0</div>
+          <span class="text-[11px] text-slate-500 font-mono mt-1 block">Asistencia confirmada</span>
+        </div>
+
+        <!-- KPI 3: INGRESADOS EN SALA (Check-in Real) -->
+        <div class="glass-panel border-2 border-emerald-500/40 rounded-3xl p-5 sm:p-6 shadow-xl relative overflow-hidden bg-gradient-to-br from-white via-white to-emerald-50/50">
+          <div class="flex items-center justify-between text-xs font-mono text-emerald-800 uppercase tracking-wider mb-2 font-bold">
+            <span>Ingresados en Sala</span>
+            <i data-lucide="user-check" class="w-5 h-5 text-emerald-600"></i>
+          </div>
+          <div id="dash-kpi-checked" class="text-3xl sm:text-5xl font-mono font-bold text-emerald-600">0</div>
+          <div class="flex items-center gap-1.5 text-[11px] text-emerald-700 font-mono mt-1 font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Acreditados en puerta</span>
+          </div>
+        </div>
+
+        <!-- KPI 4: % Aforo y Tasa de Asistencia -->
+        <div class="glass-panel border border-white/80 rounded-3xl p-5 sm:p-6 shadow-lg relative overflow-hidden bg-white">
+          <div class="flex items-center justify-between text-xs font-mono text-slate-500 uppercase tracking-wider mb-2 font-bold">
+            <span>% Aforo en Sala</span>
+            <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-500"></i>
+          </div>
+          <div id="dash-kpi-rate" class="text-3xl sm:text-5xl font-mono font-bold text-indigo-600">0%</div>
+          <span id="dash-kpi-subtext" class="text-[11px] text-slate-500 font-mono mt-1 block">0 de 230 personas</span>
+          <!-- Barra de progreso -->
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden border border-slate-200">
+            <div id="dash-progress-bar" class="bg-gradient-to-r from-emerald-500 to-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN INFERIOR: GRÁFICA DE FLUJO POR HORA + FEED EN VIVO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Gráfica de Flujo por Hora (7 cols) -->
+        <div class="lg:col-span-7 glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-600 font-bold block mb-0.5">DINÁMICA DE ENTRADAS</span>
+              <h3 class="text-lg font-bold font-display text-arch-black">Flujo de Ingreso por Hora</h3>
+            </div>
+            <div class="text-xs font-mono text-slate-400">
+              Puerta Principal
+            </div>
+          </div>
+
+          <!-- Contenedor de Barras Horarias -->
+          <div id="dash-hourly-chart" class="h-64 flex items-end justify-between gap-2 sm:gap-4 pt-8 pb-4 px-2">
+            <!-- Generado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Feed en Vivo de Últimos Asistentes (5 cols) -->
+        <div class="lg:col-span-5 glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl space-y-4 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+              <div>
+                <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-600 font-bold block mb-0.5">FEED EN TIEMPO REAL</span>
+                <h3 class="text-lg font-bold font-display text-arch-black">Últimos en Ingresar</h3>
+              </div>
+              <span class="flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> EN VIVO
+              </span>
+            </div>
+
+            <!-- Lista scrolleable del feed -->
+            <div id="dash-recent-feed" class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+              <!-- Generado dinámicamente -->
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 text-center">
+            <span class="text-[11px] font-mono text-slate-400">Actualización en tiempo real • Intervalo 4s</span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
     <!-- VISTA PANEL ADMINISTRADOR (GESTIÓN CRUD COMPLETA)            -->
     <!-- ============================================================ -->
     <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full">
@@ -680,6 +908,12 @@
             <button onclick="loadAdminData()" class="px-3.5 py-2 bg-white border border-slate-200 text-arch-black rounded-lg text-xs font-mono font-semibold flex items-center gap-2 hover:bg-slate-50 shadow-sm">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-ingelab-navy"></i>
               <span>ACTUALIZAR</span>
+            </button>
+
+            <!-- Reiniciar Check-ins de Prueba -->
+            <button onclick="resetAllTestCheckins()" class="px-3.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-1.5 transition-all shadow-xs" title="Restablecer todos los check-in a Pendiente (0 en sala)">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>REINICIAR CHECK-INS</span>
             </button>
 
             <!-- Exportar Excel NATIVO .XLSX -->
@@ -724,9 +958,16 @@
         <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="relative w-full sm:w-80">
-              <input type="search" id="search-input" onkeyup="filterTable()" placeholder="Buscar asistente, C.I., email, empresa..." autocomplete="off" name="search_attendees_query" 
-                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ingelab-green">
+            <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+              <div class="relative w-full sm:w-80">
+                <input type="search" id="search-input" onkeyup="filterTable()" placeholder="Buscar asistente, C.I., email, empresa..." autocomplete="off" name="search_attendees_query" 
+                  class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-ingelab-green">
+              </div>
+              <div class="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-mono font-bold shrink-0">
+                <button type="button" id="tab-filter-all" onclick="setTableFilterTab('all')" class="px-2.5 py-1 rounded-lg bg-white text-slate-800 shadow-xs">Todos</button>
+                <button type="button" id="tab-filter-checked" onclick="setTableFilterTab('checked')" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800">En Sala</button>
+                <button type="button" id="tab-filter-pending" onclick="setTableFilterTab('pending')" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800">Pendientes</button>
+              </div>
             </div>
 
             <span class="text-xs font-mono text-slate-400">Total mostrados: <strong id="filter-count" class="text-slate-700">0</strong></span>
@@ -1069,6 +1310,644 @@
   <script>
     lucide.createIcons();
 
+    
+    // ============================================================
+    // SISTEMA DE CHECK-IN EN TIEMPO REAL Y DASHBOARD EN VIVO
+    // ============================================================
+    let currentCheckinAttendee = null;
+    let checkinMode = 'manual';
+    let dashboardPollingInterval = null;
+    let clockInterval = null;
+
+    // Sintetizador de Audio Web Audio API para feedback sonoro en puerta
+    function playSound(type) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'success') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+          osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.35);
+        } else if (type === 'duplicate' || type === 'warning') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, ctx.currentTime);
+          osc.frequency.setValueAtTime(180, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.4, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.45);
+        }
+      } catch (e) {}
+    }
+
+    function initCheckinView() {
+      updateCheckinQuickCounters();
+      resetCheckinSelection();
+            loadAdminData().then(() => {
+        updateCheckinQuickCounters();
+      });
+      setTimeout(() => {
+        const input = document.getElementById('checkin-manual-input');
+        if (input) input.focus();
+      }, 150);
+    }
+
+    
+
+    function parseQrContent(decodedText) {
+      if (!decodedText) return null;
+      const str = String(decodedText).trim();
+
+      try {
+        if (str.startsWith('http://') || str.startsWith('https://')) {
+          const url = new URL(str);
+          const ciParam = url.searchParams.get('ci') || url.searchParams.get('cedula');
+          if (ciParam) return { ci: ciParam.replace(/\D/g, '').slice(0, 10) };
+          const idParam = url.searchParams.get('id');
+          if (idParam) return { id: idParam };
+          const emailParam = url.searchParams.get('email');
+          if (emailParam) return { email: emailParam.toLowerCase() };
+        }
+      } catch (e) {}
+
+      if (str.startsWith('{') && str.endsWith('}')) {
+        try {
+          const obj = JSON.parse(str);
+          if (obj.ci || obj.cedula) return { ci: String(obj.ci || obj.cedula).replace(/\D/g, '').slice(0, 10) };
+          if (obj.id) return { id: obj.id };
+          if (obj.email) return { email: obj.email.toLowerCase() };
+        } catch (e) {}
+      }
+
+      const digits = str.replace(/\D/g, '');
+      if (digits.length === 10) {
+        return { ci: digits };
+      }
+
+      if (/^\d+$/.test(str) && digits.length < 8) {
+        return { id: str };
+      }
+
+      return { query: str };
+    }
+
+    async function handleScannedData(text) {
+      const parsed = parseQrContent(text);
+      if (!parsed) return;
+
+      let found = null;
+      if (parsed.ci) {
+        found = allAttendeesCache.find(a => (a.ci || '').trim() === parsed.ci);
+      }
+      if (!found && parsed.id) {
+        found = allAttendeesCache.find(a => String(a.id) === String(parsed.id));
+      }
+      if (!found && parsed.email) {
+        found = allAttendeesCache.find(a => (a.email || '').toLowerCase() === parsed.email);
+      }
+      if (!found && parsed.query) {
+        const q = parsed.query.toLowerCase();
+        found = allAttendeesCache.find(a => (a.full_name || '').toLowerCase().includes(q) || (a.ci || '').includes(q));
+      }
+
+      if (found) {
+        selectAttendeeForCheckin(found);
+      } else {
+        if (parsed.ci) {
+          await fetchAttendeeFromApiByCi(parsed.ci);
+        } else {
+          playSound('duplicate');
+          alert(`Código QR leído: "${text}". No se encontró ningún asistente registrado con esos datos.`);
+        }
+      }
+    }
+
+    async function fetchAttendeeFromApiByCi(ci) {
+      try {
+        const res = await fetch('/api/attendees');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.attendees)) {
+            allAttendeesCache = deduplicateAttendees(data.attendees);
+            const match = allAttendeesCache.find(a => (a.ci || '').trim() === ci);
+            if (match) {
+              selectAttendeeForCheckin(match);
+              return;
+            }
+          }
+        }
+        playSound('duplicate');
+        alert(`No se encontró ningún registro para la Cédula: ${ci}`);
+      } catch (e) {
+        alert('Error al consultar datos del asistente: ' + e.message);
+      }
+    }
+
+    function handleManualInput(val) {
+      const cleanDigits = (val || '').replace(/\D/g, '');
+      if (cleanDigits.length === 10) {
+        const match = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits);
+        if (match) {
+          selectAttendeeForCheckin(match);
+          return;
+        }
+      }
+      handleManualSearch(val);
+    }
+
+    let searchTimer = null;
+    function handleManualSearch(val) {
+      clearTimeout(searchTimer);
+      const container = document.getElementById('checkin-search-results');
+      if (!container) return;
+
+      const query = (val || '').trim().toLowerCase();
+      if (query.length < 2) {
+        container.innerHTML = '<div class="p-6 text-center text-xs font-mono text-slate-400">Escriba una cédula o nombre para buscar...</div>';
+        return;
+      }
+
+      searchTimer = setTimeout(() => {
+        const cleanDigits = query.replace(/\D/g, '');
+        const results = allAttendeesCache.filter(a => {
+          const matchName = (a.full_name || '').toLowerCase().includes(query);
+          const matchCi = cleanDigits && (a.ci || '').includes(cleanDigits);
+          const matchInst = (a.institution || '').toLowerCase().includes(query);
+          return matchName || matchCi || matchInst;
+        }).slice(0, 10);
+
+        if (results.length === 0) {
+          container.innerHTML = `<div class="p-6 text-center text-xs font-mono text-slate-400">No se encontraron asistentes con "${val}".</div>`;
+          return;
+        }
+
+        container.innerHTML = results.map(a => {
+          const isChecked = Boolean(a.checked_in);
+          const badge = isChecked
+            ? '<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-mono text-[10px] font-bold">EN SALA</span>'
+            : '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-mono text-[10px] font-bold">LISTO</span>';
+
+          return `
+            <div onclick="selectAttendeeById(${a.id})" class="p-3 rounded-xl bg-white hover:bg-emerald-50/70 border border-slate-200 hover:border-emerald-400 cursor-pointer transition-all shadow-xs flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <span class="font-bold text-xs font-display text-arch-black block truncate">${escapeHtml(a.full_name || 'Sin Nombre')}</span>
+                <div class="flex items-center gap-2 text-[10px] font-mono text-slate-500 mt-0.5">
+                  <span>CI: <strong>${escapeHtml(a.ci || 'N/A')}</strong></span>
+                  <span>•</span>
+                  <span class="truncate">${escapeHtml(a.institution || 'Particular')}</span>
+                </div>
+              </div>
+              <div>${badge}</div>
+            </div>
+          `;
+        }).join('');
+        lucide.createIcons();
+      }, 120);
+    }
+
+    function clearManualSearch() {
+      const input = document.getElementById('checkin-manual-input');
+      if (input) {
+        input.value = '';
+        handleManualSearch('');
+        input.focus();
+      }
+    }
+
+    function selectAttendeeById(id) {
+      const attendee = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
+      if (attendee) {
+        selectAttendeeForCheckin(attendee);
+      }
+    }
+
+    function selectAttendeeForCheckin(attendee) {
+      currentCheckinAttendee = attendee;
+      const emptyState = document.getElementById('checkin-empty-state');
+      const card = document.getElementById('checkin-attendee-card');
+      const successScreen = document.getElementById('checkin-success-screen');
+      const statusBanner = document.getElementById('checkin-status-banner');
+      const btnConfirm = document.getElementById('btn-confirm-entry');
+      const btnForce = document.getElementById('btn-force-entry');
+
+      if (emptyState) emptyState.classList.add('hidden');
+      if (successScreen) successScreen.classList.add('hidden');
+      if (card) card.classList.remove('hidden');
+
+      // Restaurar estado limpio de los botones de acción para cada nuevo asistente
+      if (btnConfirm) {
+        btnConfirm.disabled = false;
+        btnConfirm.innerHTML = '<i data-lucide="check-circle" class="w-6 h-6"></i><span>CONFIRMAR INGRESO</span>';
+      }
+      if (btnForce) {
+        btnForce.disabled = false;
+        btnForce.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>PERMITIR REINGRESO / SOBREESCRIBIR</span>';
+      }
+      const btnUndo = document.getElementById('btn-undo-checkin');
+      if (btnUndo) btnUndo.classList.add('hidden');
+
+      document.getElementById('checkin-display-name').textContent = attendee.full_name || 'Sin Nombre';
+      document.getElementById('checkin-display-institution').textContent = attendee.institution || 'Particular';
+      document.getElementById('checkin-display-ci').textContent = attendee.ci || 'No registrada';
+      document.getElementById('checkin-display-position').textContent = attendee.position || 'Profesional';
+      document.getElementById('checkin-display-phone').textContent = attendee.phone || '-';
+
+      const names = (attendee.full_name || 'IN').split(' ');
+      const initials = (names[0]?.[0] || '') + (names[1]?.[0] || '');
+      document.getElementById('checkin-avatar').textContent = initials.toUpperCase() || 'IN';
+
+      // VALIDACIÓN ESTRICTA DE DUPLICADOS
+      if (attendee.checked_in) {
+        playSound('duplicate');
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+        const entryTime = attendee.checked_in_at ? new Date(attendee.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Hora previa';
+        let elapsedText = '';
+        if (attendee.checked_in_at) {
+          const elapsedMin = Math.round((Date.now() - new Date(attendee.checked_in_at).getTime()) / 60000);
+          elapsedText = elapsedMin > 0 ? ` (hace ${elapsedMin} min)` : ' (recién ingresado)';
+        }
+
+        statusBanner.className = 'p-4 rounded-2xl flex items-center gap-3 bg-rose-50 border-2 border-rose-500 text-rose-800 animate-pulse';
+        statusBanner.innerHTML = `
+          <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">⚠️ ADVERTENCIA: ESTE ASISTENTE YA INGRESÓ</span>
+            <span class="text-sm font-bold font-mono">Hora de ingreso: ${entryTime}${elapsedText}</span>
+          </div>
+        `;
+
+        document.getElementById('checkin-display-time').textContent = `${entryTime} (REGISTRADO)`;
+        document.getElementById('checkin-display-time').className = 'text-rose-600 text-xs block font-bold';
+
+        if (btnConfirm) btnConfirm.classList.add('hidden');
+        if (btnForce) btnForce.classList.remove('hidden');
+        const btnUndo = document.getElementById('btn-undo-checkin');
+        if (btnUndo) btnUndo.classList.remove('hidden');
+      } else {
+        playSound('success');
+        statusBanner.className = 'p-4 rounded-2xl flex items-center gap-3 bg-emerald-50 border border-emerald-300 text-emerald-800';
+        statusBanner.innerHTML = `
+          <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider block text-emerald-700">ASISTENTE PRE-REGISTRADO</span>
+            <span class="text-sm font-bold">Pase válido • Listo para autorizar ingreso</span>
+          </div>
+        `;
+
+        document.getElementById('checkin-display-time').textContent = 'Pendiente de ingreso';
+        document.getElementById('checkin-display-time').className = 'text-slate-500 text-xs block';
+
+        if (btnConfirm) btnConfirm.classList.remove('hidden');
+        if (btnForce) btnForce.classList.add('hidden');
+        const btnUndo = document.getElementById('btn-undo-checkin');
+        if (btnUndo) btnUndo.classList.add('hidden');
+      }
+
+      lucide.createIcons();
+    }
+
+    async function confirmCheckinAction(force = false) {
+      if (!currentCheckinAttendee) return;
+      const attendee = currentCheckinAttendee;
+      const id = attendee.id;
+      const btn = force ? document.getElementById('btn-force-entry') : document.getElementById('btn-confirm-entry');
+      if (!btn) return;
+
+      const originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>PROCESANDO...</span>';
+      lucide.createIcons();
+
+      let success = false;
+      let checkinTimestamp = new Date().toISOString();
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
+
+        const res = await fetch(`/api/checkin/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            force,
+            ci: attendee.ci,
+            attendeeData: attendee
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        const data = await res.json();
+        if (data.success) {
+          success = true;
+          checkinTimestamp = data.checked_in_at || checkinTimestamp;
+        } else if (data.already_checked_in && !force) {
+          // Asistente ya registrado: mostrar estado de duplicado de inmediato
+          attendee.checked_in = true;
+          attendee.checked_in_at = data.checked_in_at || attendee.checked_in_at;
+          selectAttendeeForCheckin(attendee);
+          showToast(data.message || 'El asistente ya había ingresado previamente');
+          return;
+        } else {
+          // Si el servidor devolvió otra respuesta, activar confirmación local para no trabar la puerta
+          success = true;
+        }
+      } catch (err) {
+        console.warn('Conexión con servidor lenta o interrumpida, aplicando check-in local garantizado:', err);
+        success = true;
+      } finally {
+        // Garantizar que NUNCA se quede en estado PROCESANDO
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+        lucide.createIcons();
+      }
+
+      if (success) {
+        playSound('success');
+        try {
+          if (window.confetti) {
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+          }
+        } catch (e) {}
+
+        attendee.checked_in = true;
+        attendee.checked_in_at = checkinTimestamp;
+
+        // Actualizar en caché y almacenamiento local
+        const idx = allAttendeesCache.findIndex(a => 
+          (a.id && attendee.id && String(a.id) === String(attendee.id)) ||
+          (a.ci && attendee.ci && a.ci.trim() === attendee.ci.trim())
+        );
+        if (idx !== -1) {
+          allAttendeesCache[idx].checked_in = true;
+          allAttendeesCache[idx].checked_in_at = checkinTimestamp;
+        } else {
+          allAttendeesCache.unshift(attendee);
+        }
+        saveStoredAttendees(allAttendeesCache);
+
+        // Mostrar la Pantalla de Ingreso Exitoso con la hora exacta de ingreso
+        const card = document.getElementById('checkin-attendee-card');
+        const successScreen = document.getElementById('checkin-success-screen');
+        if (card) card.classList.add('hidden');
+        if (successScreen) {
+          successScreen.classList.remove('hidden');
+          const elName = document.getElementById('success-screen-name');
+          const elInst = document.getElementById('success-screen-institution');
+          const elCi = document.getElementById('success-screen-ci');
+          const elTime = document.getElementById('success-screen-time');
+
+          if (elName) elName.textContent = attendee.full_name || 'Asistente';
+          if (elInst) elInst.textContent = (attendee.institution || 'Particular') + ' • ' + (attendee.position || 'Profesional');
+          if (elCi) elCi.textContent = attendee.ci || 'N/A';
+          const exactTime = new Date(checkinTimestamp).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          if (elTime) elTime.textContent = exactTime;
+        }
+
+        updateCheckinQuickCounters();
+        showToast('Ingreso confirmado: ' + (attendee.full_name || ''));
+        lucide.createIcons();
+      }
+    }
+
+    function resetCheckinSelection() {
+      currentCheckinAttendee = null;
+      const emptyState = document.getElementById('checkin-empty-state');
+      const card = document.getElementById('checkin-attendee-card');
+      const successScreen = document.getElementById('checkin-success-screen');
+      const btnConfirm = document.getElementById('btn-confirm-entry');
+      const btnForce = document.getElementById('btn-force-entry');
+
+      if (emptyState) emptyState.classList.remove('hidden');
+      if (card) card.classList.add('hidden');
+      if (successScreen) successScreen.classList.add('hidden');
+
+      if (btnConfirm) {
+        btnConfirm.disabled = false;
+        btnConfirm.innerHTML = '<i data-lucide="check-circle" class="w-6 h-6"></i><span>CONFIRMAR INGRESO</span>';
+      }
+      if (btnForce) {
+        btnForce.disabled = false;
+        btnForce.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>PERMITIR REINGRESO / SOBREESCRIBIR</span>';
+      }
+      const btnUndo = document.getElementById('btn-undo-checkin');
+      if (btnUndo) btnUndo.classList.add('hidden');
+
+      clearManualSearch();
+      const input = document.getElementById('checkin-manual-input');
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 60);
+      }
+      lucide.createIcons();
+    }
+
+    function updateCheckinQuickCounters() {
+      const VENUE_CAPACITY = 230; // Aforo oficial: 230 personas
+      const clean = deduplicateAttendees(allAttendeesCache.filter(a => !isRecordDeleted(a)));
+      const checked = clean.filter(a => a.checked_in).length;
+      const pct = Math.round((checked / VENUE_CAPACITY) * 100);
+
+      const elChecked = document.getElementById('checkin-quick-checked');
+      const elTotal = document.getElementById('checkin-quick-total');
+      const elPct = document.getElementById('checkin-quick-pct');
+
+      if (elChecked) elChecked.textContent = checked;
+      if (elTotal) elTotal.textContent = VENUE_CAPACITY;
+      if (elPct) elPct.textContent = `${pct}%`;
+    }
+
+    // ============================================================
+    // VISTA B: DASHBOARD / MONITOR DE ASISTENCIA EN TIEMPO REAL
+    // ============================================================
+    function initDashboardView() {
+      startDashboardClock();
+      fetchDashboardStats();
+      if (dashboardPollingInterval) clearInterval(dashboardPollingInterval);
+      dashboardPollingInterval = setInterval(fetchDashboardStats, 4000);
+    }
+
+    function startDashboardClock() {
+      if (clockInterval) clearInterval(clockInterval);
+      const updateClock = () => {
+        const el = document.getElementById('dashboard-clock');
+        if (el) {
+          el.textContent = new Date().toLocaleTimeString('es-EC', { hour12: false });
+        }
+      };
+      updateClock();
+      clockInterval = setInterval(updateClock, 1000);
+    }
+
+    async function fetchDashboardStats() {
+      try {
+        const res = await fetch('/api/checkin/stats');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.stats) {
+            renderDashboardData(data.stats);
+            return;
+          }
+        }
+      } catch (e) {}
+      renderDashboardLocalFallback();
+    }
+
+    function renderDashboardData(stats) {
+      const VENUE_CAPACITY = 230;
+      const elReg = document.getElementById('dash-kpi-registered');
+      const elAtt = document.getElementById('dash-kpi-attending');
+      const elChk = document.getElementById('dash-kpi-checked');
+      const elRate = document.getElementById('dash-kpi-rate');
+      const elSubtext = document.getElementById('dash-kpi-subtext');
+      const elBar = document.getElementById('dash-progress-bar');
+
+      const checked = stats.totalCheckedIn || 0;
+      const ratePct = Math.round((checked / VENUE_CAPACITY) * 100);
+
+      if (elReg) elReg.textContent = stats.totalRegistered;
+      if (elAtt) elAtt.textContent = stats.totalAttending;
+      if (elChk) elChk.textContent = checked;
+      if (elRate) elRate.textContent = `${ratePct}%`;
+      if (elSubtext) elSubtext.textContent = `${checked} de ${VENUE_CAPACITY} personas`;
+      if (elBar) elBar.style.width = `${Math.min(ratePct, 100)}%`;
+
+      renderHourlyChart(stats.hourlyCounts || {});
+      renderRecentFeed(stats.recentEntries || []);
+    }
+
+    function renderDashboardLocalFallback() {
+      const VENUE_CAPACITY = 230;
+      const clean = deduplicateAttendees(allAttendeesCache.filter(a => !isRecordDeleted(a)));
+      const totalRegistered = clean.length;
+      const totalAttending = clean.filter(a => a.attending === 'yes').length;
+      const checkedInList = clean.filter(a => a.checked_in);
+      const totalCheckedIn = checkedInList.length;
+      const attendanceRate = Math.round((totalCheckedIn / VENUE_CAPACITY) * 100);
+
+      const hourlyCounts = {
+        '16:00': 0, '17:00': 0, '18:00': 0, '19:00': 0, '20:00': 0, '21:00': 0, '22:00': 0
+      };
+      for (const a of checkedInList) {
+        if (a.checked_in_at) {
+          let h = new Date(a.checked_in_at).getHours();
+          if (h < 16) h = 16;
+          if (h > 22) h = 22;
+          const hour = h.toString().padStart(2, '0') + ':00';
+          hourlyCounts[hour] = (hourlyCounts[hour] || 0) + 1;
+        }
+      }
+
+      const recentEntries = [...checkedInList]
+        .sort((a, b) => new Date(b.checked_in_at || 0) - new Date(a.checked_in_at || 0))
+        .slice(0, 15)
+        .map(a => ({
+          id: a.id,
+          full_name: a.full_name,
+          ci: a.ci || '',
+          institution: a.institution || 'Particular',
+          position: a.position || 'Profesional',
+          checked_in_at: a.checked_in_at
+        }));
+
+      renderDashboardData({
+        totalRegistered,
+        totalAttending,
+        totalCheckedIn,
+        attendanceRate,
+        hourlyCounts,
+        recentEntries
+      });
+    }
+
+    function renderHourlyChart(hourlyCounts) {
+      const container = document.getElementById('dash-hourly-chart');
+      if (!container) return;
+
+      const standardHours = ['16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
+      const values = standardHours.map(h => hourlyCounts[h] || 0);
+      const maxVal = Math.max(...values, 8);
+
+      container.innerHTML = standardHours.map((hour, idx) => {
+        const count = values[idx];
+        const pct = Math.max(Math.round((count / maxVal) * 100), count > 0 ? 12 : 4);
+        const isPeak = count === Math.max(...values) && count > 0;
+
+        return `
+          <div class="flex-1 flex flex-col items-center h-full justify-end group">
+            <span class="text-[11px] font-mono font-bold ${count > 0 ? 'text-emerald-600' : 'text-slate-300'} mb-1.5 transition-all">
+              ${count}
+            </span>
+            <div class="w-full max-w-[38px] rounded-t-xl transition-all duration-500 relative ${isPeak ? 'bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-md shadow-emerald-500/20' : count > 0 ? 'bg-gradient-to-t from-ingelab-navy to-ingelab-blue' : 'bg-slate-100'}" style="height: ${pct}%;">
+            </div>
+            <span class="text-[10px] font-mono font-bold text-slate-500 mt-2.5 block text-center">${hour}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRecentFeed(recentEntries) {
+      const container = document.getElementById('dash-recent-feed');
+      if (!container) return;
+
+      if (!recentEntries || recentEntries.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-xs font-mono text-slate-400">
+            Aún no hay ingresos registrados en sala.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = recentEntries.map((item, idx) => {
+        const timeStr = item.checked_in_at ? new Date(item.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Reciente';
+        const isFirst = idx === 0;
+
+        return `
+          <div class="p-3 rounded-2xl ${isFirst ? 'bg-emerald-50/80 border border-emerald-300/80 shadow-sm' : 'bg-white border border-slate-200/70'} flex items-center justify-between gap-3 transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl ${isFirst ? 'bg-emerald-600 text-white animate-pulse' : 'bg-slate-100 text-slate-600'} flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                <i data-lucide="user-check" class="w-4 h-4"></i>
+              </div>
+              <div class="min-w-0">
+                <span class="font-bold text-xs font-display text-arch-black block truncate">${escapeHtml(item.full_name || 'Asistente')}</span>
+                <span class="text-[10px] text-slate-500 font-sans block truncate">${escapeHtml(item.institution || 'Particular')}</span>
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${isFirst ? 'bg-emerald-200 text-emerald-900 font-black' : 'bg-slate-100 text-slate-600'} block">
+                ${timeStr}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function toggleDashboardFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
     // ============================================================
     // 1. CONFIGURACIÓN Y CLIENTE DE SUPABASE
     // ============================================================
@@ -1192,6 +2071,18 @@
       const isLoggedIn = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
       const adminNavGroup = document.getElementById('admin-nav-group');
       const publicNavGroup = document.getElementById('public-nav-group');
+      const statsBar = document.getElementById('checkin-stats-bar');
+
+      // Solo el Administrador puede ver las métricas de En Sala / Aforo
+      if (statsBar) {
+        if (isLoggedIn) {
+          statsBar.classList.remove('hidden');
+          statsBar.classList.add('flex');
+        } else {
+          statsBar.classList.add('hidden');
+          statsBar.classList.remove('flex');
+        }
+      }
 
       if (isLoggedIn) {
         if (adminNavGroup) adminNavGroup.classList.remove('hidden');
@@ -1200,58 +2091,109 @@
         if (adminNavGroup) adminNavGroup.classList.add('hidden');
         if (publicNavGroup) publicNavGroup.classList.remove('hidden');
         const adminView = document.getElementById('view-admin');
-        if (adminView && !adminView.classList.contains('hidden')) {
-          switchView('form');
+        const dashboardView = document.getElementById('view-dashboard');
+        // Si no está logueado y estaba en una vista protegida, volver a checkin
+        if ((adminView && !adminView.classList.contains('hidden')) || (dashboardView && !dashboardView.classList.contains('hidden'))) {
+          switchView('checkin');
         }
       }
       lucide.createIcons();
     }
 
-    // ============================================================
-    // 4. NAVEGACIÓN ENTRE VISTAS
-    // ============================================================
+    function openRegistrationModal() {
+      const modal = document.getElementById('registration-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+        setTimeout(() => {
+          const nameInput = document.getElementById('fullName');
+          if (nameInput) nameInput.focus();
+        }, 150);
+      }
+    }
+
+    function closeRegistrationModal() {
+      const modal = document.getElementById('registration-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
     function switchView(view) {
-      const formView = document.getElementById('view-form');
+      const landingView = document.getElementById('view-form');
       const successView = document.getElementById('view-success');
+      const checkinView = document.getElementById('view-checkin');
+      const dashboardView = document.getElementById('view-dashboard');
       const adminView = document.getElementById('view-admin');
-      const btnForm = document.getElementById('nav-btn-form');
-      const btnAdmin = document.getElementById('nav-btn-admin');
+      const checkinSuccessScreen = document.getElementById('checkin-success-screen');
 
-      if (view === 'admin') {
-        if (sessionStorage.getItem('ingelab_admin_logged_in') !== 'true') {
-          openLoginModal();
-          return;
-        }
-        formView.classList.add('hidden');
-        successView.classList.add('hidden');
-        adminView.classList.remove('hidden');
+      // Protección estricta: Dashboard y Base de Datos son exclusivos para Administradores
+      const isLoggedIn = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
+      if ((view === 'dashboard' || view === 'admin') && !isLoggedIn) {
+        openLoginModal();
+        return;
+      }
 
-        if (btnAdmin) btnAdmin.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm';
-        if (btnForm) btnForm.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black';
+      // Ocultar todas las vistas principales y pantallas de éxito
+      if (landingView) landingView.classList.add('hidden');
+      if (successView) successView.classList.add('hidden');
+      if (checkinView) checkinView.classList.add('hidden');
+      if (dashboardView) dashboardView.classList.add('hidden');
+      if (adminView) adminView.classList.add('hidden');
+      if (checkinSuccessScreen) checkinSuccessScreen.classList.add('hidden');
 
+      // Actualizar estado visual de los botones de navegación en ambos grupos
+      const navButtons = [
+        { ids: ['nav-btn-checkin-pub', 'nav-btn-checkin-adm'], active: view === 'checkin' },
+        { ids: ['nav-btn-dashboard-adm'], active: view === 'dashboard' },
+        { ids: ['nav-btn-landing-pub', 'nav-btn-landing-adm'], active: view === 'landing' || view === 'form' },
+        { ids: ['nav-btn-admin-adm'], active: view === 'admin' }
+      ];
+
+      navButtons.forEach(({ ids, active }) => {
+        ids.forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            if (active) {
+              btn.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold';
+            } else {
+              btn.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black';
+            }
+          }
+        });
+      });
+
+      // Detener intervalo de dashboard al salir
+      if (view !== 'dashboard' && dashboardPollingInterval) {
+        clearInterval(dashboardPollingInterval);
+        dashboardPollingInterval = null;
+      }
+
+      if (view === 'checkin') {
+        if (checkinView) checkinView.classList.remove('hidden');
+        initCheckinView();
+      } else if (view === 'dashboard') {
+        if (dashboardView) dashboardView.classList.remove('hidden');
+        initDashboardView();
+      } else if (view === 'admin') {
+        if (adminView) adminView.classList.remove('hidden');
+        resetCheckinSelection(); // Limpiar y garantizar que nunca se muestre la confirmación del último ingresado en admin
         loadAdminData();
       } else if (view === 'success') {
-        formView.classList.add('hidden');
-        adminView.classList.add('hidden');
-        successView.classList.remove('hidden');
+        if (successView) successView.classList.remove('hidden');
       } else {
-        adminView.classList.add('hidden');
-        successView.classList.add('hidden');
-        formView.classList.remove('hidden');
-
-        if (btnForm) btnForm.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm';
-        if (btnAdmin) btnAdmin.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black';
+        if (landingView) landingView.classList.remove('hidden');
       }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
       lucide.createIcons();
     }
 
     function resetToNewConfirmation() {
-      document.getElementById('attendance-form').reset();
-      switchView('form');
-      setTimeout(() => {
-        document.getElementById('fullName').focus();
-      }, 200);
+      const form = document.getElementById('attendance-form');
+      if (form) form.reset();
+      switchView('landing');
+      openRegistrationModal();
     }
 
     // ============================================================
@@ -1354,7 +2296,6 @@
 
     function deduplicateAttendees(list) {
       if (!Array.isArray(list)) return [];
-      // Ordenar cronológicamente descendente (el último registrado siempre queda primero)
       const sorted = [...list].sort((a, b) => {
         const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
         const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
@@ -1362,34 +2303,37 @@
         return Number(b.id || 0) - Number(a.id || 0);
       });
 
-      const seenNames = new Set();
-      const seenEmails = new Set();
-      const seenCis = new Set();
+      const seenNames = new Map();
+      const seenEmails = new Map();
+      const seenCis = new Map();
       const uniqueList = [];
 
       for (const item of sorted) {
+        const checkinMatch = (item.comments || '').match(/\[CHECKIN:\s*([^\]]+)\]/);
+        const checkedInAt = item.checked_in_at || (checkinMatch ? checkinMatch[1] : null);
+        item.checked_in = Boolean(checkedInAt || item.checked_in);
+        item.checked_in_at = checkedInAt;
         const nameKey = normalizeAttendeeStr(item.full_name);
         const emailKey = (item.email || '').trim().toLowerCase();
         const ciKey = (item.ci || '').trim();
 
         let isDuplicate = false;
-        // Detección por nombre idéntico (normalizado)
+        let existingItem = null;
         if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) {
           isDuplicate = true;
-        }
-        // Detección por correo
-        if (emailKey && seenEmails.has(emailKey)) {
+          existingItem = seenNames.get(nameKey);
+        } else if (emailKey && seenEmails.has(emailKey)) {
           isDuplicate = true;
-        }
-        // Detección por documento/cédula
-        if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
+          existingItem = seenEmails.get(emailKey);
+        } else if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
           isDuplicate = true;
+          existingItem = seenCis.get(ciKey);
         }
 
         if (!isDuplicate) {
-          if (nameKey && nameKey.length >= 3) seenNames.add(nameKey);
-          if (emailKey) seenEmails.add(emailKey);
-          if (ciKey && ciKey.length >= 6) seenCis.add(ciKey);
+          if (nameKey && nameKey.length >= 3) seenNames.set(nameKey, item);
+          if (emailKey) seenEmails.set(emailKey, item);
+          if (ciKey && ciKey.length >= 6) seenCis.set(ciKey, item);
 
           // Si el último estado registrado es eliminación (tombstone), se descarta de la lista visible
           // y sus claves quedan registradas para que registros anteriores de esa persona queden bloqueados
@@ -1679,8 +2623,16 @@
         saveStoredAttendees(allAttendeesCache);
 
         clearTombstoneForAttendee(newRecord);
-        showSuccessScreen(newRecord);
-        form.reset();
+        closeRegistrationModal();
+        const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
+        if (isAdmin) {
+          form.reset();
+          loadAdminData();
+          showToast('Asistente registrado exitosamente');
+        } else {
+          showSuccessScreen(newRecord);
+          form.reset();
+        }
 
         try {
           if (window.confetti) {
@@ -1697,7 +2649,14 @@
 
       } catch (err) {
         console.error('Error al procesar registro:', err);
-        showSuccessScreen(newRecord);
+        const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
+        if (isAdmin) {
+          form.reset();
+          loadAdminData();
+          showToast('Asistente registrado en caché local');
+        } else {
+          showSuccessScreen(newRecord);
+        }
       } finally {
         isSubmittingForm = false;
         submitBtn.disabled = false;
@@ -2498,7 +3457,7 @@
               <span class="text-slate-400 block text-[11px] font-mono">${escapeHtml(a.position || 'Profesional')}</span>
             </td>
 
-            <!-- ESTADO -->
+            <!-- ESTADO Y CHECK-IN -->
             <td class="py-4 px-4 align-middle text-center">
               ${isConfirmed ? `
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-mono font-bold">
@@ -2510,13 +3469,26 @@
                   NO ASISTE
                 </span>
               `}
+              ${a.checked_in ? `
+                <div class="mt-1.5 flex flex-col items-center gap-1">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 text-[9px] font-mono font-bold">
+                    <i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> EN SALA
+                  </span>
+                  <button onclick="undoCheckin(${a.id})" title="Anular Check-in y regresar a Pendiente" class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 flex items-center gap-1 transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-2.5 h-2.5"></i> Anular Ingreso
+                  </button>
+                </div>
+              ` : ''}
             </td>
 
-            <!-- ACCIONES: VER, EDITAR, ELIMINAR -->
+            <!-- ACCIONES: CHECK-IN, VER, EDITAR, ELIMINAR -->
             <td class="py-4 px-4 align-middle text-center">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="viewCredentialAdmin(${a.id})" title="Ver comprobante oficial" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-navy hover:bg-slate-100 transition-colors">
-                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                <button onclick="selectAttendeeById(${a.id}); switchView('checkin');" title="Acreditar / Check-in en Puerta" class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors">
+                  <i data-lucide="scan-line" class="w-4 h-4"></i>
+                </button>
+                <button onclick="viewAttendeeDetail(${a.id})" title="Ver detalles del asistente" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-navy hover:bg-slate-100 transition-colors">
+                  <i data-lucide="eye" class="w-4 h-4"></i>
                 </button>
                 <button onclick="openEditModal(${a.id})" title="Modificar datos" class="p-1.5 rounded-lg text-slate-400 hover:text-ingelab-green hover:bg-emerald-50 transition-colors">
                   <i data-lucide="edit-3" class="w-4 h-4"></i>
@@ -2535,23 +3507,138 @@
     }
 
     function viewCredentialAdmin(id) {
-      const record = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
-      if (record) {
-        showSuccessScreen(record);
-      }
+      viewAttendeeDetail(id);
+    }
+
+    let currentTableFilterTab = 'all';
+
+    function setTableFilterTab(tab) {
+      currentTableFilterTab = tab;
+      const tabs = ['all', 'checked', 'pending'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-filter-${t}`);
+        if (btn) {
+          if (t === tab) {
+            btn.className = 'px-2.5 py-1 rounded-lg bg-white text-slate-800 shadow-xs font-bold';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+          }
+        }
+      });
+      filterTable();
     }
 
     function filterTable() {
-      const q = document.getElementById('search-input').value.toLowerCase();
+      const q = (document.getElementById('search-input')?.value || '').toLowerCase();
       const filtered = allAttendeesCache.filter(item => {
-        return item.full_name.toLowerCase().includes(q) ||
+        if (isRecordDeleted(item)) return false;
+
+        if (currentTableFilterTab === 'checked' && !item.checked_in) return false;
+        if (currentTableFilterTab === 'pending' && item.checked_in) return false;
+
+        if (!q) return true;
+        return (item.full_name && item.full_name.toLowerCase().includes(q)) ||
                (item.ci && item.ci.toLowerCase().includes(q)) ||
-               item.email.toLowerCase().includes(q) ||
-               item.phone.toLowerCase().includes(q) ||
+               (item.email && item.email.toLowerCase().includes(q)) ||
+               (item.phone && item.phone.toLowerCase().includes(q)) ||
                (item.institution && item.institution.toLowerCase().includes(q));
       });
-      document.getElementById('filter-count').innerText = filtered.length;
+      const countEl = document.getElementById('filter-count');
+      if (countEl) countEl.innerText = filtered.length;
       renderTable(filtered);
+    }
+
+    // ANULAR CHECK-IN DE UN ASISTENTE EN LA TABLA ADMINISTRATIVA
+    async function undoCheckin(id) {
+      const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
+      const name = item ? item.full_name : 'este asistente';
+      if (!confirm(`¿Está seguro de anular el check-in de "${name}" y regresarlo a estado "Pendiente de ingreso"?`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`/api/checkin/undo/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ci: item ? item.ci : '' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (item) {
+            item.checked_in = false;
+            item.checked_in_at = null;
+          }
+          saveStoredAttendees(allAttendeesCache);
+          updateKpis(allAttendeesCache);
+          filterTable();
+          updateCheckinQuickCounters();
+          showToast(data.message || 'Check-in anulado con éxito');
+        } else {
+          alert(data.error || 'Error al anular check-in.');
+        }
+      } catch (err) {
+        alert('Error al conectar con el servidor: ' + err.message);
+      }
+    }
+
+    // ANULAR CHECK-IN DESDE LA TARJETA DEL OPERADOR
+    async function undoCurrentCheckin() {
+      if (!currentCheckinAttendee) return;
+      const id = currentCheckinAttendee.id;
+      const item = currentCheckinAttendee;
+      if (!confirm(`¿Está seguro de anular el check-in de "${item.full_name}" y regresarlo a estado "Pendiente de ingreso"?`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`/api/checkin/undo/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ci: item.ci || '' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          item.checked_in = false;
+          item.checked_in_at = null;
+          const idx = allAttendeesCache.findIndex(a => a.id === id || String(a.id) === String(id));
+          if (idx !== -1) {
+            allAttendeesCache[idx].checked_in = false;
+            allAttendeesCache[idx].checked_in_at = null;
+          }
+          saveStoredAttendees(allAttendeesCache);
+          selectAttendeeForCheckin(item);
+          updateCheckinQuickCounters();
+          showToast('Check-in anulado: Asistente restablecido a Pendiente');
+        } else {
+          alert(data.error || 'Error al anular check-in.');
+        }
+      } catch (err) {
+        alert('Error al conectar con el servidor: ' + err.message);
+      }
+    }
+
+    // RESTABLECER TODOS LOS CHECK-INS DE PRUEBA A 0
+    async function resetAllTestCheckins() {
+      if (!confirm('¿Desea restablecer todos los check-ins de prueba para dejar el aforo en sala limpio (0 personas) antes del evento?')) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/checkin/reset-all-tests', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          for (const a of allAttendeesCache) {
+            a.checked_in = false;
+            a.checked_in_at = null;
+          }
+          saveStoredAttendees(allAttendeesCache);
+          updateKpis(allAttendeesCache);
+          filterTable();
+          updateCheckinQuickCounters();
+          showToast(data.message || 'Todos los check-in han sido restablecidos.');
+        } else {
+          alert(data.error || 'Error al restablecer check-ins.');
+        }
+      } catch (err) {
+        alert('Error al conectar con el servidor: ' + err.message);
+      }
     }
 
     // ============================================================
@@ -2580,6 +3667,8 @@
         'CARGO / ESPECIALIDAD': a.position || 'Profesional de la Salud',
         'FECHA DE NACIMIENTO': a.birth_date || 'No especificada',
         'ESTADO': a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE',
+        'CHECK-IN (INGRESO)': a.checked_in ? 'EN SALA' : 'PENDIENTE',
+        'HORA DE CHECK-IN': a.checked_in_at ? new Date(a.checked_in_at).toLocaleString('es-EC') : 'No registrado',
         'OBSERVACIONES': a.comments || '',
         'FECHA DE REGISTRO': a.created_at ? new Date(a.created_at).toLocaleString('es-EC') : ''
       }));
@@ -2638,6 +3727,26 @@
 
     // Inicialización al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
+      initSupabase();
+      loadAdminData();
+      updateAuthUi();
+
+      // Auto-detección de vistas por URL (Por defecto: CHECK-IN EN PUERTA)
+      const hash = window.location.hash.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      if (hash === '#register' || params.get('register') === '1') {
+        switchView('checkin');
+        openRegistrationModal();
+      } else if (hash === '#dashboard' || params.get('dashboard') === '1') {
+        switchView('dashboard');
+      } else if (hash === '#admin' || params.get('admin') === '1') {
+        switchView('admin');
+      } else if (hash === '#evento' || hash === '#landing' || params.get('landing') === '1') {
+        switchView('landing');
+      } else {
+        // VISTA POR DEFECTO AL INICIO: CHECK-IN DIRECTO
+        switchView('checkin');
+      }
       runIntro();
       initCountdown();
       initSupabase();
