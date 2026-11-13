@@ -70,7 +70,7 @@ function rateLimiterMiddleware(req, res, next) {
 // ==============================================================
 // 3. ARCHIVOS ESTÁTICOS CON CACHÉ ÓPTIMO (Evita Cold Starts)
 // ==============================================================
-const staticOpts = { maxAge: '1d', immutable: false };
+const staticOpts = { maxAge: 0, immutable: false };
 app.use(express.static(rootDir, staticOpts));
 app.use(express.static(path.join(rootDir, 'public'), staticOpts));
 app.use(express.static(__dirname, staticOpts));
