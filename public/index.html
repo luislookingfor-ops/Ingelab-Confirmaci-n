@@ -7,28 +7,35 @@
   
   <link rel="icon" type="image/png" href="ingelab_evolution_logo.png">
 
-  <!-- Tipografía: Space Grotesk & Inter -->
+  <!-- Conexiones anticipadas prioritarias (Preconnect & DNS-Prefetch para CDNs críticos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://hfxgmeykdxnoapqdspzn.supabase.co">
+
+  <!-- Tipografía: Space Grotesk & Inter con carga asíncrona no bloqueante -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  </noscript>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lucide Icons CDN (Diferido con ejecución segura en DOMContentLoaded) -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
 
-  <!-- Canvas Confetti CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Canvas Confetti CDN (Diferido) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
 
-  <!-- QRCode.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <!-- QRCode.js CDN (Diferido) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
 
-  <!-- SheetJS (XLSX) CDN para exportación nativa de Excel (.xlsx) -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-  <!-- Supabase JS Client CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase JS Client CDN (Diferido) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 
   <!-- Tailwind Config con colores exactos de Ingelab -->
   <script>
@@ -207,7 +214,7 @@
       
       <!-- Logo Oficial Ingelab Evolution Recortado en HD -->
       <div class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 shadow-2xl mb-6 max-w-sm sm:max-w-md">
-        <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="w-full h-auto object-contain logo-sharp">
+        <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" width="946" height="437" fetchpriority="high" decoding="async" class="w-full h-auto object-contain logo-sharp">
       </div>
 
       <div class="flex items-center gap-3 text-xs tracking-ultra font-mono uppercase text-arch-subtle mb-2">
@@ -221,9 +228,9 @@
         Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
       </p>
 
-      <!-- Barra de progreso -->
+      <!-- Barra de progreso acelerada por GPU (evita layout reflow) -->
       <div class="w-52 sm:w-64 h-[3px] bg-slate-100 rounded-full overflow-hidden mt-3">
-        <div id="intro-bar" class="h-full bg-gradient-to-r from-ingelab-green via-ingelab-blue to-ingelab-navy w-0 transition-all duration-[1800ms] ease-out"></div>
+        <div id="intro-bar" class="h-full bg-gradient-to-r from-ingelab-green via-ingelab-blue to-ingelab-navy w-full origin-left scale-x-0 transition-transform duration-[1800ms] ease-out will-change-transform"></div>
       </div>
 
     </div>
@@ -246,7 +253,7 @@
         
         <!-- Logo Ingelab Evolution (de INVITACION.png) Arriba a la Izquierda -->
         <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-1 group">
-          <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" class="h-8 sm:h-12 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
+          <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" width="946" height="437" class="h-8 sm:h-12 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
         </a>
 
         <!-- Navegación: Vista Cliente/Pública vs Administrador -->
@@ -331,9 +338,9 @@
         <!-- HERO CARD: AFICHE OFICIAL INVITACION1.PNG Y FICHA TÉCNICA -->
         <div class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 shadow-xl overflow-hidden relative">
           
-          <!-- Afiche Oficial INVITACION1.png -->
+          <!-- Afiche Oficial INVITACION1.png con carga diferida -->
           <div class="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-white mb-4 sm:mb-8 cursor-pointer group" onclick="openInvitationModal()" title="Haga clic para ver invitación completa">
-            <img src="INVITACION1.png" alt="Ingelab Evolution - Invitación Oficial" class="w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]">
+            <img src="INVITACION1.png" alt="Ingelab Evolution - Invitación Oficial" width="1122" height="1014" loading="lazy" decoding="async" class="w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]">
           </div>
 
           <!-- ============================================================ -->
@@ -557,7 +564,7 @@
             </div>
             <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
               <span class="text-[9px] sm:text-[10px] text-slate-500 uppercase block font-bold">Aforo Total</span>
-              <span id="checkin-quick-total" class="text-base sm:text-lg font-bold text-slate-700">230</span>
+              <span id="checkin-quick-total" class="text-base sm:text-lg font-bold text-slate-700">--</span>
             </div>
             <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center shadow-xs">
               <span class="text-[9px] sm:text-[10px] text-emerald-700 uppercase block font-bold">% Aforo</span>
@@ -909,7 +916,7 @@
             <i data-lucide="pie-chart" class="w-5 h-5 text-indigo-500"></i>
           </div>
           <div id="dash-kpi-rate" class="text-3xl sm:text-5xl font-mono font-bold text-indigo-600">0%</div>
-          <span id="dash-kpi-subtext" class="text-[11px] text-slate-500 font-mono mt-1 block">0 de 230 personas</span>
+          <span id="dash-kpi-subtext" class="text-[11px] text-slate-500 font-mono mt-1 block">0 registrados</span>
           <!-- Barra de progreso -->
           <div class="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden border border-slate-200">
             <div id="dash-progress-bar" class="bg-gradient-to-r from-emerald-500 to-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -1271,7 +1278,7 @@
       </div>
 
       <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-50">
-        <img src="INVITACION.png" alt="Invitación Oficial Ingelab Evolution" class="w-full h-auto object-contain">
+        <img src="INVITACION.png" alt="Invitación Oficial Ingelab Evolution" width="1122" height="1402" loading="lazy" decoding="async" class="w-full h-auto object-contain">
       </div>
 
       <div class="pt-1">
@@ -1565,7 +1572,9 @@
 
   <!-- JAVASCRIPT: LÓGICA COMPLETA, XLSX NATIVO Y GESTIÓN CRUD -->
   <script>
-    lucide.createIcons();
+    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+      lucide.createIcons();
+    }
 
     
     // ============================================================
@@ -2171,17 +2180,19 @@
     }
 
     function updateCheckinQuickCounters() {
-      const VENUE_CAPACITY = 230; // Aforo oficial: 230 personas
       const clean = deduplicateAttendees(allAttendeesCache.filter(a => !isRecordDeleted(a)));
+      const totalRegistered = clean.length;
       const checked = clean.filter(a => a.checked_in).length;
-      const pct = Math.round((checked / VENUE_CAPACITY) * 100);
+      // El aforo total se ajusta dinámicamente según la cantidad de registrados
+      const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
+      const pct = dynamicCapacity > 0 ? Math.round((checked / dynamicCapacity) * 100) : 0;
 
       const elChecked = document.getElementById('checkin-quick-checked');
       const elTotal = document.getElementById('checkin-quick-total');
       const elPct = document.getElementById('checkin-quick-pct');
 
       if (elChecked) elChecked.textContent = checked;
-      if (elTotal) elTotal.textContent = VENUE_CAPACITY;
+      if (elTotal) elTotal.textContent = dynamicCapacity;
       if (elPct) elPct.textContent = `${pct}%`;
     }
 
@@ -2222,7 +2233,6 @@
     }
 
     function renderDashboardData(stats) {
-      const VENUE_CAPACITY = 230;
       const elReg = document.getElementById('dash-kpi-registered');
       const elAtt = document.getElementById('dash-kpi-attending');
       const elChk = document.getElementById('dash-kpi-checked');
@@ -2231,13 +2241,16 @@
       const elBar = document.getElementById('dash-progress-bar');
 
       const checked = stats.totalCheckedIn || 0;
-      const ratePct = Math.round((checked / VENUE_CAPACITY) * 100);
+      // Capacidad dinámica de aforo adaptada a los registrados
+      const totalRegistered = stats.totalRegistered || (allAttendeesCache || []).length || 0;
+      const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
+      const ratePct = dynamicCapacity > 0 ? Math.round((checked / dynamicCapacity) * 100) : 0;
 
-      if (elReg) elReg.textContent = stats.totalRegistered;
-      if (elAtt) elAtt.textContent = stats.totalAttending;
+      if (elReg) elReg.textContent = totalRegistered;
+      if (elAtt) elAtt.textContent = stats.totalAttending || totalRegistered;
       if (elChk) elChk.textContent = checked;
       if (elRate) elRate.textContent = `${ratePct}%`;
-      if (elSubtext) elSubtext.textContent = `${checked} de ${VENUE_CAPACITY} personas`;
+      if (elSubtext) elSubtext.textContent = `${checked} de ${dynamicCapacity} registrados`;
       if (elBar) elBar.style.width = `${Math.min(ratePct, 100)}%`;
 
       renderHourlyChart(stats.hourlyCounts || {});
@@ -2245,13 +2258,14 @@
     }
 
     function renderDashboardLocalFallback() {
-      const VENUE_CAPACITY = 230;
       const clean = deduplicateAttendees(allAttendeesCache.filter(a => !isRecordDeleted(a)));
       const totalRegistered = clean.length;
+      // Capacidad dinámica ajustada a registrados
+      const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
       const totalAttending = clean.filter(a => a.attending === 'yes').length;
       const checkedInList = clean.filter(a => a.checked_in);
       const totalCheckedIn = checkedInList.length;
-      const attendanceRate = Math.round((totalCheckedIn / VENUE_CAPACITY) * 100);
+      const attendanceRate = dynamicCapacity > 0 ? Math.round((totalCheckedIn / dynamicCapacity) * 100) : 0;
 
       const hourlyCounts = {
         '16:00': 0, '17:00': 0, '18:00': 0, '19:00': 0, '20:00': 0, '21:00': 0, '22:00': 0
@@ -2790,7 +2804,10 @@
       const introBar = document.getElementById('intro-bar');
 
       setTimeout(() => {
-        if (introBar) introBar.style.width = '100%';
+        if (introBar) {
+          introBar.style.transform = 'scaleX(1)';
+          introBar.style.width = '100%';
+        }
       }, 100);
 
       setTimeout(() => {
@@ -2822,7 +2839,10 @@
       introScreen.classList.remove('hidden', 'animate-curtain-up');
       appContainer.classList.add('opacity-0');
       appContainer.classList.remove('animate-content-in');
-      if (introBar) introBar.style.width = '0%';
+      if (introBar) {
+        introBar.style.transform = 'scaleX(0)';
+        introBar.style.width = '0%';
+      }
 
       introBox.classList.remove('animate-crisp-zoom');
       void introBox.offsetWidth;
@@ -3303,91 +3323,92 @@
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
 
-      const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
-      const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
       let cloudLoaded = false;
 
-      // 2. Cargar en segundo plano desde Supabase Client SDK o REST
-      if (url && key) {
-        try {
-          const res = await fetch(`${url}/rest/v1/attendees?select=*&order=id.desc`, {
-            headers: {
-              'apikey': key,
-              'Authorization': `Bearer ${key}`
-            }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data)) {
-              const filteredData = data.filter(d => !isRecordDeleted(d));
-              const cloudItems = filteredData.map(d => {
-                const rawComments = d.comments || '';
-                const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
-                const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
-                const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
-                return {
-                  id: d.id,
-                  full_name: d.full_name,
-                  ci: d.ci || '',
-                  email: d.email,
-                  phone: d.phone,
-                  institution: d.institution || '',
-                  position: d.position || '',
-                  birth_date: birthDate,
-                  ticket_count: d.ticket_count || 1,
-                  attending: d.attending || 'yes',
-                  comments: cleanComments,
-                  created_at: d.created_at
-                };
-              });
-
-              // Combinar cloud y local respetando la versión más reciente por fecha/ID
-              const localCache = getStoredAttendees();
-              allAttendeesCache = deduplicateAttendees([...cloudItems, ...localCache]);
-              saveStoredAttendees(allAttendeesCache);
-              cloudLoaded = true;
-            }
+      // 2. Priorizar consulta al backend /api/attendees (con caché de alta velocidad <5ms y pooling)
+      try {
+        const res = await fetch('/api/attendees');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.attendees)) {
+            const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
+            const cloudItems = filteredData.map(d => {
+              const rawComments = d.comments || '';
+              const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
+              const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
+              const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+              return {
+                id: d.id,
+                full_name: d.full_name,
+                ci: d.ci || '',
+                email: d.email,
+                phone: d.phone,
+                institution: d.institution || '',
+                position: d.position || '',
+                birth_date: birthDate,
+                ticket_count: d.ticket_count || 1,
+                attending: d.attending || 'yes',
+                checked_in: Boolean(d.checked_in),
+                checked_in_at: d.checked_in_at,
+                comments: cleanComments,
+                created_at: d.created_at
+              };
+            });
+            const localCache = getStoredAttendees();
+            allAttendeesCache = deduplicateAttendees([...cloudItems, ...localCache]);
+            saveStoredAttendees(allAttendeesCache);
+            cloudLoaded = true;
           }
-        } catch (e) {
-          console.warn('Supabase fetch error:', e);
         }
-      }
+      } catch (err) {}
 
-      // 3. Fallback Endpoint backend /api/attendees
+      // 3. Fallback directo a Supabase REST (por si se despliega en host estático sin backend)
       if (!cloudLoaded) {
-        try {
-          const res = await fetch('/api/attendees');
-          if (res.ok) {
-            const data = await res.json();
-            if (data.success && Array.isArray(data.attendees)) {
-              const filteredData = data.attendees.filter(d => !isRecordDeleted(d));
-              const cloudItems = filteredData.map(d => {
-                const rawComments = d.comments || '';
-                const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
-                const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
-                const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
-                return {
-                  id: d.id,
-                  full_name: d.full_name,
-                  ci: d.ci || '',
-                  email: d.email,
-                  phone: d.phone,
-                  institution: d.institution || '',
-                  position: d.position || '',
-                  birth_date: birthDate,
-                  ticket_count: d.ticket_count || 1,
-                  attending: d.attending || 'yes',
-                  comments: cleanComments,
-                  created_at: d.created_at
-                };
-              });
-              const localCache = getStoredAttendees();
-              allAttendeesCache = deduplicateAttendees([...cloudItems, ...localCache]);
-              saveStoredAttendees(allAttendeesCache);
-              cloudLoaded = true;
+        const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
+        const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
+        if (url && key) {
+          try {
+            const res = await fetch(`${url}/rest/v1/attendees?select=*&order=id.desc`, {
+              headers: {
+                'apikey': key,
+                'Authorization': `Bearer ${key}`
+              }
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (Array.isArray(data)) {
+                const filteredData = data.filter(d => !isRecordDeleted(d));
+                const cloudItems = filteredData.map(d => {
+                  const rawComments = d.comments || '';
+                  const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
+                  const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
+                  const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+                  return {
+                    id: d.id,
+                    full_name: d.full_name,
+                    ci: d.ci || '',
+                    email: d.email,
+                    phone: d.phone,
+                    institution: d.institution || '',
+                    position: d.position || '',
+                    birth_date: birthDate,
+                    ticket_count: d.ticket_count || 1,
+                    attending: d.attending || 'yes',
+                    checked_in: Boolean(d.checked_in || (rawComments.match(/\[CHECKIN:\s*[^\]]+\]/))),
+                    comments: cleanComments,
+                    created_at: d.created_at
+                  };
+                });
+                const localCache = getStoredAttendees();
+                allAttendeesCache = deduplicateAttendees([...cloudItems, ...localCache]);
+                saveStoredAttendees(allAttendeesCache);
+                cloudLoaded = true;
+              }
             }
+          } catch (e) {
+            console.warn('Supabase fallback error:', e);
           }
-        } catch (err) {}
+        }
       }
 
       updateKpis(allAttendeesCache);
@@ -4058,10 +4079,21 @@
     // ============================================================
     // 11. EXPORTACIÓN A EXCEL NATIVO FORMATO .XLSX (SHEETJS)
     // ============================================================
-    function exportToExcel() {
+    async function exportToExcel() {
       if (!window.XLSX) {
-        alert('Cargando librería de exportación a Excel, intente nuevamente en 2 segundos.');
-        return;
+        showToast('Descargando módulo de exportación Excel...');
+        try {
+          await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        } catch (e) {
+          alert('No se pudo descargar la librería de exportación. Verifique su conexión.');
+          return;
+        }
       }
 
       const cleanList = (allAttendeesCache || []).filter(a => !isRecordDeleted(a));
@@ -4141,6 +4173,9 @@
 
     // Inicialización al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+      }
       initSupabase();
       loadAdminData();
       updateAuthUi();
@@ -4174,8 +4209,6 @@
 
       runIntro();
       initCountdown();
-      initSupabase();
-      updateAuthUi();
     });
   </script>
 </body>
