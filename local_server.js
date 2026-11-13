@@ -61,11 +61,11 @@ app.post('/api/confirm', (req, res) => {
       comments 
     } = req.body;
 
-    // Validación flexible: Solo Nombre, Teléfono o Email requeridos
-    if (!fullName || (!email && !phone)) {
+    // Validación: Nombre, Cédula e Institución requeridos; Correo y Teléfono opcionales
+    if (!fullName || !ci || !institution) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Por favor complete su Nombre y al menos un medio de contacto (Teléfono o Correo).' 
+        error: 'Por favor complete su Nombre, Cédula de Identidad e Institución.' 
       });
     }
 

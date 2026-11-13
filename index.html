@@ -1161,21 +1161,21 @@
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono text-slate-700">
             </div>
 
-            <!-- Correo Electrónico (OBLIGATORIO) -->
+            <!-- Correo Electrónico (OPCIONAL) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="email">
-                Correo Electrónico <span class="text-rose-500 font-bold">*</span>
+                Correo Electrónico <span class="text-slate-400 font-normal lowercase">(opcional)</span>
               </label>
-              <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com" 
+              <input type="email" id="email" name="email" placeholder="correo@ejemplo.com (opcional)" 
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
 
-            <!-- Teléfono / WhatsApp (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
+            <!-- Teléfono / WhatsApp (OPCIONAL) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
-                Teléfono Móvil / WhatsApp <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
+                Teléfono Móvil / WhatsApp <span class="text-slate-400 font-normal lowercase">(opcional - 10 dígitos)</span>
               </label>
-              <input type="tel" id="phone" name="phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 0991234567)" 
+              <input type="tel" id="phone" name="phone" maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (opcional)" 
                 oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
             </div>
@@ -1183,7 +1183,7 @@
           </div>
         </div>
 
-        <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL (OBLIGATORIA - SOLO TEXTO) -->
+        <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL -->
         <div class="pt-5 border-t border-slate-200/80">
           <div class="flex items-center gap-2.5 mb-4">
             <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
@@ -1202,12 +1202,12 @@
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
 
-            <!-- Cargo / Especialidad (OBLIGATORIO - SOLO TEXTO) -->
+            <!-- Cargo / Especialidad (OPCIONAL - SOLO TEXTO) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="position">
-                Cargo o Especialidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
+                Cargo o Especialidad <span class="text-slate-400 font-normal lowercase">(opcional - solo texto)</span>
               </label>
-              <input type="text" id="position" name="position" required placeholder="Ej: Director Técnico / Bioquímico" 
+              <input type="text" id="position" name="position" placeholder="Ej: Director Técnico / Bioquímico (opcional)" 
                 oninput="this.value = this.value.replace(/[0-9]/g, '')"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
@@ -1322,14 +1322,14 @@
             <input type="text" id="create-ci" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
-            <input type="tel" id="create-phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil (Opcional)</label>
+            <input type="tel" id="create-phone" maxlength="10" inputmode="numeric" placeholder="10 dígitos (opcional)" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
-          <input type="email" id="create-email" required placeholder="correo@institucional.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico (Opcional)</label>
+          <input type="email" id="create-email" placeholder="correo@institucional.com (opcional)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1338,8 +1338,8 @@
             <input type="text" id="create-institution" required placeholder="Hospital / Laboratorio" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
-            <input type="text" id="create-position" required placeholder="Bioquímico / Director" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad (Opcional)</label>
+            <input type="text" id="create-position" placeholder="Bioquímico / Director (opcional)" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
@@ -1409,14 +1409,14 @@
             <input type="text" id="edit-ci" required maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
-            <input type="tel" id="edit-phone" required maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil (Opcional)</label>
+            <input type="tel" id="edit-phone" maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
-          <input type="email" id="edit-email" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico (Opcional)</label>
+          <input type="email" id="edit-email" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1425,8 +1425,8 @@
             <input type="text" id="edit-institution" required oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
-            <input type="text" id="edit-position" required oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad (Opcional)</label>
+            <input type="text" id="edit-position" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
@@ -1990,12 +1990,14 @@
       if (nameEl) nameEl.textContent = attendee.full_name || 'Sin Nombre';
       if (instEl) instEl.textContent = attendee.institution || 'Particular';
       if (ciEl) ciEl.textContent = attendee.ci || 'No registrada';
-      if (posEl) posEl.textContent = attendee.position || 'Profesional';
+      if (posEl) posEl.textContent = (attendee.position && attendee.position !== 'Particular') ? attendee.position : (attendee.position || 'Profesional');
       
-      // Ofuscar teléfono en pantalla pública si no es admin
+      // Ofuscar teléfono en pantalla pública si no es admin, o mostrar "No registrado" si no se ingresó
       const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
       if (phoneEl) {
-        if (!isAdmin && attendee.phone && attendee.phone.length === 10) {
+        if (!attendee.phone || attendee.phone === '0000000000') {
+          phoneEl.textContent = 'No registrado';
+        } else if (!isAdmin && attendee.phone && attendee.phone.length === 10) {
           phoneEl.textContent = attendee.phone.slice(0, 3) + '****' + attendee.phone.slice(7);
         } else {
           phoneEl.textContent = attendee.phone || '-';
@@ -2940,17 +2942,17 @@
         return;
       }
 
-      // 2. VALIDACIÓN ESTRICTA: 10 DÍGITOS EN CÉDULA Y TELÉFONO, SOLO TEXTO EN NOMBRE/INSTITUCIÓN/CARGO, FECHA REAL
+      // 2. VALIDACIÓN: NOMBRE, CÉDULA E INSTITUCIÓN SON OBLIGATORIOS; CORREO, TELÉFONO Y CARGO SON OPCIONALES
       const fullName = (formData.get('fullName') || '').trim();
       const ciRaw = (formData.get('ci') || '').trim();
-      const email = (formData.get('email') || '').trim();
+      const emailRaw = (formData.get('email') || '').trim();
       const phoneRaw = (formData.get('phone') || '').trim();
       const institution = (formData.get('institution') || '').trim();
-      const position = (formData.get('position') || '').trim();
+      const positionRaw = (formData.get('position') || '').trim();
       const birthDate = (formData.get('birth_date') || '').trim();
       const attending = formData.get('attending') || 'yes';
 
-      // 2.1 Nombre y apellidos: obligatorio y solo texto (no números)
+      // 2.1 Nombre y apellidos: OBLIGATORIO y solo texto (no números)
       if (!fullName || fullName.length < 3) {
         markInputError('fullName', 'Por favor ingrese su Nombre y Apellidos completos (*)');
         return;
@@ -2960,28 +2962,14 @@
         return;
       }
 
-      // 2.2 Cédula de Identidad: obligatorio, solo dígitos, exactamente 10 dígitos numéricos
+      // 2.2 Cédula de Identidad: OBLIGATORIO, solo dígitos, exactamente 10 dígitos numéricos
       const ci = ciRaw.replace(/\D/g, '');
       if (!ci || ci.length !== 10 || !/^\d{10}$/.test(ci)) {
         markInputError('ci', 'La Cédula de Identidad debe tener exactamente 10 dígitos numéricos (*)');
         return;
       }
 
-      // 2.3 Correo Electrónico: obligatorio y válido
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email || !emailRegex.test(email)) {
-        markInputError('email', 'Por favor ingrese un Correo Electrónico válido (*)');
-        return;
-      }
-
-      // 2.4 Teléfono Móvil: obligatorio, solo dígitos, exactamente 10 dígitos numéricos
-      const phone = phoneRaw.replace(/\D/g, '');
-      if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
-        markInputError('phone', 'El Teléfono móvil debe tener exactamente 10 dígitos numéricos (*)');
-        return;
-      }
-
-      // 2.5 Institución o Laboratorio Clínico: obligatorio y solo texto (no números)
+      // 2.3 Institución o Laboratorio Clínico: OBLIGATORIO y solo texto (no números)
       if (!institution) {
         markInputError('institution', 'Por favor ingrese su Institución o Laboratorio Clínico (*)');
         return;
@@ -2991,14 +2979,42 @@
         return;
       }
 
-      // 2.6 Cargo o Especialidad: obligatorio y solo texto (no números)
-      if (!position) {
-        markInputError('position', 'Por favor ingrese su Cargo o Especialidad (*)');
-        return;
+      // 2.4 Correo Electrónico: OPCIONAL. Si se ingresa se valida formato; si se omite, se genera email único para BD
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let finalEmail = '';
+      if (emailRaw && emailRaw.length > 0) {
+        if (!emailRegex.test(emailRaw)) {
+          markInputError('email', 'Por favor ingrese un Correo Electrónico válido');
+          return;
+        }
+        finalEmail = emailRaw.toLowerCase();
+      } else {
+        finalEmail = `${ci}@ingelab.com`;
       }
-      if (/[0-9]/.test(position)) {
-        markInputError('position', 'El Cargo o Especialidad solo debe contener texto, no números (*)');
-        return;
+
+      // 2.5 Teléfono Móvil: OPCIONAL. Si se ingresa se validan 10 dígitos; si se omite, valor neutro
+      const phoneDigits = phoneRaw.replace(/\D/g, '');
+      let finalPhone = '';
+      if (phoneDigits && phoneDigits.length > 0) {
+        if (phoneDigits.length !== 10 || !/^\d{10}$/.test(phoneDigits)) {
+          markInputError('phone', 'El Teléfono móvil debe tener exactamente 10 dígitos numéricos');
+          return;
+        }
+        finalPhone = phoneDigits;
+      } else {
+        finalPhone = '0000000000';
+      }
+
+      // 2.6 Cargo o Especialidad: OPCIONAL y solo texto (no números)
+      let finalPosition = '';
+      if (positionRaw && positionRaw.length > 0) {
+        if (/[0-9]/.test(positionRaw)) {
+          markInputError('position', 'El Cargo o Especialidad solo debe contener texto, no números');
+          return;
+        }
+        finalPosition = positionRaw;
+      } else {
+        finalPosition = 'Particular';
       }
 
       // 2.7 Fecha de Nacimiento (Único campo NO obligatorio, pero si se ingresa debe ser real, no ficticia ni muy lejana)
@@ -3022,10 +3038,10 @@
         id: Date.now(),
         full_name: fullName.toUpperCase(),
         ci: ci,
-        email: email.toLowerCase(),
-        phone: phone,
+        email: finalEmail,
+        phone: finalPhone,
         institution: institution,
-        position: position,
+        position: finalPosition,
         birth_date: birthDate || '',
         attending: attending,
         ticket_count: 1,
@@ -3104,10 +3120,12 @@
 
       document.getElementById('success-display-name').innerText = record.full_name || '-';
       document.getElementById('success-display-ci').innerText = record.ci ? `C.I: ${record.ci}` : '-';
-      document.getElementById('success-display-email').innerText = record.email || '-';
-      document.getElementById('success-display-phone').innerText = record.phone || '-';
+      document.getElementById('success-display-email').innerText = (record.email && !record.email.toLowerCase().endsWith('@ingelab.com')) ? record.email : 'No registrado';
+      document.getElementById('success-display-phone').innerText = (record.phone && record.phone !== '0000000000') ? record.phone : 'No registrado';
       document.getElementById('success-display-institution').innerText = record.institution || 'Particular';
-      document.getElementById('success-display-position').innerText = record.position || 'Profesional de la Salud';
+      document.getElementById('success-display-position').innerText = (record.position && record.position !== 'Particular') ? record.position : (record.position || 'No especificado');
+      const birthEl = document.getElementById('success-display-birthdate');
+      if (birthEl) birthEl.innerText = record.birth_date || 'No registrada';
     }
 
     // ============================================================
@@ -3475,21 +3493,50 @@
       const attending = document.getElementById('create-attending') ? document.getElementById('create-attending').value : 'yes';
       const comments = document.getElementById('create-comments') ? document.getElementById('create-comments').value.trim() : '';
 
+      if (!fullName || fullName.length < 3) { alert('Por favor ingrese el Nombre y Apellidos completos.'); if (btn) btn.disabled = false; return; }
       if (/[0-9]/.test(fullName)) { alert('El Nombre Completo no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
       if (!/^\d{10}$/.test(ci)) { alert('La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
-      if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (!institution) { alert('La Institución es obligatoria.'); if (btn) btn.disabled = false; return; }
       if (/[0-9]/.test(institution)) { alert('La Institución no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+
+      // Correo Electrónico (Opcional)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let finalEmail = '';
+      if (email && email.length > 0) {
+        if (!emailRegex.test(email)) { alert('El Correo Electrónico ingresado no es válido.'); if (btn) btn.disabled = false; return; }
+        finalEmail = email;
+      } else {
+        finalEmail = `${ci}@ingelab.com`;
+      }
+
+      // Teléfono Móvil (Opcional)
+      let finalPhone = '';
+      if (phone && phone.length > 0) {
+        if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+        finalPhone = phone;
+      } else {
+        finalPhone = '0000000000';
+      }
+
+      // Cargo / Especialidad (Opcional)
+      let finalPosition = '';
+      if (position && position.length > 0) {
+        if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+        finalPosition = position;
+      } else {
+        finalPosition = 'Particular';
+      }
+
       if (birthDate && !validateBirthDateReal(birthDate)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
 
       const newRecord = {
         id: Date.now(),
         full_name: fullName,
         ci: ci,
-        email: email,
-        phone: phone,
+        email: finalEmail,
+        phone: finalPhone,
         institution: institution,
-        position: position,
+        position: finalPosition,
         birth_date: birthDate,
         attending: attending,
         ticket_count: 1,
@@ -3542,10 +3589,10 @@
 
       document.getElementById('detail-name').innerText = item.full_name || '-';
       document.getElementById('detail-ci').innerText = item.ci || '-';
-      document.getElementById('detail-email').innerText = item.email || '-';
-      document.getElementById('detail-phone').innerText = item.phone || '-';
+      document.getElementById('detail-email').innerText = (item.email && !item.email.toLowerCase().endsWith('@ingelab.com')) ? item.email : 'No registrado';
+      document.getElementById('detail-phone').innerText = (item.phone && item.phone !== '0000000000') ? item.phone : 'No registrado';
       document.getElementById('detail-institution').innerText = item.institution || 'Particular';
-      document.getElementById('detail-position').innerText = item.position || 'Profesional de la Salud';
+      document.getElementById('detail-position').innerText = (item.position && item.position !== 'Particular') ? item.position : 'No especificado';
       document.getElementById('detail-status').innerText = item.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE';
       document.getElementById('detail-status').className = item.attending === 'yes' ? 'font-bold text-emerald-600' : 'font-bold text-slate-500';
       document.getElementById('detail-comments').innerText = item.comments || 'Sin comentarios';
@@ -3567,10 +3614,10 @@
       document.getElementById('edit-id').value = item.id;
       document.getElementById('edit-name').value = item.full_name || '';
       document.getElementById('edit-ci').value = item.ci || '';
-      document.getElementById('edit-email').value = item.email || '';
-      document.getElementById('edit-phone').value = item.phone || '';
+      document.getElementById('edit-email').value = (item.email && !item.email.toLowerCase().endsWith('@ingelab.com')) ? item.email : '';
+      document.getElementById('edit-phone').value = (item.phone && item.phone !== '0000000000') ? item.phone : '';
       document.getElementById('edit-institution').value = item.institution || '';
-      document.getElementById('edit-position').value = item.position || '';
+      document.getElementById('edit-position').value = (item.position && item.position !== 'Particular') ? item.position : '';
       if (document.getElementById('edit-birthdate')) {
         document.getElementById('edit-birthdate').value = item.birth_date || '';
       }
@@ -3604,11 +3651,40 @@
       const attending = document.getElementById('edit-attending').value;
       const comments = document.getElementById('edit-comments').value.trim();
 
+      if (!full_name || full_name.length < 3) { alert('El Nombre Completo es obligatorio.'); if (btn) btn.disabled = false; return; }
       if (/[0-9]/.test(full_name)) { alert('El Nombre Completo no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
       if (!/^\d{10}$/.test(ci)) { alert('La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
-      if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (!institution) { alert('La Institución es obligatoria.'); if (btn) btn.disabled = false; return; }
       if (/[0-9]/.test(institution)) { alert('La Institución no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+
+      // Correo Electrónico (Opcional)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let finalEmail = '';
+      if (email && email.length > 0) {
+        if (!emailRegex.test(email)) { alert('El Correo Electrónico ingresado no es válido.'); if (btn) btn.disabled = false; return; }
+        finalEmail = email;
+      } else {
+        finalEmail = `${ci}@ingelab.com`;
+      }
+
+      // Teléfono Móvil (Opcional)
+      let finalPhone = '';
+      if (phone && phone.length > 0) {
+        if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+        finalPhone = phone;
+      } else {
+        finalPhone = '0000000000';
+      }
+
+      // Cargo / Especialidad (Opcional)
+      let finalPosition = '';
+      if (position && position.length > 0) {
+        if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+        finalPosition = position;
+      } else {
+        finalPosition = 'Particular';
+      }
+
       if (birth_date && !validateBirthDateReal(birth_date)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
 
       const nowIso = new Date().toISOString();
@@ -3618,10 +3694,10 @@
       const updatedFields = {
         full_name,
         ci,
-        email,
-        phone,
+        email: finalEmail,
+        phone: finalPhone,
         institution,
-        position,
+        position: finalPosition,
         birth_date,
         attending,
         comments: cleanComments,
@@ -3878,18 +3954,18 @@
             <td class="py-4 px-6 align-middle space-y-1">
               <div class="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
                 <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                <span>${escapeHtml(a.email)}</span>
+                <span>${(a.email && !a.email.toLowerCase().endsWith('@ingelab.com')) ? escapeHtml(a.email) : '<span class="text-slate-400 italic">Sin correo</span>'}</span>
               </div>
               <div class="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
                 <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                <span>${escapeHtml(a.phone)}</span>
+                <span>${(a.phone && a.phone !== '0000000000') ? escapeHtml(a.phone) : '<span class="text-slate-400 italic">Sin teléfono</span>'}</span>
               </div>
             </td>
 
             <!-- INSTITUCIÓN / CARGO -->
             <td class="py-4 px-6 align-middle">
               <span class="font-semibold text-slate-800 block text-xs">${escapeHtml(a.institution || 'Particular')}</span>
-              <span class="text-slate-400 block text-[11px] font-mono">${escapeHtml(a.position || 'Profesional')}</span>
+              <span class="text-slate-400 block text-[11px] font-mono">${(a.position && a.position !== 'Particular') ? escapeHtml(a.position) : (a.position || 'Profesional')}</span>
             </td>
 
             <!-- ESTADO Y CHECK-IN -->
@@ -4107,10 +4183,10 @@
         'N°': index + 1,
         'ASISTENTE': a.full_name || '',
         'C.I. / DOCUMENTO': a.ci || '',
-        'CORREO ELECTRÓNICO': a.email || '',
-        'TELÉFONO': a.phone || '',
+        'CORREO ELECTRÓNICO': (a.email && !a.email.toLowerCase().endsWith('@ingelab.com')) ? a.email : 'No registrado',
+        'TELÉFONO': (a.phone && a.phone !== '0000000000') ? a.phone : 'No registrado',
         'INSTITUCIÓN / EMPRESA': a.institution || 'Particular',
-        'CARGO / ESPECIALIDAD': a.position || 'Profesional de la Salud',
+        'CARGO / ESPECIALIDAD': (a.position && a.position !== 'Particular') ? a.position : (a.position || 'No especificado'),
         'FECHA DE NACIMIENTO': a.birth_date || 'No especificada',
         'ESTADO': a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE',
         'CHECK-IN (INGRESO)': a.checked_in ? 'EN SALA' : 'PENDIENTE',
