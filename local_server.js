@@ -61,11 +61,11 @@ app.post('/api/confirm', (req, res) => {
       comments 
     } = req.body;
 
-    // Validación: Nombre, Cédula e Institución requeridos; Correo y Teléfono opcionales
-    if (!fullName || !ci || !institution) {
+    // Validación: Todos los campos son obligatorios a excepción de fecha de nacimiento
+    if (!fullName || !ci || !email || !phone || !institution || !position) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Por favor complete su Nombre, Cédula de Identidad e Institución.' 
+        error: 'Por favor complete todos los campos obligatorios (*).' 
       });
     }
 

@@ -686,14 +686,13 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
 
     const fullName = (b.fullName || b.full_name || '').trim().toUpperCase();
     const ci = (b.ci || '').trim().replace(/\D/g, '');
-    const emailRaw = (b.email || '').trim().toLowerCase();
-    const phoneRaw = (b.phone || '').trim().replace(/\D/g, '');
+    const email = (b.email || '').trim().toLowerCase();
+    const phone = (b.phone || '').trim().replace(/\D/g, '');
     const institution = (b.institution || '').trim();
-    const positionRaw = (b.position || '').trim();
+    const position = (b.position || '').trim();
     
     // 2. Validación estricta en servidor:
-    // C.I., Nombre Completo e Institución son OBLIGATORIOS.
-    // Correo, Teléfono y Cargo son OPCIONALES para nuevos registros.
+    // Todos los campos son OBLIGATORIOS a excepción de fecha de nacimiento.
     if (!fullName || fullName.length < 3) {
       return res.status(400).json({ success: false, error: 'El nombre completo es obligatorio.' });
     }
@@ -705,6 +704,15 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
       return res.status(400).json({ success: false, error: 'La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.' });
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ success: false, error: 'El correo electrónico es obligatorio y debe tener un formato válido.' });
+    }
+
+    if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+      return res.status(400).json({ success: false, error: 'El teléfono móvil debe tener exactamente 10 dígitos numéricos.' });
+    }
+
     if (!institution) {
       return res.status(400).json({ success: false, error: 'La institución o laboratorio es obligatorio.' });
     }
@@ -712,39 +720,11 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
       return res.status(400).json({ success: false, error: 'La institución o laboratorio solo puede contener texto, no números.' });
     }
 
-    // Correo Electrónico (Opcional)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    let finalEmail = '';
-    if (emailRaw && emailRaw.length > 0) {
-      if (!emailRegex.test(emailRaw)) {
-        return res.status(400).json({ success: false, error: 'El correo electrónico ingresado no tiene un formato válido.' });
-      }
-      finalEmail = emailRaw;
-    } else {
-      // Email autogenerado único derivado de su C.I. para cumplir con NOT NULL y CHECK de BD sin alterar el schema
-      finalEmail = `${ci}@ingelab.com`;
+    if (!position) {
+      return res.status(400).json({ success: false, error: 'El cargo o especialidad es obligatorio.' });
     }
-
-    // Teléfono Móvil (Opcional)
-    let finalPhone = '';
-    if (phoneRaw && phoneRaw.length > 0) {
-      if (phoneRaw.length !== 10 || !/^\d{10}$/.test(phoneRaw)) {
-        return res.status(400).json({ success: false, error: 'El teléfono móvil debe tener exactamente 10 dígitos numéricos.' });
-      }
-      finalPhone = phoneRaw;
-    } else {
-      finalPhone = '0000000000';
-    }
-
-    // Cargo o Especialidad (Opcional)
-    let finalPosition = '';
-    if (positionRaw && positionRaw.length > 0) {
-      if (/[0-9]/.test(positionRaw)) {
-        return res.status(400).json({ success: false, error: 'El cargo o especialidad solo puede contener texto, no números.' });
-      }
-      finalPosition = positionRaw;
-    } else {
-      finalPosition = 'Particular';
+    if (/[0-9]/.test(position)) {
+      return res.status(400).json({ success: false, error: 'El cargo o especialidad solo puede contener texto, no números.' });
     }
 
     // Fecha de nacimiento: Único campo no obligatorio, pero si se envía debe ser real (no ficticia ni muy lejana: 1935 a 2008)
@@ -766,12 +746,12 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
     const record = {
       full_name: fullName,
       ci: ci,
-      email: finalEmail,
-      phone: finalPhone,
+      email: email,
+      phone: phone,
       ticket_count: 1,
       ticket_list: [],
       institution: institution,
-      position: finalPosition,
+      position: position,
       attending: b.attending || 'yes',
       dietary: [],
       comments: combinedComments
@@ -792,8 +772,8 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
 
     // Solo si no tiene cédula válida de al menos 8 dígitos se busca por email real o nombre exacto
     if (!existingId && (!ci || ci.length < 8)) {
-      if (finalEmail && !finalEmail.endsWith('@ingelab.com')) {
-        const checkEmail = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(finalEmail)}&order=id.desc&limit=1`, {
+      if (email && !email.endsWith('@ingelab.com')) {
+        const checkEmail = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(email)}&order=id.desc&limit=1`, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
         });
         if (checkEmail.ok) {
