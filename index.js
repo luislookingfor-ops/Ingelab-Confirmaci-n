@@ -127,9 +127,8 @@ function deduplicateAttendeesServer(list) {
     return Number(b.id || 0) - Number(a.id || 0);
   });
 
-  const seenNames = new Map();
-  const seenEmails = new Map();
   const seenCis = new Map();
+  const seenFallbackKeys = new Map();
   const uniqueList = [];
 
   for (const item of sorted) {
@@ -138,36 +137,64 @@ function deduplicateAttendeesServer(list) {
     item.checked_in = Boolean(checkedInAt || item.checked_in);
     item.checked_in_at = checkedInAt;
 
+    const ciClean = (item.ci || '').replace(/\D/g, '').trim();
     const nameKey = (item.full_name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
     const emailKey = (item.email || '').trim().toLowerCase();
-    const ciKey = (item.ci || '').trim();
+
+    const isDeleted = item.attending === 'deleted' || String(item.comments || '').includes('[DELETED]');
+    if (isDeleted) {
+      if (ciClean && ciClean.length >= 8) seenCis.set(ciClean, item);
+      else {
+        const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
+          ? ('email:' + emailKey) 
+          : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
+        if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
+      }
+      continue;
+    }
 
     let isDuplicate = false;
     let existingItem = null;
-    if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) {
-      isDuplicate = true;
-      existingItem = seenNames.get(nameKey);
-    } else if (emailKey && seenEmails.has(emailKey)) {
-      isDuplicate = true;
-      existingItem = seenEmails.get(emailKey);
-    } else if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
-      isDuplicate = true;
-      existingItem = seenCis.get(ciKey);
+
+    // 1. Clave Principal Única: Cédula de Identidad (C.I.)
+    if (ciClean && ciClean.length >= 8) {
+      if (seenCis.has(ciClean)) {
+        isDuplicate = true;
+        existingItem = seenCis.get(ciClean);
+      } else {
+        // Chequear si existe un registro previo con el mismo nombre y C.I. casi idéntica (ej. 9 vs 10 dígitos)
+        for (const [sCi, sItem] of seenCis.entries()) {
+          const sName = (sItem.full_name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
+          if (sName === nameKey && (sCi.startsWith(ciClean) || ciClean.startsWith(sCi))) {
+            isDuplicate = true;
+            existingItem = sItem;
+            break;
+          }
+        }
+      }
+    } else {
+      // 2. Solo si no tiene C.I. válida de al menos 8 dígitos se usa email o nombre como fallback
+      const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
+        ? ('email:' + emailKey) 
+        : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
+      if (fallbackKey && seenFallbackKeys.has(fallbackKey)) {
+        isDuplicate = true;
+        existingItem = seenFallbackKeys.get(fallbackKey);
+      }
     }
 
     if (!isDuplicate) {
-      if (nameKey && nameKey.length >= 3) seenNames.set(nameKey, item);
-      if (emailKey) seenEmails.set(emailKey, item);
-      if (ciKey && ciKey.length >= 6) seenCis.set(ciKey, item);
-
-      const isDeleted = item.attending === 'deleted' || String(item.comments || '').includes('[DELETED]');
-      if (!isDeleted) {
-        uniqueList.push(item);
+      if (ciClean && ciClean.length >= 8) seenCis.set(ciClean, item);
+      else {
+        const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
+          ? ('email:' + emailKey) 
+          : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
+        if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
       }
+      uniqueList.push(item);
     } else if (existingItem && item.checked_in && !existingItem.checked_in) {
       const checkinTime = new Date(item.checked_in_at || 0).getTime();
       const existingCreatedTime = new Date(existingItem.created_at || 0).getTime();
-      // Solo heredar check-in si ocurrió DESPUÉS de la creación del registro actual
       if (checkinTime > existingCreatedTime) {
         existingItem.checked_in = true;
         existingItem.checked_in_at = item.checked_in_at;
@@ -750,39 +777,39 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
       comments: combinedComments
     };
 
-    // 2.1 Verificar si el asistente ya existe por NOMBRE, EMAIL o CÉDULA para ACTUALIZAR en vez de duplicar
+    // 2.1 Verificar si el asistente ya existe por CÉDULA (o fallback por email/nombre si no tiene cédula)
     let existingId = null;
 
-    // Buscar por email
-    if (finalEmail) {
-      const checkEmail = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(finalEmail)}&order=id.desc&limit=1`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      if (checkEmail.ok) {
-        const data = await checkEmail.json();
-        if (data && data.length > 0) existingId = data[0].id;
-      }
-    }
-
-    // Si no se encontró por email, buscar por nombre exacto
-    if (!existingId && fullName) {
-      const checkName = await fetch(`${SUPABASE_URL}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(fullName)}&order=id.desc&limit=1`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      if (checkName.ok) {
-        const data = await checkName.json();
-        if (data && data.length > 0) existingId = data[0].id;
-      }
-    }
-
-    // Si no se encontró, buscar por C.I.
-    if (!existingId && ci) {
+    if (ci && ci.length >= 8) {
       const checkCi = await fetch(`${SUPABASE_URL}/rest/v1/attendees?ci=eq.${encodeURIComponent(ci)}&order=id.desc&limit=1`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
       if (checkCi.ok) {
         const data = await checkCi.json();
         if (data && data.length > 0) existingId = data[0].id;
+      }
+    }
+
+    // Solo si no tiene cédula válida de al menos 8 dígitos se busca por email real o nombre exacto
+    if (!existingId && (!ci || ci.length < 8)) {
+      if (finalEmail && !finalEmail.endsWith('@ingelab.com')) {
+        const checkEmail = await fetch(`${SUPABASE_URL}/rest/v1/attendees?email=eq.${encodeURIComponent(finalEmail)}&order=id.desc&limit=1`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (checkEmail.ok) {
+          const data = await checkEmail.json();
+          if (data && data.length > 0) existingId = data[0].id;
+        }
+      }
+
+      if (!existingId && fullName) {
+        const checkName = await fetch(`${SUPABASE_URL}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(fullName)}&order=id.desc&limit=1`, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        });
+        if (checkName.ok) {
+          const data = await checkName.json();
+          if (data && data.length > 0) existingId = data[0].id;
+        }
       }
     }
 

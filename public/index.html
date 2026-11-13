@@ -2732,9 +2732,8 @@
         return Number(b.id || 0) - Number(a.id || 0);
       });
 
-      const seenNames = new Map();
-      const seenEmails = new Map();
       const seenCis = new Map();
+      const seenFallbackKeys = new Map();
       const uniqueList = [];
 
       for (const item of sorted) {
@@ -2742,36 +2741,69 @@
         const checkedInAt = item.checked_in_at || (checkinMatch ? checkinMatch[1] : null);
         item.checked_in = Boolean(checkedInAt || item.checked_in);
         item.checked_in_at = checkedInAt;
+
+        const ciClean = (item.ci || '').replace(/\D/g, '').trim();
         const nameKey = normalizeAttendeeStr(item.full_name);
         const emailKey = (item.email || '').trim().toLowerCase();
-        const ciKey = (item.ci || '').trim();
+
+        // Si el último estado registrado es eliminación (tombstone), se descarta de la lista visible
+        // y se registra su clave para bloquear registros anteriores de esa persona
+        const isDeleted = item.attending === 'deleted' || 
+                          String(item.comments || '').includes('[DELETED]') ||
+                          isRecordDeleted(item);
+        if (isDeleted) {
+          if (ciClean && ciClean.length >= 8) seenCis.set(ciClean, item);
+          else {
+            const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
+              ? ('email:' + emailKey) 
+              : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
+            if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
+          }
+          continue;
+        }
 
         let isDuplicate = false;
         let existingItem = null;
-        if (nameKey && nameKey.length >= 3 && seenNames.has(nameKey)) {
-          isDuplicate = true;
-          existingItem = seenNames.get(nameKey);
-        } else if (emailKey && seenEmails.has(emailKey)) {
-          isDuplicate = true;
-          existingItem = seenEmails.get(emailKey);
-        } else if (ciKey && ciKey.length >= 6 && seenCis.has(ciKey)) {
-          isDuplicate = true;
-          existingItem = seenCis.get(ciKey);
+
+        // 1. Clave Principal Única: Cédula de Identidad (C.I.)
+        if (ciClean && ciClean.length >= 8) {
+          if (seenCis.has(ciClean)) {
+            isDuplicate = true;
+            existingItem = seenCis.get(ciClean);
+          } else {
+            // Chequear si existe un registro previo con el mismo nombre y C.I. casi idéntica (ej. 9 vs 10 dígitos por tipeo)
+            for (const [sCi, sItem] of seenCis.entries()) {
+              const sName = normalizeAttendeeStr(sItem.full_name);
+              if (sName === nameKey && (sCi.startsWith(ciClean) || ciClean.startsWith(sCi))) {
+                isDuplicate = true;
+                existingItem = sItem;
+                break;
+              }
+            }
+          }
+        } else {
+          // 2. Solo si no tiene C.I. válida de al menos 8 dígitos se usa email o nombre como fallback
+          const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
+            ? ('email:' + emailKey) 
+            : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
+          if (fallbackKey && seenFallbackKeys.has(fallbackKey)) {
+            isDuplicate = true;
+            existingItem = seenFallbackKeys.get(fallbackKey);
+          }
         }
 
         if (!isDuplicate) {
-          if (nameKey && nameKey.length >= 3) seenNames.set(nameKey, item);
-          if (emailKey) seenEmails.set(emailKey, item);
-          if (ciKey && ciKey.length >= 6) seenCis.set(ciKey, item);
-
-          // Si el último estado registrado es eliminación (tombstone), se descarta de la lista visible
-          // y sus claves quedan registradas para que registros anteriores de esa persona queden bloqueados
-          const isDeleted = item.attending === 'deleted' || 
-                            String(item.comments || '').includes('[DELETED]') ||
-                            isRecordDeleted(item);
-          if (!isDeleted) {
-            uniqueList.push(item);
+          if (ciClean && ciClean.length >= 8) seenCis.set(ciClean, item);
+          else {
+            const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
+              ? ('email:' + emailKey) 
+              : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
+            if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
           }
+          uniqueList.push(item);
+        } else if (existingItem && item.checked_in && !existingItem.checked_in) {
+          existingItem.checked_in = true;
+          existingItem.checked_in_at = item.checked_in_at;
         }
       }
 
@@ -3050,12 +3082,22 @@
       };
 
       try {
-        // Si el asistente ya existe por NOMBRE, CORREO o CÉDULA, actualizar su registro existente al último registrado
+        const newCiClean = (newRecord.ci || '').replace(/\D/g, '').trim();
+        const newNameNorm = normalizeAttendeeStr(newRecord.full_name);
+        const newEmailNorm = (newRecord.email || '').trim().toLowerCase();
+
+        // Solo es el mismo asistente si coincide su CÉDULA (o nombre exacto con cédula coincidente)
         const existingIdx = allAttendeesCache.findIndex(a => {
-          const nameMatch = a.full_name && newRecord.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(newRecord.full_name);
-          const emailMatch = a.email && newRecord.email && a.email.toLowerCase() === newRecord.email.toLowerCase();
-          const ciMatch = a.ci && newRecord.ci && a.ci.trim() === newRecord.ci.trim();
-          return nameMatch || emailMatch || ciMatch;
+          const aCi = (a.ci || '').replace(/\D/g, '').trim();
+          if (newCiClean && aCi && newCiClean.length >= 8 && aCi.length >= 8) {
+            return aCi === newCiClean || (normalizeAttendeeStr(a.full_name) === newNameNorm && (aCi.startsWith(newCiClean) || newCiClean.startsWith(aCi)));
+          }
+          // Si alguno no tiene cédula válida, evaluar email real o nombre exacto
+          const aName = normalizeAttendeeStr(a.full_name);
+          const aEmail = (a.email || '').trim().toLowerCase();
+          const emailMatches = newEmailNorm && !newEmailNorm.endsWith('@ingelab.com') && aEmail === newEmailNorm;
+          const nameMatches = newNameNorm && newNameNorm.length >= 5 && aName === newNameNorm;
+          return emailMatches || nameMatches;
         });
 
         if (existingIdx !== -1) {
@@ -3063,7 +3105,7 @@
           allAttendeesCache[existingIdx] = { 
             ...allAttendeesCache[existingIdx], 
             ...newRecord,
-            created_at: newRecord.created_at // asegurar fecha del último registro
+            created_at: newRecord.created_at
           };
         } else {
           allAttendeesCache.unshift(newRecord);
@@ -3072,6 +3114,12 @@
         saveStoredAttendees(allAttendeesCache);
 
         clearTombstoneForAttendee(newRecord);
+
+        // Actualizar contadores y aforo inmediatamente
+        updateCheckinQuickCounters();
+        updateKpis(allAttendeesCache);
+        if (typeof filterTable === 'function') filterTable();
+
         closeRegistrationModal();
         const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
         if (isAdmin) {
@@ -3195,33 +3243,37 @@
         try {
           let existingId = null;
 
-          if (record.email) {
-            const checkEmail = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
-              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
-            });
-            if (checkEmail.ok) {
-              const res = await checkEmail.json();
-              if (res && res.length > 0) existingId = res[0].id;
-            }
-          }
-
-          if (!existingId && record.full_name) {
-            const checkName = await fetch(`${url}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(record.full_name)}&order=id.desc&limit=1`, {
-              headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
-            });
-            if (checkName.ok) {
-              const res = await checkName.json();
-              if (res && res.length > 0) existingId = res[0].id;
-            }
-          }
-
-          if (!existingId && record.ci) {
-            const checkCi = await fetch(`${url}/rest/v1/attendees?ci=eq.${encodeURIComponent(record.ci)}&order=id.desc&limit=1`, {
+          const ciClean = (record.ci || '').replace(/\D/g, '').trim();
+          if (ciClean && ciClean.length >= 8) {
+            const checkCi = await fetch(`${url}/rest/v1/attendees?ci=eq.${encodeURIComponent(ciClean)}&order=id.desc&limit=1`, {
               headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
             });
             if (checkCi.ok) {
               const res = await checkCi.json();
               if (res && res.length > 0) existingId = res[0].id;
+            }
+          }
+
+          // Solo si NO tiene cédula válida de al menos 8 dígitos se busca por email o nombre
+          if (!existingId && (!ciClean || ciClean.length < 8)) {
+            if (record.email && !record.email.endsWith('@ingelab.com')) {
+              const checkEmail = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
+                headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+              });
+              if (checkEmail.ok) {
+                const res = await checkEmail.json();
+                if (res && res.length > 0) existingId = res[0].id;
+              }
+            }
+
+            if (!existingId && record.full_name) {
+              const checkName = await fetch(`${url}/rest/v1/attendees?full_name=ilike.${encodeURIComponent(record.full_name)}&order=id.desc&limit=1`, {
+                headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+              });
+              if (checkName.ok) {
+                const res = await checkName.json();
+                if (res && res.length > 0) existingId = res[0].id;
+              }
             }
           }
 
@@ -3431,6 +3483,7 @@
 
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
+      updateCheckinQuickCounters();
     }
 
     function updateKpis(list) {
@@ -3544,12 +3597,22 @@
         created_at: new Date().toISOString()
       };
 
-      // Si el asistente ya existe por NOMBRE, EMAIL o CÉDULA, actualizar en vez de duplicar
+      const newCiClean = (newRecord.ci || '').replace(/\D/g, '').trim();
+      const newNameNorm = normalizeAttendeeStr(newRecord.full_name);
+      const newEmailNorm = (newRecord.email || '').trim().toLowerCase();
+
+      // Solo es el mismo asistente si coincide su CÉDULA (o nombre exacto con cédula coincidente)
       const existingIdx = allAttendeesCache.findIndex(a => {
-        const nameMatch = a.full_name && newRecord.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(newRecord.full_name);
-        const emailMatch = a.email && newRecord.email && a.email.toLowerCase() === newRecord.email.toLowerCase();
-        const ciMatch = a.ci && newRecord.ci && a.ci.trim() === newRecord.ci.trim();
-        return nameMatch || emailMatch || ciMatch;
+        const aCi = (a.ci || '').replace(/\D/g, '').trim();
+        if (newCiClean && aCi && newCiClean.length >= 8 && aCi.length >= 8) {
+          return aCi === newCiClean || (normalizeAttendeeStr(a.full_name) === newNameNorm && (aCi.startsWith(newCiClean) || newCiClean.startsWith(aCi)));
+        }
+        // Si alguno no tiene cédula válida, evaluar email real o nombre exacto
+        const aName = normalizeAttendeeStr(a.full_name);
+        const aEmail = (a.email || '').trim().toLowerCase();
+        const emailMatches = newEmailNorm && !newEmailNorm.endsWith('@ingelab.com') && aEmail === newEmailNorm;
+        const nameMatches = newNameNorm && newNameNorm.length >= 5 && aName === newNameNorm;
+        return emailMatches || nameMatches;
       });
 
       if (existingIdx !== -1) {
@@ -3569,6 +3632,7 @@
 
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
+      updateCheckinQuickCounters();
 
       saveRecordToCloud(newRecord);
 
