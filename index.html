@@ -1769,8 +1769,13 @@
 
       // Exactamente 10 dígitos: búsqueda atómica por C.I.
       if (cleanDigits.length === 10) {
+        const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
         const match = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits && !isRecordDeleted(a));
         if (match) {
+          if (!isAdmin && match.checked_in) {
+            renderNotFound(cleanDigits);
+            return;
+          }
           renderFoundBadge();
           selectAttendeeForCheckin(match);
           return;
@@ -1794,6 +1799,10 @@
               allAttendeesCache = deduplicateAttendees(data.attendees.filter(a => !isRecordDeleted(a)));
               const remoteMatch = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits && !isRecordDeleted(a));
               if (remoteMatch) {
+                if (!isAdmin && remoteMatch.checked_in) {
+                  renderNotFound(cleanDigits);
+                  return;
+                }
                 renderFoundBadge();
                 selectAttendeeForCheckin(remoteMatch);
                 return;
@@ -1827,26 +1836,29 @@
       const card = document.getElementById('checkin-attendee-card');
       const successScreen = document.getElementById('checkin-success-screen');
       const emptyState = document.getElementById('checkin-empty-state');
+      const alreadyClientPanel = document.getElementById('checkin-already-client-panel');
+
+      if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
+      if (card) card.classList.add('hidden');
+      if (successScreen) successScreen.classList.add('hidden');
+      if (emptyState) emptyState.classList.remove('hidden');
 
       if (container) {
         container.innerHTML = `
           <div class="p-3 rounded-xl bg-rose-50 border border-rose-300 text-center space-y-1 animate-content-in">
             <span class="text-xs font-mono font-bold text-rose-800 flex items-center justify-center gap-1.5">
-              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i> Cédula No Registrada
+              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i> Cédula No Encontrada
             </span>
             <p class="text-[11px] font-mono text-rose-700">
               No se encontró ningún registro para <strong>${escapeHtml(digits)}</strong>.
             </p>
             <p class="text-[10px] font-mono text-slate-500">
-              Verifique los números o regístrese como nuevo asistente.
+              Verifique los números o acérquese a la mesa de soporte.
             </p>
           </div>
         `;
         lucide.createIcons();
       }
-      if (card) card.classList.add('hidden');
-      if (successScreen) successScreen.classList.add('hidden');
-      if (emptyState) emptyState.classList.remove('hidden');
     }
 
     function clearManualSearch() {
@@ -1878,57 +1890,55 @@
       const btnForce = document.getElementById('btn-force-entry');
       const btnUndo = document.getElementById('btn-undo-checkin');
 
-      if (emptyState) emptyState.classList.add('hidden');
-      if (successScreen) successScreen.classList.add('hidden');
-      if (card) card.classList.remove('hidden');
-
       const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
 
       // 1. CASO ASISTENTE YA INGRESÓ (CHECK-IN PREVIO)
       if (attendee.checked_in) {
+        if (!isAdmin) {
+          // EXCLUSIVAMENTE SI YA SE REGISTRÓ EN EL CHECK-IN:
+          // Para el cliente/participante sale como NO ENCONTRADO, sin revelar que ya está registrado
+          // para garantizar que no haya duplicados ni filtración de información.
+          renderNotFound(attendee.ci || '');
+          return;
+        }
+
         playSound('duplicate');
         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 
         const entryTime = attendee.checked_in_at ? new Date(attendee.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }) : 'Hora previa';
 
-        if (!isAdmin) {
-          // PROTECCIÓN TOTAL DE PRIVACIDAD EN MODO CLIENTE:
-          // No revelar nombre, teléfono ni datos personales a terceros en la fila
-          if (alreadyClientPanel) {
-            alreadyClientPanel.classList.remove('hidden');
-            const timeEl = document.getElementById('checkin-already-client-time');
-            if (timeEl) timeEl.textContent = entryTime;
-          }
-          if (attendeeDetails) attendeeDetails.classList.add('hidden');
-          if (actionsContainer) actionsContainer.classList.add('hidden');
-          if (statusBanner) statusBanner.classList.add('hidden');
-        } else {
-          // MODO ADMINISTRADOR: El admin sí puede ver detalles completos y opciones de forzar/anular
-          if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
-          if (attendeeDetails) attendeeDetails.classList.remove('hidden');
-          if (actionsContainer) actionsContainer.classList.remove('hidden');
-          if (statusBanner) statusBanner.classList.remove('hidden');
+        // MODO ADMINISTRADOR: El admin sí puede ver detalles completos y opciones de forzar/anular
+        if (emptyState) emptyState.classList.add('hidden');
+        if (successScreen) successScreen.classList.add('hidden');
+        if (card) card.classList.remove('hidden');
+        if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
+        if (attendeeDetails) attendeeDetails.classList.remove('hidden');
+        if (actionsContainer) actionsContainer.classList.remove('hidden');
+        if (statusBanner) statusBanner.classList.remove('hidden');
 
-          statusBanner.className = 'p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3 bg-rose-50 border-2 border-rose-500 text-rose-800 animate-pulse';
-          statusBanner.innerHTML = `
-            <div class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0">
-              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">⚠️ ASISTENTE YA INGRESÓ</span>
-              <span class="text-xs font-bold font-mono">Hora de ingreso: ${entryTime}</span>
-            </div>
-          `;
+        statusBanner.className = 'p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3 bg-rose-50 border-2 border-rose-500 text-rose-800 animate-pulse';
+        statusBanner.innerHTML = `
+          <div class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">⚠️ ASISTENTE YA INGRESÓ</span>
+            <span class="text-xs font-bold font-mono">Hora de ingreso: ${entryTime}</span>
+          </div>
+        `;
 
-          fillAttendeeCardData(attendee, entryTime + ' (REGISTRADO)');
+        fillAttendeeCardData(attendee, entryTime + ' (REGISTRADO)');
 
-          if (btnConfirm) btnConfirm.classList.add('hidden');
-          if (btnForce) btnForce.classList.remove('hidden');
-          if (btnUndo) btnUndo.classList.remove('hidden');
-        }
+        if (btnConfirm) btnConfirm.classList.add('hidden');
+        if (btnForce) btnForce.classList.remove('hidden');
+        if (btnUndo) btnUndo.classList.remove('hidden');
+        return;
       } else {
         // 2. CASO ASISTENTE PENDIENTE DE INGRESO (VÁLIDO PARA AUTORIZAR)
         playSound('success');
+        if (emptyState) emptyState.classList.add('hidden');
+        if (successScreen) successScreen.classList.add('hidden');
+        if (card) card.classList.remove('hidden');
         if (alreadyClientPanel) alreadyClientPanel.classList.add('hidden');
         if (attendeeDetails) attendeeDetails.classList.remove('hidden');
         if (actionsContainer) actionsContainer.classList.remove('hidden');
@@ -2031,9 +2041,14 @@
           success = true;
           checkinTimestamp = data.checked_in_at || checkinTimestamp;
         } else if (data.already_checked_in && !force) {
-          // Asistente ya registrado: mostrar estado de duplicado de inmediato
+          // Asistente ya registrado: en modo cliente se muestra no encontrado para evitar duplicados
           attendee.checked_in = true;
           attendee.checked_in_at = data.checked_in_at || attendee.checked_in_at;
+          const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
+          if (!isAdmin) {
+            renderNotFound(attendee.ci || '');
+            return;
+          }
           selectAttendeeForCheckin(attendee);
           showToast(data.message || 'El asistente ya había ingresado previamente');
           return;
