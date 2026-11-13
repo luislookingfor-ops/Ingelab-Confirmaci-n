@@ -177,7 +177,23 @@ function deduplicateAttendeesServer(list) {
   return uniqueList;
 }
 
+// Caché en memoria para mitigar llamadas lentas a Supabase (1676ms -> <1ms) y soportar alta concurrencia
+let serverAttendeesCache = null;
+let serverAttendeesCacheTime = 0;
+const ATTENDEES_CACHE_TTL_MS = 4000; // 4 segundos de caché SWR ultra-rápida
+
+function invalidateServerAttendeesCache() {
+  serverAttendeesCacheTime = 0;
+  serverAttendeesCache = null;
+}
+
 app.get('/api/attendees', async (req, res) => {
+  const now = Date.now();
+  if (serverAttendeesCache && (now - serverAttendeesCacheTime) < ATTENDEES_CACHE_TTL_MS) {
+    res.setHeader('X-Cache', 'HIT');
+    return res.json({ success: true, attendees: serverAttendeesCache });
+  }
+
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
@@ -194,11 +210,23 @@ app.get('/api/attendees', async (req, res) => {
     if (response.ok) {
       const attendees = await response.json();
       const cleanAttendees = deduplicateAttendeesServer(attendees || []);
+      serverAttendeesCache = cleanAttendees;
+      serverAttendeesCacheTime = now;
+      res.setHeader('X-Cache', 'MISS');
       return res.json({ success: true, attendees: cleanAttendees });
+    }
+
+    if (serverAttendeesCache) {
+      res.setHeader('X-Cache', 'STALE');
+      return res.json({ success: true, attendees: serverAttendeesCache });
     }
     const errText = await response.text();
     res.status(response.status).json({ success: false, error: errText });
   } catch (err) {
+    if (serverAttendeesCache) {
+      res.setHeader('X-Cache', 'STALE-FALLBACK');
+      return res.json({ success: true, attendees: serverAttendeesCache });
+    }
     res.status(500).json({ success: false, error: err.message });
   }
 });
@@ -248,7 +276,9 @@ app.get('/api/checkin/stats', async (req, res) => {
     const totalAttending = attendees.filter(a => a.attending === 'yes').length;
     const checkedInList = attendees.filter(a => a.checked_in);
     const totalCheckedIn = checkedInList.length;
-    const VENUE_CAPACITY = 230; // Aforo oficial del salón: 230 personas
+    // El valor de aforo se ajusta según la cantidad de registrados
+    const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
+    const attendanceRate = dynamicCapacity > 0 ? Math.round((totalCheckedIn / dynamicCapacity) * 100) : 0;
 
     // Calcular distribución por horas iniciando desde las 16:00
     const hourlyCounts = {
@@ -290,8 +320,8 @@ app.get('/api/checkin/stats', async (req, res) => {
         totalRegistered,
         totalAttending,
         totalCheckedIn,
-        venueCapacity: VENUE_CAPACITY,
-        attendanceRate: Math.round((totalCheckedIn / VENUE_CAPACITY) * 100),
+        venueCapacity: dynamicCapacity,
+        attendanceRate,
         hourlyCounts,
         recentEntries,
         timestamp: new Date().toISOString()
@@ -349,6 +379,7 @@ app.post('/api/checkin/reset-all-tests', async (req, res) => {
     }
 
     checkinMemoryCache.clear();
+    invalidateServerAttendeesCache();
 
     return res.json({ 
       success: true, 
@@ -429,6 +460,8 @@ app.post('/api/checkin/undo/:id', async (req, res) => {
         }])
       });
     } catch (e) {}
+
+    invalidateServerAttendeesCache();
 
     return res.json({ 
       success: true, 
@@ -591,6 +624,8 @@ app.post('/api/checkin/:id', async (req, res) => {
       console.warn('Error al guardar check-in en Supabase (mantenido en memoria):', e.message);
     }
 
+    invalidateServerAttendeesCache();
+
     return res.status(200).json({
       success: true,
       checked_in: true,
@@ -742,6 +777,7 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
       if (updateRes.ok) {
         const updatedData = await updateRes.json().catch(() => []);
         if (updatedData && updatedData.length > 0) {
+          invalidateServerAttendeesCache();
           return res.status(200).json({ success: true, attendee: updatedData[0] });
         }
       }
@@ -761,6 +797,7 @@ app.post('/api/confirm', rateLimiterMiddleware, async (req, res) => {
 
     if (insertRes.ok) {
       const data = await insertRes.json().catch(() => []);
+      invalidateServerAttendeesCache();
       return res.status(201).json({ success: true, attendee: data ? data[0] : record });
     }
     const errText = await insertRes.text().catch(() => '');
@@ -804,6 +841,7 @@ app.put('/api/attendees/:id', async (req, res) => {
     if (patchRes.ok) {
       const patchData = await patchRes.json().catch(() => []);
       if (patchData && patchData.length > 0) {
+        invalidateServerAttendeesCache();
         return res.json({ success: true, attendee: patchData[0] });
       }
     }
@@ -822,6 +860,7 @@ app.put('/api/attendees/:id', async (req, res) => {
 
     if (insRes.ok) {
       const insData = await insRes.json().catch(() => []);
+      invalidateServerAttendeesCache();
       return res.json({ success: true, attendee: insData ? insData[0] : record });
     }
     const errText = await patchRes.text().catch(() => '');
@@ -897,6 +936,8 @@ app.delete('/api/attendees/:id', async (req, res) => {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
       });
     } catch (e) {}
+
+    invalidateServerAttendeesCache();
 
     return res.json({ success: true, message: 'Asistente eliminado definitivamente' });
   } catch (err) {
