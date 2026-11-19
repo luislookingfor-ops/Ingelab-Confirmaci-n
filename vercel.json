@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "functions": {
     "index.js": {
-      "includeFiles": "{index.html,public/**,*.png}"
+      "includeFiles": "{index.html,public/index.html,*.png,public/*.png}"
     }
   },
   "headers": [
