@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>INGELAB • Ingelab Evolution 2026</title>
   
   <link rel="icon" type="image/png" href="ingelab_evolution_logo.png">
@@ -252,18 +253,22 @@
       <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-20 flex items-center justify-between">
         
         <!-- Logo Ingelab Evolution (de INVITACION.png) Arriba a la Izquierda -->
-        <a href="#" onclick="switchView('form'); return false;" class="flex items-center py-1 group">
+        <a href="#" onclick="switchView('catalog'); return false;" class="flex items-center py-1 group" title="Ir al Catálogo de Fotos">
           <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" width="946" height="437" class="h-8 sm:h-12 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
         </a>
 
         <!-- Navegación: Vista Cliente/Pública vs Administrador -->
         <div class="flex items-center gap-1.5 sm:gap-3">
           
-          <!-- NAVEGACIÓN CLIENTE / PÚBLICA (Solo puede ver: CHECK-IN, EVENTO, REGISTRAR y ACCESO ADMIN) -->
+          <!-- NAVEGACIÓN CLIENTE / PÚBLICA (FOTOS, CHECK-IN, EVENTO, REGISTRAR y ACCESO ADMIN) -->
           <div id="public-nav-group" class="flex items-center gap-1.5 sm:gap-2.5">
             <div class="inline-flex p-0.5 sm:p-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 text-[11px] sm:text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
-                <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
+              <button id="nav-btn-catalog-pub" onclick="switchView('catalog')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Catálogo de Fotos Oficiales">
+                <i data-lucide="images" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
+                <span>FOTOS</span>
+              </button>
+              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Acreditación y Check-in">
+                <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
                 <span>CHECK-IN</span>
               </button>
               <button id="nav-btn-landing-pub" onclick="switchView('landing')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Ver Detalles del Evento">
@@ -288,8 +293,12 @@
           <!-- NAVEGACIÓN ADMINISTRADOR (Solo visible tras iniciar sesión como Admin) -->
           <div id="admin-nav-group" class="hidden flex items-center gap-1.5 sm:gap-2.5">
             <div class="inline-flex p-0.5 sm:p-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 text-[11px] sm:text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Acreditación y Check-in">
-                <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
+              <button id="nav-btn-catalog-adm" onclick="switchView('catalog')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Catálogo de Fotos Oficiales">
+                <i data-lucide="images" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
+                <span class="hidden xs:inline">FOTOS</span>
+              </button>
+              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Acreditación y Check-in">
+                <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
                 <span>CHECK-IN</span>
               </button>
               <button id="nav-btn-dashboard-adm" onclick="switchView('dashboard')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Pantalla de Control en Vivo">
@@ -327,6 +336,132 @@
 
       </div>
     </header>
+
+    <!-- ============================================================ -->
+    <!-- VISTA CATÁLOGO DE FOTOS: INGELAB EVOLUTION                   -->
+    <!-- ============================================================ -->
+    <main id="view-catalog" class="flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 w-full animate-content-in">
+      
+      <!-- GRID DE FOTOS LIMPIO -->
+      <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Renderizado dinámico vía JavaScript -->
+      </div>
+
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- MODAL LIGHTBOX PARA EL CATÁLOGO DE FOTOS                     -->
+    <!-- ============================================================ -->
+    <div id="catalog-lightbox-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 select-none" onclick="if(event.target === this) closeCatalogLightbox()">
+      
+      <!-- Botones Superiores: Descargar y Cerrar -->
+      <div class="absolute top-4 right-4 z-40 flex items-center gap-2">
+        <a id="lightbox-download" href="#" download class="p-2.5 rounded-full bg-white/10 hover:bg-emerald-600 text-white transition-colors" title="Descargar foto">
+          <i data-lucide="download" class="w-5 h-5"></i>
+        </a>
+        <button onclick="closeCatalogLightbox()" class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors" title="Cerrar (Esc)">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Botón Anterior -->
+      <button onclick="catalogPrevPhoto()" class="absolute left-3 sm:left-6 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Anterior">
+        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+      </button>
+
+      <!-- Contenedor imagen ampliada limpia -->
+      <div class="relative max-h-[88vh] max-w-[90vw] flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl bg-black/40 border border-white/10">
+        <img id="lightbox-img" src="" alt="Foto Oficial Ingelab Evolution" class="max-h-[85vh] max-w-[88vw] w-auto h-auto object-contain select-none block" oncontextmenu="return false;">
+      </div>
+
+      <!-- Botón Siguiente -->
+      <button onclick="catalogNextPhoto()" class="absolute right-3 sm:right-6 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Siguiente">
+        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+      </button>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL BLOQUEANTE: AVISO DE PRIVACIDAD LOPDP ECUADOR          -->
+    <!-- ============================================================ -->
+    <div id="gallery-privacy-modal" class="fixed inset-0 z-[60] hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      
+      <!-- Contenedor del Modal (Bloqueante: no se cierra al hacer clic fuera) -->
+      <div class="relative w-full max-w-xl bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden my-auto animate-content-in" onclick="event.stopPropagation()">
+        
+        <!-- Header Institucional con Escudo de Seguridad -->
+        <div class="bg-gradient-to-r from-ingelab-navy via-slate-900 to-slate-900 p-5 sm:p-6 text-white border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
+              <i data-lucide="shield-check" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-1">
+                LOPDP • Ecuador
+              </span>
+              <h3 class="text-base sm:text-lg font-bold font-mono tracking-tight text-white leading-tight">
+                Aviso de Privacidad y Uso de Imágenes
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cuerpo del Aviso Informativo -->
+        <div class="p-5 sm:p-6 space-y-4 max-h-[60vh] overflow-y-auto text-slate-600 text-xs sm:text-sm leading-relaxed">
+          
+          <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/90 flex items-start gap-3">
+            <i data-lucide="lock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+            <p class="text-amber-900 font-medium text-xs leading-relaxed">
+              <strong>Evento Privado:</strong> Las fotografías contenidas en esta galería corresponden exclusivamente al evento corporativo privado <strong>Ingelab Evolution</strong>.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="scale" class="w-4 h-4 text-ingelab-navy shrink-0 mt-0.5"></i>
+              <p>
+                <strong>Protección de Datos Personales:</strong> De conformidad con la Ley Orgánica de Protección de Datos Personales de la República del Ecuador, las imágenes y registros fisionómicos de los asistentes constituyen datos personales protegidos por ley.
+              </p>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="ban" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+              <p>
+                <strong>Prohibición de difusión:</strong> Queda estrictamente prohibida la difusión en redes sociales, publicación o redistribución pública de estas fotografías sin la debida autorización de INGELAB y de las personas involucradas.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer con Checkbox de Consentimiento y Botones -->
+        <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200/90 space-y-4">
+          
+          <!-- Checkbox Obligatorio (sin marcar por defecto) -->
+          <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
+            <input type="checkbox" id="privacy-gallery-checkbox" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+            <span class="text-xs sm:text-sm text-slate-700 leading-snug font-medium">
+              He leído el Aviso de Privacidad y acepto las condiciones de confidencialidad y no redistribución de las imágenes.
+            </span>
+          </label>
+
+          <!-- Botones de Acción -->
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5">
+            <button type="button" onclick="exitGalleryPrivacy()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              <span>Salir</span>
+            </button>
+            <button type="button" id="btn-accept-gallery-privacy" disabled onclick="acceptGalleryPrivacy()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>Aceptar y ver galería</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
 
     <!-- ============================================================ -->
     <!-- VISTA FORMULARIO: CONFIRMACIÓN DE ASISTENCIA                  -->
@@ -2492,7 +2627,7 @@
     function logoutAdmin() {
       sessionStorage.removeItem('ingelab_admin_logged_in');
       updateAuthUi();
-      switchView('form');
+      switchView('catalog');
       showToast('Sesión de administrador cerrada');
     }
 
@@ -2549,6 +2684,7 @@
     }
 
     function switchView(view) {
+      const catalogView = document.getElementById('view-catalog');
       const landingView = document.getElementById('view-form');
       const successView = document.getElementById('view-success');
       const checkinView = document.getElementById('view-checkin');
@@ -2564,6 +2700,7 @@
       }
 
       // Ocultar todas las vistas principales y pantallas de éxito
+      if (catalogView) catalogView.classList.add('hidden');
       if (landingView) landingView.classList.add('hidden');
       if (successView) successView.classList.add('hidden');
       if (checkinView) checkinView.classList.add('hidden');
@@ -2573,6 +2710,7 @@
 
       // Actualizar estado visual de los botones de navegación en ambos grupos
       const navButtons = [
+        { ids: ['nav-btn-catalog-pub', 'nav-btn-catalog-adm'], active: view === 'catalog' },
         { ids: ['nav-btn-checkin-pub', 'nav-btn-checkin-adm'], active: view === 'checkin' },
         { ids: ['nav-btn-dashboard-adm'], active: view === 'dashboard' },
         { ids: ['nav-btn-landing-pub', 'nav-btn-landing-adm'], active: view === 'landing' || view === 'form' },
@@ -2584,9 +2722,9 @@
           const btn = document.getElementById(id);
           if (btn) {
             if (active) {
-              btn.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold';
+              btn.className = 'px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold';
             } else {
-              btn.className = 'px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all flex items-center gap-1.5 text-arch-subtle hover:text-arch-black';
+              btn.className = 'px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black';
             }
           }
         });
@@ -2598,7 +2736,10 @@
         dashboardPollingInterval = null;
       }
 
-      if (view === 'checkin') {
+      if (view === 'catalog') {
+        if (catalogView) catalogView.classList.remove('hidden');
+        if (typeof initCatalogView === 'function') initCatalogView();
+      } else if (view === 'checkin') {
         if (checkinView) checkinView.classList.remove('hidden');
         initCheckinView();
       } else if (view === 'dashboard') {
@@ -2623,6 +2764,350 @@
       if (form) form.reset();
       switchView('landing');
       openRegistrationModal();
+    }
+
+    // ============================================================
+    // CATÁLOGO FOTOGRÁFICO OFICIAL
+    // ============================================================
+    const CATALOG_PHOTOS = [
+      { id: 1, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0052.jpeg" },
+      { id: 2, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0053.jpeg" },
+      { id: 3, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0054.jpeg" },
+      { id: 4, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0055.jpeg" },
+      { id: 5, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0056.jpeg" },
+      { id: 6, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0057.jpeg" },
+      { id: 7, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0058.jpeg" },
+      { id: 8, src: "Fotos151/image00001.jpeg" },
+      { id: 9, src: "Fotos151/image00002.jpeg" },
+      { id: 10, src: "Fotos151/image00003.jpeg" },
+      { id: 11, src: "Fotos151/image00004.jpeg" },
+      { id: 12, src: "Fotos151/image00005.jpeg" },
+      { id: 13, src: "Fotos151/image00006.jpeg" },
+      { id: 14, src: "Fotos151/image00007.jpeg" },
+      { id: 15, src: "Fotos151/image00008.jpeg" },
+      { id: 16, src: "Fotos151/image00009.jpeg" },
+      { id: 17, src: "Fotos151/image00010.jpeg" },
+      { id: 18, src: "Fotos151/image00011.jpeg" },
+      { id: 19, src: "Fotos151/image00012.jpeg" },
+      { id: 20, src: "Fotos151/image00013.jpeg" },
+      { id: 21, src: "Fotos151/image00014.jpeg" },
+      { id: 22, src: "Fotos151/image00015.jpeg" },
+      { id: 23, src: "Fotos151/image00016.jpeg" },
+      { id: 24, src: "Fotos151/image00017.jpeg" },
+      { id: 25, src: "Fotos151/image00018.jpeg" },
+      { id: 26, src: "Fotos151/image00019.jpeg" },
+      { id: 27, src: "Fotos151/image00020.jpeg" },
+      { id: 28, src: "Fotos151/image00021.jpeg" },
+      { id: 29, src: "Fotos151/image00022.jpeg" },
+      { id: 30, src: "Fotos151/image00023.jpeg" },
+      { id: 31, src: "Fotos151/image00024.jpeg" },
+      { id: 32, src: "Fotos151/image00025.jpeg" },
+      { id: 33, src: "Fotos151/image00026.jpeg" },
+      { id: 34, src: "Fotos151/image00027.jpeg" },
+      { id: 35, src: "Fotos151/image00028.jpeg" },
+      { id: 36, src: "Fotos151/image00029.jpeg" },
+      { id: 37, src: "Fotos151/image00030.jpeg" },
+      { id: 38, src: "Fotos151/image00031.jpeg" },
+      { id: 39, src: "Fotos151/image00032.jpeg" },
+      { id: 40, src: "Fotos151/image00033.jpeg" },
+      { id: 41, src: "Fotos151/image00034.jpeg" },
+      { id: 42, src: "Fotos151/image00035.jpeg" },
+      { id: 43, src: "Fotos151/image00036.jpeg" },
+      { id: 44, src: "Fotos151/image00037.jpeg" },
+      { id: 45, src: "Fotos151/image00038.jpeg" },
+      { id: 46, src: "Fotos151/image00039.jpeg" },
+      { id: 47, src: "Fotos151/image00040.jpeg" },
+      { id: 48, src: "Fotos151/image00041.jpeg" },
+      { id: 49, src: "Fotos151/image00042.jpeg" },
+      { id: 50, src: "Fotos151/image00043.jpeg" },
+      { id: 51, src: "Fotos151/image00044.jpeg" },
+      { id: 52, src: "Fotos151/image00045.jpeg" },
+      { id: 53, src: "Fotos151/image00046.jpeg" },
+      { id: 54, src: "Fotos151/image00047.jpeg" },
+      { id: 55, src: "Fotos151/image00048.jpeg" },
+      { id: 56, src: "Fotos151/image00049.jpeg" },
+      { id: 57, src: "Fotos151/image00050.jpeg" },
+      { id: 58, src: "Fotos151/image00051.jpeg" },
+      { id: 59, src: "Fotos151/image00052.jpeg" },
+      { id: 60, src: "Fotos151/image00053.jpeg" },
+      { id: 61, src: "Fotos151/image00054.jpeg" },
+      { id: 62, src: "Fotos151/image00055.jpeg" },
+      { id: 63, src: "Fotos151/image00056.jpeg" },
+      { id: 64, src: "Fotos151/image00057.jpeg" },
+      { id: 65, src: "Fotos151/image00058.jpeg" },
+      { id: 66, src: "Fotos151/image00059.jpeg" },
+      { id: 67, src: "Fotos151/image00060.jpeg" },
+      { id: 68, src: "Fotos151/image00061.jpeg" },
+      { id: 69, src: "Fotos151/image00062.jpeg" },
+      { id: 70, src: "Fotos151/image00063.jpeg" },
+      { id: 71, src: "Fotos151/image00064.jpeg" },
+      { id: 72, src: "Fotos151/image00065.jpeg" },
+      { id: 73, src: "Fotos151/image00066.jpeg" },
+      { id: 74, src: "Fotos151/image00067.jpeg" },
+      { id: 75, src: "Fotos151/image00068.jpeg" },
+      { id: 76, src: "Fotos151/image00069.jpeg" },
+      { id: 77, src: "Fotos151/image00070.jpeg" },
+      { id: 78, src: "Fotos151/image00071.jpeg" },
+      { id: 79, src: "Fotos151/image00072.jpeg" },
+      { id: 80, src: "Fotos151/image00073.jpeg" },
+      { id: 81, src: "Fotos151/image00074.jpeg" },
+      { id: 82, src: "Fotos151/image00075.jpeg" },
+      { id: 83, src: "Fotos151/image00076.jpeg" },
+      { id: 84, src: "Fotos151/image00077.jpeg" },
+      { id: 85, src: "Fotos151/image00078.jpeg" },
+      { id: 86, src: "Fotos151/image00079.jpeg" },
+      { id: 87, src: "Fotos151/image00080.jpeg" },
+      { id: 88, src: "Fotos151/image00081.jpeg" },
+      { id: 89, src: "Fotos151/image00082.jpeg" },
+      { id: 90, src: "Fotos151/image00083.jpeg" },
+      { id: 91, src: "Fotos151/image00084.jpeg" },
+      { id: 92, src: "Fotos151/image00085.jpeg" },
+      { id: 93, src: "Fotos151/image00086.jpeg" },
+      { id: 94, src: "Fotos151/image00087.jpeg" },
+      { id: 95, src: "Fotos151/image00088.jpeg" },
+      { id: 96, src: "Fotos151/image00089.jpeg" },
+      { id: 97, src: "Fotos151/image00090.jpeg" },
+      { id: 98, src: "Fotos151/image00091.jpeg" },
+      { id: 99, src: "Fotos151/image00092.jpeg" },
+      { id: 100, src: "Fotos151/image00093.jpeg" },
+      { id: 101, src: "Fotos151/image00094.jpeg" },
+      { id: 102, src: "Fotos151/image00095.jpeg" },
+      { id: 103, src: "Fotos151/image00096.jpeg" },
+      { id: 104, src: "Fotos151/image00097.jpeg" },
+      { id: 105, src: "Fotos151/image00098.jpeg" },
+      { id: 106, src: "Fotos151/image00099.jpeg" },
+      { id: 107, src: "Fotos151/image00100.jpeg" },
+      { id: 108, src: "Fotos151/image00101.jpeg" },
+      { id: 109, src: "Fotos151/image00102.jpeg" },
+      { id: 110, src: "Fotos151/image00103.jpeg" },
+      { id: 111, src: "Fotos151/image00104.jpeg" },
+      { id: 112, src: "Fotos151/image00105.jpeg" },
+      { id: 113, src: "Fotos151/image00106.jpeg" },
+      { id: 114, src: "Fotos151/image00107.jpeg" },
+      { id: 115, src: "Fotos151/image00108.jpeg" },
+      { id: 116, src: "Fotos151/image00109.jpeg" },
+      { id: 117, src: "Fotos151/image00110.jpeg" },
+      { id: 118, src: "Fotos151/image00111.jpeg" },
+      { id: 119, src: "Fotos151/image00112.jpeg" },
+      { id: 120, src: "Fotos151/image00113.jpeg" },
+      { id: 121, src: "Fotos151/image00114.jpeg" },
+      { id: 122, src: "Fotos151/image00115.jpeg" },
+      { id: 123, src: "Fotos151/image00116.jpeg" },
+      { id: 124, src: "Fotos151/image00117.jpeg" },
+      { id: 125, src: "Fotos151/image00118.jpeg" },
+      { id: 126, src: "Fotos151/image00119.jpeg" },
+      { id: 127, src: "Fotos151/image00120.jpeg" },
+      { id: 128, src: "Fotos151/image00121.jpeg" },
+      { id: 129, src: "Fotos151/image00122.jpeg" },
+      { id: 130, src: "Fotos151/image00123.jpeg" },
+      { id: 131, src: "Fotos151/image00124.jpeg" },
+      { id: 132, src: "Fotos151/image00125.jpeg" },
+      { id: 133, src: "Fotos151/image00126.jpeg" },
+      { id: 134, src: "Fotos151/image00127.jpeg" },
+      { id: 135, src: "Fotos151/image00128.jpeg" },
+      { id: 136, src: "Fotos151/image00129.jpeg" },
+      { id: 137, src: "Fotos151/image00130.jpeg" },
+      { id: 138, src: "Fotos151/image00131.jpeg" },
+      { id: 139, src: "Fotos151/image00132.jpeg" },
+      { id: 140, src: "Fotos151/image00133.jpeg" },
+      { id: 141, src: "Fotos151/image00134.jpeg" },
+      { id: 142, src: "Fotos151/image00135.jpeg" },
+      { id: 143, src: "Fotos151/image00136.jpeg" },
+      { id: 144, src: "Fotos151/image00137.jpeg" },
+      { id: 145, src: "Fotos151/image00138.jpeg" },
+      { id: 146, src: "Fotos151/image00139.jpeg" },
+      { id: 147, src: "Fotos151/image00140.jpeg" },
+      { id: 148, src: "Fotos151/image00141.jpeg" },
+      { id: 149, src: "Fotos151/image00142.jpeg" },
+      { id: 150, src: "Fotos151/image00143.jpeg" },
+      { id: 151, src: "Fotos151/image00144.jpeg" },
+      { id: 152, src: "Fotos151/image00145.jpeg" },
+      { id: 153, src: "Fotos151/image00146.jpeg" },
+      { id: 154, src: "Fotos151/image00147.jpeg" },
+      { id: 155, src: "Fotos151/image00148.jpeg" },
+      { id: 156, src: "Fotos151/image00149.jpeg" },
+      { id: 157, src: "Fotos151/image00150.jpeg" },
+      { id: 158, src: "Fotos151/image00151.jpeg" }
+    ];
+
+    let currentLightboxIndex = 0;
+
+    function initCatalogView() {
+      // Requisito 4: Metaetiqueta noindex, nofollow para la vista de la galería privada
+      setNoIndexMeta(true);
+
+      // Requisito 1 y 2: Bloqueo real en DOM y apertura automática si no hay aceptación previa en sessionStorage
+      const isAccepted = sessionStorage.getItem('privacy_gallery_accepted_v1') === 'true';
+      if (!isAccepted) {
+        clearCatalogGridForPrivacy();
+        openGalleryPrivacyModal();
+      } else {
+        renderCatalogGrid();
+      }
+    }
+
+    function clearCatalogGridForPrivacy() {
+      const grid = document.getElementById('catalog-grid');
+      if (grid) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 px-4 text-center">
+            <div class="w-16 h-16 rounded-3xl bg-emerald-50 border border-emerald-200 text-emerald-600 mx-auto flex items-center justify-center mb-4 shadow-sm">
+              <i data-lucide="shield-lock" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold font-mono text-slate-800">Galería Privada Protegida</h3>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
+              El acceso a las fotografías del evento corporativo privado está restringido conforme a la Ley Orgánica de Protección de Datos Personales (LOPDP Ecuador).
+            </p>
+            <button onclick="openGalleryPrivacyModal()" class="mt-5 px-5 py-2.5 rounded-xl bg-ingelab-navy text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition-all shadow-md inline-flex items-center gap-2">
+              <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-400"></i>
+              <span>Ver Aviso de Privacidad</span>
+            </button>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function openGalleryPrivacyModal() {
+      const modal = document.getElementById('gallery-privacy-modal');
+      const checkbox = document.getElementById('privacy-gallery-checkbox');
+      const btn = document.getElementById('btn-accept-gallery-privacy');
+
+      if (checkbox) checkbox.checked = false;
+      if (btn) {
+        btn.disabled = true;
+        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed';
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeGalleryPrivacyModal() {
+      const modal = document.getElementById('gallery-privacy-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    function toggleGalleryPrivacyAcceptBtn() {
+      const checkbox = document.getElementById('privacy-gallery-checkbox');
+      const btn = document.getElementById('btn-accept-gallery-privacy');
+      if (!checkbox || !btn) return;
+
+      if (checkbox.checked) {
+        btn.disabled = false;
+        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+      } else {
+        btn.disabled = true;
+        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed';
+      }
+    }
+
+    function acceptGalleryPrivacy() {
+      const checkbox = document.getElementById('privacy-gallery-checkbox');
+      if (!checkbox || !checkbox.checked) return;
+
+      sessionStorage.setItem('privacy_gallery_accepted_v1', 'true');
+      closeGalleryPrivacyModal();
+      // Renderizar realmente las fotos en el DOM tras la aceptación
+      renderCatalogGrid();
+    }
+
+    function exitGalleryPrivacy() {
+      closeGalleryPrivacyModal();
+      if (window.location.hash === '#fotos' || window.location.hash === '#catalogo' || window.location.hash === '#gallery') {
+        window.location.hash = '';
+      }
+      // Redirigir a inicio / check-in
+      switchView('checkin');
+    }
+
+    function setNoIndexMeta(isGallery) {
+      let meta = document.querySelector('meta[name="robots"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'robots';
+        document.head.appendChild(meta);
+      }
+      meta.content = 'noindex, nofollow';
+    }
+
+    function renderCatalogGrid() {
+      // Bloqueo real: verificar aceptación antes de insertar fotos en el DOM
+      if (sessionStorage.getItem('privacy_gallery_accepted_v1') !== 'true') {
+        clearCatalogGridForPrivacy();
+        openGalleryPrivacyModal();
+        return;
+      }
+
+      const grid = document.getElementById('catalog-grid');
+      if (!grid) return;
+
+      grid.innerHTML = CATALOG_PHOTOS.map((photo, index) => {
+        return `
+          <div class="relative aspect-[4/3] bg-slate-900 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group flex items-center justify-center" onclick="openCatalogLightbox(${index})">
+            <img src="${photo.src}" alt="Foto ${index + 1}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 select-none">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+              <div class="w-10 h-10 rounded-full bg-white/80 text-slate-900 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+                <i data-lucide="zoom-in" class="w-5 h-5"></i>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function openCatalogLightbox(index) {
+      if (sessionStorage.getItem('privacy_gallery_accepted_v1') !== 'true') {
+        openGalleryPrivacyModal();
+        return;
+      }
+      currentLightboxIndex = index;
+      const photo = CATALOG_PHOTOS[index];
+      if (!photo) return;
+
+      const img = document.getElementById('lightbox-img');
+      if (img) img.src = photo.src;
+
+      const dl = document.getElementById('lightbox-download');
+      if (dl) {
+        dl.href = photo.src;
+        dl.setAttribute('download', photo.src.split('/').pop());
+      }
+
+      const modal = document.getElementById('catalog-lightbox-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function closeCatalogLightbox() {
+      const modal = document.getElementById('catalog-lightbox-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    function catalogPrevPhoto() {
+      if (CATALOG_PHOTOS.length === 0) return;
+      currentLightboxIndex = (currentLightboxIndex - 1 + CATALOG_PHOTOS.length) % CATALOG_PHOTOS.length;
+      openCatalogLightbox(currentLightboxIndex);
+    }
+
+    function catalogNextPhoto() {
+      if (CATALOG_PHOTOS.length === 0) return;
+      currentLightboxIndex = (currentLightboxIndex + 1) % CATALOG_PHOTOS.length;
+      openCatalogLightbox(currentLightboxIndex);
     }
 
     // ============================================================
@@ -4261,7 +4746,9 @@
       // Auto-detección de vistas por URL (Por defecto: CHECK-IN EN PUERTA)
       const hash = window.location.hash.toLowerCase();
       const params = new URLSearchParams(window.location.search);
-      if (hash === '#register' || params.get('register') === '1') {
+      if (hash === '#checkin' || params.get('checkin') === '1') {
+        switchView('checkin');
+      } else if (hash === '#register' || params.get('register') === '1') {
         switchView('checkin');
         openRegistrationModal();
       } else if (hash === '#dashboard' || params.get('dashboard') === '1') {
@@ -4270,18 +4757,32 @@
         switchView('admin');
       } else if (hash === '#evento' || hash === '#landing' || params.get('landing') === '1') {
         switchView('landing');
+      } else if (hash === '#fotos' || hash === '#catalogo' || hash === '#gallery' || params.get('gallery') === '1') {
+        switchView('catalog');
       } else {
-        // VISTA POR DEFECTO AL INICIO: CHECK-IN DIRECTO
-        switchView('checkin');
+        // VISTA POR DEFECTO AL INICIO: CATÁLOGO DE FOTOS OFICIAL
+        switchView('catalog');
       }
-      // Cerrar modales con tecla Escape
+      // Cerrar modales con tecla Escape y navegación de fotos
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
+          // Requisito 2: El modal de privacidad LOPDP es bloqueante y NO se cierra con tecla Escape
+          const privModal = document.getElementById('gallery-privacy-modal');
+          if (privModal && !privModal.classList.contains('hidden')) {
+            return;
+          }
           closeRegistrationModal();
           closeInvitationModal();
           closeCreateModal();
           closeEditModal();
           closeLoginModal();
+          closeCatalogLightbox();
+        } else if (e.key === 'ArrowLeft') {
+          const lb = document.getElementById('catalog-lightbox-modal');
+          if (lb && !lb.classList.contains('hidden')) catalogPrevPhoto();
+        } else if (e.key === 'ArrowRight') {
+          const lb = document.getElementById('catalog-lightbox-modal');
+          if (lb && !lb.classList.contains('hidden')) catalogNextPhoto();
         }
       });
 
