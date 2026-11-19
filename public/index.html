@@ -350,120 +350,6 @@
     </main>
 
     <!-- ============================================================ -->
-    <!-- MODAL LIGHTBOX PARA EL CATÁLOGO DE FOTOS                     -->
-    <!-- ============================================================ -->
-    <div id="catalog-lightbox-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 select-none" onclick="if(event.target === this) closeCatalogLightbox()">
-      
-      <!-- Botones Superiores: Descargar y Cerrar -->
-      <div class="absolute top-4 right-4 z-40 flex items-center gap-2">
-        <a id="lightbox-download" href="#" download class="p-2.5 rounded-full bg-white/10 hover:bg-emerald-600 text-white transition-colors" title="Descargar foto">
-          <i data-lucide="download" class="w-5 h-5"></i>
-        </a>
-        <button onclick="closeCatalogLightbox()" class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors" title="Cerrar (Esc)">
-          <i data-lucide="x" class="w-6 h-6"></i>
-        </button>
-      </div>
-
-      <!-- Botón Anterior -->
-      <button onclick="catalogPrevPhoto()" class="absolute left-3 sm:left-6 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Anterior">
-        <i data-lucide="chevron-left" class="w-6 h-6"></i>
-      </button>
-
-      <!-- Contenedor imagen ampliada limpia -->
-      <div class="relative max-h-[88vh] max-w-[90vw] flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl bg-black/40 border border-white/10">
-        <img id="lightbox-img" src="" alt="Foto Oficial Ingelab Evolution" class="max-h-[85vh] max-w-[88vw] w-auto h-auto object-contain select-none block" oncontextmenu="return false;">
-      </div>
-
-      <!-- Botón Siguiente -->
-      <button onclick="catalogNextPhoto()" class="absolute right-3 sm:right-6 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Siguiente">
-        <i data-lucide="chevron-right" class="w-6 h-6"></i>
-      </button>
-
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- MODAL BLOQUEANTE: AVISO DE PRIVACIDAD LOPDP ECUADOR          -->
-    <!-- ============================================================ -->
-    <div id="gallery-privacy-modal" class="fixed inset-0 z-[60] hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-      
-      <!-- Contenedor del Modal (Bloqueante: no se cierra al hacer clic fuera) -->
-      <div class="relative w-full max-w-xl bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden my-auto animate-content-in" onclick="event.stopPropagation()">
-        
-        <!-- Header Institucional con Escudo de Seguridad -->
-        <div class="bg-gradient-to-r from-ingelab-navy via-slate-900 to-slate-900 p-5 sm:p-6 text-white border-b border-slate-800">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
-              <i data-lucide="shield-check" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-1">
-                LOPDP • Ecuador
-              </span>
-              <h3 class="text-base sm:text-lg font-bold font-mono tracking-tight text-white leading-tight">
-                Aviso de Privacidad y Uso de Imágenes
-              </h3>
-            </div>
-          </div>
-        </div>
-
-        <!-- Cuerpo del Aviso Informativo -->
-        <div class="p-5 sm:p-6 space-y-4 max-h-[60vh] overflow-y-auto text-slate-600 text-xs sm:text-sm leading-relaxed">
-          
-          <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/90 flex items-start gap-3">
-            <i data-lucide="lock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
-            <p class="text-amber-900 font-medium text-xs leading-relaxed">
-              <strong>Evento Privado:</strong> Las fotografías contenidas en esta galería corresponden exclusivamente al evento corporativo privado <strong>Ingelab Evolution</strong>.
-            </p>
-          </div>
-
-          <div class="space-y-3">
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="scale" class="w-4 h-4 text-ingelab-navy shrink-0 mt-0.5"></i>
-              <p>
-                <strong>Protección de Datos Personales:</strong> De conformidad con la Ley Orgánica de Protección de Datos Personales de la República del Ecuador, las imágenes y registros fisionómicos de los asistentes constituyen datos personales protegidos por ley.
-              </p>
-            </div>
-
-            <div class="flex items-start gap-2.5">
-              <i data-lucide="ban" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
-              <p>
-                <strong>Prohibición de difusión:</strong> Queda estrictamente prohibida la difusión en redes sociales, publicación o redistribución pública de estas fotografías sin la debida autorización de INGELAB y de las personas involucradas.
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Footer con Checkbox de Consentimiento y Botones -->
-        <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200/90 space-y-4">
-          
-          <!-- Checkbox Obligatorio (sin marcar por defecto) -->
-          <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
-            <input type="checkbox" id="privacy-gallery-checkbox" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
-            <span class="text-xs sm:text-sm text-slate-700 leading-snug font-medium">
-              He leído el Aviso de Privacidad y acepto las condiciones de confidencialidad y no redistribución de las imágenes.
-            </span>
-          </label>
-
-          <!-- Botones de Acción -->
-          <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5">
-            <button type="button" onclick="exitGalleryPrivacy()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5">
-              <i data-lucide="arrow-left" class="w-4 h-4"></i>
-              <span>Salir</span>
-            </button>
-            <button type="button" id="btn-accept-gallery-privacy" disabled onclick="acceptGalleryPrivacy()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
-              <i data-lucide="check-circle" class="w-4 h-4"></i>
-              <span>Aceptar y ver galería</span>
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- ============================================================ -->
     <!-- VISTA FORMULARIO: CONFIRMACIÓN DE ASISTENCIA                  -->
     <!-- ============================================================ -->
     <main id="view-form" class="flex-1 hidden py-4 sm:py-10 px-3 sm:px-6">
@@ -1224,6 +1110,120 @@
       </div>
 
     </main>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL LIGHTBOX PARA EL CATÁLOGO DE FOTOS                     -->
+  <!-- ============================================================ -->
+  <div id="catalog-lightbox-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 select-none" onclick="if(event.target === this) closeCatalogLightbox()">
+    
+    <!-- Botones Superiores: Descargar y Cerrar -->
+    <div class="absolute top-4 right-4 z-40 flex items-center gap-2">
+      <a id="lightbox-download" href="#" download class="p-2.5 rounded-full bg-white/10 hover:bg-emerald-600 text-white transition-colors" title="Descargar foto">
+        <i data-lucide="download" class="w-5 h-5"></i>
+      </a>
+      <button onclick="closeCatalogLightbox()" class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors" title="Cerrar (Esc)">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Botón Anterior -->
+    <button onclick="catalogPrevPhoto()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Anterior">
+      <i data-lucide="chevron-left" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Contenedor imagen ampliada limpia -->
+    <div class="relative max-h-[88vh] max-w-[90vw] flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl bg-black/40 border border-white/10">
+      <img id="lightbox-img" src="" alt="Foto Oficial Ingelab Evolution" class="max-h-[85vh] max-w-[88vw] w-auto h-auto object-contain select-none block" oncontextmenu="return false;">
+    </div>
+
+    <!-- Botón Siguiente -->
+    <button onclick="catalogNextPhoto()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Siguiente">
+      <i data-lucide="chevron-right" class="w-6 h-6"></i>
+    </button>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL BLOQUEANTE: AVISO DE PRIVACIDAD LOPDP ECUADOR          -->
+  <!-- ============================================================ -->
+  <div id="gallery-privacy-modal" class="fixed inset-0 z-[110] hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    
+    <!-- Contenedor del Modal (Bloqueante: no se cierra al hacer clic fuera) -->
+    <div class="relative w-full max-w-xl bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden my-auto animate-content-in" onclick="event.stopPropagation()">
+      
+      <!-- Header Institucional con Escudo de Seguridad -->
+      <div class="bg-gradient-to-r from-ingelab-navy via-slate-900 to-slate-900 p-5 sm:p-6 text-white border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-1">
+              LOPDP • Ecuador
+            </span>
+            <h3 class="text-base sm:text-lg font-bold font-mono tracking-tight text-white leading-tight">
+              Aviso de Privacidad y Uso de Imágenes
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuerpo del Aviso Informativo -->
+      <div class="p-5 sm:p-6 space-y-4 max-h-[60vh] overflow-y-auto text-slate-600 text-xs sm:text-sm leading-relaxed">
+        
+        <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/90 flex items-start gap-3">
+          <i data-lucide="lock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+          <p class="text-amber-900 font-medium text-xs leading-relaxed">
+            <strong>Evento Privado:</strong> Las fotografías contenidas en esta galería corresponden exclusivamente al evento corporativo privado <strong>Ingelab Evolution</strong>.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex items-start gap-2.5">
+            <i data-lucide="scale" class="w-4 h-4 text-ingelab-navy shrink-0 mt-0.5"></i>
+            <p>
+              <strong>Protección de Datos Personales:</strong> De conformidad con la Ley Orgánica de Protección de Datos Personales de la República del Ecuador, las imágenes y registros fisionómicos de los asistentes constituyen datos personales protegidos por ley.
+            </p>
+          </div>
+
+          <div class="flex items-start gap-2.5">
+            <i data-lucide="ban" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+            <p>
+              <strong>Prohibición de difusión:</strong> Queda estrictamente prohibida la difusión en redes sociales, publicación o redistribución pública de estas fotografías sin la debida autorización de INGELAB y de las personas involucradas.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer con Checkbox de Consentimiento y Botones -->
+      <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200/90 space-y-4">
+        
+        <!-- Checkbox Obligatorio (sin marcar por defecto) -->
+        <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
+          <input type="checkbox" id="privacy-gallery-checkbox" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+          <span class="text-xs sm:text-sm text-slate-700 leading-snug font-medium">
+            He leído el Aviso de Privacidad y acepto las condiciones de confidencialidad y no redistribución de las imágenes.
+          </span>
+        </label>
+
+        <!-- Botones de Acción -->
+        <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5">
+          <button type="button" onclick="exitGalleryPrivacy()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Salir</span>
+          </button>
+          <button type="button" id="btn-accept-gallery-privacy" disabled onclick="acceptGalleryPrivacy()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>Aceptar y ver galería</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
