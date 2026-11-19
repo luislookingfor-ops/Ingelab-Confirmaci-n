@@ -3037,6 +3037,26 @@
       meta.content = 'noindex, nofollow';
     }
 
+    function handleImageFallback(img) {
+      if (img.dataset.failed) return;
+      const current = img.getAttribute('src');
+      if (!img.dataset.attempt) {
+        img.dataset.attempt = '1';
+        if (!current.startsWith('public/') && !current.startsWith('/public/')) {
+          img.src = 'public/' + current.replace(/^\//, '');
+          return;
+        } else {
+          img.src = current.replace(/^\/?public\//, '');
+          return;
+        }
+      } else if (img.dataset.attempt === '1') {
+        img.dataset.attempt = '2';
+        img.src = '/' + current.replace(/^\/?(public\/)?/, '');
+        return;
+      }
+      img.dataset.failed = 'true';
+    }
+
     function renderCatalogGrid() {
       // Bloqueo real: verificar aceptación antes de insertar fotos en el DOM
       if (sessionStorage.getItem('privacy_gallery_accepted_v1') !== 'true') {
@@ -3051,7 +3071,7 @@
       grid.innerHTML = CATALOG_PHOTOS.map((photo, index) => {
         return `
           <div class="relative aspect-[4/3] bg-slate-900 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group flex items-center justify-center" onclick="openCatalogLightbox(${index})">
-            <img src="${photo.src}" alt="Foto ${index + 1}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 select-none">
+            <img src="${photo.src}" alt="Foto ${index + 1}" loading="lazy" onerror="handleImageFallback(this)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 select-none">
             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
               <div class="w-10 h-10 rounded-full bg-white/80 text-slate-900 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
                 <i data-lucide="zoom-in" class="w-5 h-5"></i>
@@ -3074,7 +3094,10 @@
       if (!photo) return;
 
       const img = document.getElementById('lightbox-img');
-      if (img) img.src = photo.src;
+      if (img) {
+        img.src = photo.src;
+        img.onerror = () => handleImageFallback(img);
+      }
 
       const dl = document.getElementById('lightbox-download');
       if (dl) {
