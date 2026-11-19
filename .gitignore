@@ -7,3 +7,10 @@ yarn-error.log*
 .DS_Store
 *.db
 *.zip
+
+# Carpetas de fotos originales (duplicadas en public/)
+Fotos151/
+wetransfer_img_0056-jpeg_2026-11-19_1727/
+INGELAB_EVOLUTION_PNG/
+public/INGELAB_EVOLUTION_PNG/
+INVITACION/
