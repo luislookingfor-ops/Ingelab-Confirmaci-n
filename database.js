@@ -141,14 +141,32 @@ export function getStats() {
   };
 }
 
-// Registrar acceso y consentimiento de galería de fotos
+// Registrar acceso y consentimiento de galería de fotos (Solo participantes registrados)
 export function recordGalleryAccess({ ci, acceptedTerms, authorizedMedia, ip = '', userAgent = '' }) {
   const cleanCi = (ci || '').replace(/\D/g, '').trim();
+  const ciPadded = cleanCi.length === 9 ? '0' + cleanCi : cleanCi;
   
-  // Buscar si coincide con un asistente registrado
-  const attendee = db.prepare('SELECT * FROM attendees WHERE ci = ? ORDER BY id DESC LIMIT 1').get(cleanCi);
-  const fullName = attendee ? attendee.full_name : 'Invitado Externo / No en lista';
-  const attendeeId = attendee ? attendee.id : null;
+  // Buscar si coincide con un asistente registrado en la base de datos
+  const attendee = db.prepare(`
+    SELECT * FROM attendees 
+    WHERE REPLACE(REPLACE(ci, '-', ''), ' ', '') = ? 
+       OR REPLACE(REPLACE(ci, '-', ''), ' ', '') = ?
+       OR ci = ? 
+       OR ci = ?
+    ORDER BY id DESC LIMIT 1
+  `).get(cleanCi, ciPadded, cleanCi, ciPadded);
+
+  // REQUISITO ESTRICTO: Únicamente participantes registrados en la BD pueden continuar
+  if (!attendee) {
+    return {
+      success: false,
+      matched: false,
+      error: 'La cédula ingresada no se encuentra registrada en la base de datos oficial del evento. El acceso al catálogo de fotos está reservado únicamente para participantes registrados.'
+    };
+  }
+
+  const fullName = attendee.full_name;
+  const attendeeId = attendee.id;
   const nowIso = new Date().toISOString();
 
   // Guardar en tabla de auditoría
@@ -168,17 +186,15 @@ export function recordGalleryAccess({ ci, acceptedTerms, authorizedMedia, ip = '
     nowIso
   );
 
-  // Si existe en attendees, actualizar sus comments con el tag de acceso para visualización en Admin
-  if (attendee) {
-    const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
-    const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
-    db.prepare('UPDATE attendees SET comments = ? WHERE id = ?').run(updatedComments, attendee.id);
-  }
+  // Actualizar sus comments con el tag de acceso para visualización en Admin
+  const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
+  const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
+  db.prepare('UPDATE attendees SET comments = ? WHERE id = ?').run(updatedComments, attendee.id);
 
   return {
     success: true,
-    matched: Boolean(attendee),
-    attendee: attendee ? { id: attendee.id, full_name: attendee.full_name, ci: attendee.ci } : null,
+    matched: true,
+    attendee: { id: attendee.id, full_name: attendee.full_name, ci: attendee.ci },
     ci: cleanCi,
     authorized_media: Boolean(authorizedMedia),
     created_at: nowIso
