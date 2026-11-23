@@ -2927,7 +2927,24 @@
       { id: 155, src: "Fotos151/image00148.jpeg" },
       { id: 156, src: "Fotos151/image00149.jpeg" },
       { id: 157, src: "Fotos151/image00150.jpeg" },
-      { id: 158, src: "Fotos151/image00151.jpeg" }
+      { id: 158, src: "Fotos151/image00151.jpeg" },
+      { id: 159, src: "fotos18/DSC00009.jpeg" },
+      { id: 160, src: "fotos18/IMG_0211.jpeg" },
+      { id: 161, src: "fotos18/IMG_0212.jpeg" },
+      { id: 162, src: "fotos18/IMG_0215.jpeg" },
+      { id: 163, src: "fotos18/IMG_0216.jpeg" },
+      { id: 164, src: "fotos18/IMG_0217.jpeg" },
+      { id: 165, src: "fotos18/IMG_0218.jpeg" },
+      { id: 166, src: "fotos18/IMG_0219.jpeg" },
+      { id: 167, src: "fotos18/IMG_0220.jpeg" },
+      { id: 168, src: "fotos18/IMG_0221.jpeg" },
+      { id: 169, src: "fotos18/IMG_0222.jpeg" },
+      { id: 170, src: "fotos18/IMG_0223.jpeg" },
+      { id: 171, src: "fotos18/IMG_0224.jpeg" },
+      { id: 172, src: "fotos18/IMG_0225.jpeg" },
+      { id: 173, src: "fotos18/IMG_0226.jpeg" },
+      { id: 174, src: "fotos18/IMG_0227.jpeg" },
+      { id: 175, src: "fotos18/IMG_0228.jpeg" }
     ];
 
     let currentLightboxIndex = 0;
@@ -3038,23 +3055,22 @@
     }
 
     function handleImageFallback(img) {
-      if (img.dataset.failed) return;
-      const current = img.getAttribute('src');
-      if (!img.dataset.attempt) {
-        img.dataset.attempt = '1';
-        if (!current.startsWith('public/') && !current.startsWith('/public/')) {
-          img.src = 'public/' + current.replace(/^\//, '');
-          return;
-        } else {
-          img.src = current.replace(/^\/?public\//, '');
-          return;
-        }
-      } else if (img.dataset.attempt === '1') {
-        img.dataset.attempt = '2';
-        img.src = '/' + current.replace(/^\/?(public\/)?/, '');
-        return;
+      if (img.dataset.failed === 'true') return;
+      const current = img.getAttribute('src') || '';
+      const cleanPath = current.replace(/^(\.\/|\/|public\/|\/public\/)+/, '');
+      const attempts = [
+        cleanPath,
+        'public/' + cleanPath,
+        '/' + cleanPath,
+        '/public/' + cleanPath
+      ];
+      const nextIdx = parseInt(img.dataset.attempt || '0', 10);
+      if (nextIdx < attempts.length) {
+        img.dataset.attempt = String(nextIdx + 1);
+        img.src = attempts[nextIdx];
+      } else {
+        img.dataset.failed = 'true';
       }
-      img.dataset.failed = 'true';
     }
 
     function renderCatalogGrid() {
@@ -3095,13 +3111,23 @@
 
       const img = document.getElementById('lightbox-img');
       if (img) {
-        img.src = photo.src;
+        delete img.dataset.attempt;
+        delete img.dataset.failed;
+
+        const gridImgs = document.querySelectorAll('#catalog-grid img');
+        const activeThumb = gridImgs[index];
+        const initialSrc = (activeThumb && activeThumb.currentSrc) ? activeThumb.currentSrc : photo.src;
+
         img.onerror = () => handleImageFallback(img);
+        img.src = initialSrc;
       }
 
       const dl = document.getElementById('lightbox-download');
       if (dl) {
-        dl.href = photo.src;
+        const gridImgs = document.querySelectorAll('#catalog-grid img');
+        const activeThumb = gridImgs[index];
+        const downloadUrl = (activeThumb && activeThumb.currentSrc) ? activeThumb.currentSrc : photo.src;
+        dl.href = downloadUrl;
         dl.setAttribute('download', photo.src.split('/').pop());
       }
 
