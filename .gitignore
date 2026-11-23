@@ -8,9 +8,9 @@ yarn-error.log*
 *.db
 *.zip
 
-# Carpetas de fotos originales (duplicadas en public/)
-Fotos151/
-wetransfer_img_0056-jpeg_2026-11-19_1727/
-INGELAB_EVOLUTION_PNG/
-public/INGELAB_EVOLUTION_PNG/
-INVITACION/
+# Carpetas de fotos originales en la raiz (duplicadas y optimizadas en public/)
+/Fotos151/
+/wetransfer_img_0056-jpeg_2026-11-19_1727/
+/fotos18/
+/INGELAB_EVOLUTION_PNG/
+/INVITACION/
