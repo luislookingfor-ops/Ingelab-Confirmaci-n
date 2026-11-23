@@ -155,7 +155,32 @@ app.post('/api/confirm', (req, res) => {
 app.get('/api/attendees', (req, res) => {
   try {
     const attendees = getAllAttendees();
-    res.json({ success: true, attendees });
+    const logs = getGalleryAccessLogs();
+    
+    // Mapear logs de auditoría por C.I.
+    const logsByCi = new Map();
+    for (const log of logs) {
+      const clean = (log.ci || '').replace(/\D/g, '').trim();
+      if (clean && !logsByCi.has(clean)) {
+        logsByCi.set(clean, log);
+      }
+    }
+
+    // Enriquecer asistentes con su estado de acceso a fotos
+    const enriched = attendees.map(a => {
+      const cleanCi = (a.ci || '').replace(/\D/g, '').trim();
+      const log = cleanCi ? logsByCi.get(cleanCi) : null;
+      if (log) {
+        return {
+          ...a,
+          gallery_access_at: log.created_at,
+          gallery_media_auth: Boolean(log.authorized_media)
+        };
+      }
+      return a;
+    });
+
+    res.json({ success: true, attendees: enriched });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

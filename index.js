@@ -198,17 +198,26 @@ function deduplicateAttendeesServer(list) {
         if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
       }
       uniqueList.push(item);
-    } else if (existingItem && item.checked_in && !existingItem.checked_in) {
-      const checkinTime = new Date(item.checked_in_at || 0).getTime();
-      const existingCreatedTime = new Date(existingItem.created_at || 0).getTime();
-      if (checkinTime > existingCreatedTime) {
-        existingItem.checked_in = true;
-        existingItem.checked_in_at = item.checked_in_at;
+    } else if (existingItem) {
+      if (item.checked_in && !existingItem.checked_in) {
+        const checkinTime = new Date(item.checked_in_at || 0).getTime();
+        const existingCreatedTime = new Date(existingItem.created_at || 0).getTime();
+        if (checkinTime > existingCreatedTime) {
+          existingItem.checked_in = true;
+          existingItem.checked_in_at = item.checked_in_at;
+        }
+      }
+      if (item.gallery_access_at && !existingItem.gallery_access_at) {
+        existingItem.gallery_access_at = item.gallery_access_at;
+        existingItem.gallery_media_auth = item.gallery_media_auth;
       }
     }
   }
   return uniqueList;
 }
+
+// Memoria para auditoría de accesos a galería en entornos serverless
+const galleryAccessMemoryLogs = [];
 
 // Caché en memoria para mitigar llamadas lentas a Supabase (1676ms -> <1ms) y soportar alta concurrencia
 let serverAttendeesCache = null;
@@ -243,6 +252,34 @@ app.get('/api/attendees', async (req, res) => {
     if (response.ok) {
       const attendees = await response.json();
       const cleanAttendees = deduplicateAttendeesServer(attendees || []);
+
+      // Enriquecer con logs de galería en memoria
+      for (const log of galleryAccessMemoryLogs) {
+        const logCi = (log.ci || '').replace(/\D/g, '').trim();
+        const matched = cleanAttendees.find(a => (a.ci || '').replace(/\D/g, '').trim() === logCi);
+        if (matched) {
+          if (!matched.gallery_access_at) {
+            matched.gallery_access_at = log.created_at;
+            matched.gallery_media_auth = Boolean(log.authorized_media);
+          }
+        } else {
+          cleanAttendees.push({
+            id: 'gallery-' + (log.attendee_id || Date.now()),
+            full_name: log.full_name || 'Visitante Galería',
+            ci: log.ci,
+            email: `${log.ci}@ingelab.com`,
+            institution: 'Acceso Directo Galería',
+            position: 'Visitante Galería',
+            attending: 'gallery_only',
+            checked_in: false,
+            gallery_access_at: log.created_at,
+            gallery_media_auth: Boolean(log.authorized_media),
+            comments: `[FOTOS_ACCESO: ${log.created_at} | FOTOS_AUTORIZO: ${log.authorized_media ? 'SI' : 'NO'}]`,
+            created_at: log.created_at
+          });
+        }
+      }
+
       serverAttendeesCache = cleanAttendees;
       serverAttendeesCacheTime = now;
       res.setHeader('X-Cache', 'MISS');
@@ -677,9 +714,6 @@ app.post('/api/checkin/:id', async (req, res) => {
     activeCheckinLocks.delete(lockKey);
   }
 });
-
-// Memoria para auditoría de accesos a galería en entornos serverless
-const galleryAccessMemoryLogs = [];
 
 // Registrar acceso y consentimiento de la galería fotográfica con C.I.
 app.post('/api/gallery-access', async (req, res) => {
