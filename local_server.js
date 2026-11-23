@@ -3,12 +3,15 @@ import cors from 'cors';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { 
+  db,
   initDB, 
   createAttendee, 
   getAllAttendees, 
   deleteAttendee, 
   getStats,
-  getAttendeeByTicket
+  getAttendeeByTicket,
+  recordGalleryAccess,
+  getGalleryAccessLogs
 } from './database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,6 +22,59 @@ const PORT = process.env.PORT || 3000;
 
 // Inicializar base de datos SQLite con soporte para C.I. y Boletos
 initDB();
+
+// Sincronización automática de asistentes de Supabase a SQLite local
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hfxgmeykdxnoapqdspzn.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_cx0IDgIzs4N6hIbhcklc2A_SEh2yPrQ';
+
+async function syncFromSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=*&order=id.desc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) return;
+    const list = await res.json();
+    if (!Array.isArray(list) || list.length === 0) return;
+
+    const stmt = db.prepare(`
+      INSERT OR REPLACE INTO attendees (
+        id, ticket_code, full_name, ci, institution, position, email, phone,
+        ticket_count, ticket_list, attending, companion, companion_name, dietary, comments, created_at
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?, ?, ?
+      )
+    `);
+
+    db.exec('BEGIN TRANSACTION');
+    for (const a of list) {
+      stmt.run(
+        a.id,
+        a.ticket_code || `ING-${a.id}`,
+        a.full_name || '',
+        a.ci || '',
+        a.institution || '',
+        a.position || '',
+        a.email || '',
+        a.phone || '',
+        a.ticket_count || 1,
+        Array.isArray(a.ticket_list) ? a.ticket_list.join(', ') : (a.ticket_list || ''),
+        a.attending || 'yes',
+        a.companion || 'no',
+        a.companion_name || '',
+        Array.isArray(a.dietary) ? a.dietary.join(', ') : (a.dietary || ''),
+        a.comments || '',
+        a.created_at || new Date().toISOString()
+      );
+    }
+    db.exec('COMMIT');
+    console.log(`✅ Sincronizados ${list.length} asistentes de Supabase a SQLite local.`);
+  } catch (err) {
+    console.warn('Sync warning from Supabase:', err.message);
+  }
+}
+syncFromSupabase().catch(() => {});
+
 
 // Middlewares
 app.use(cors());
@@ -99,7 +155,32 @@ app.post('/api/confirm', (req, res) => {
 app.get('/api/attendees', (req, res) => {
   try {
     const attendees = getAllAttendees();
-    res.json({ success: true, attendees });
+    const logs = getGalleryAccessLogs();
+    
+    // Mapear logs de auditoría por C.I.
+    const logsByCi = new Map();
+    for (const log of logs) {
+      const clean = (log.ci || '').replace(/\D/g, '').trim();
+      if (clean && !logsByCi.has(clean)) {
+        logsByCi.set(clean, log);
+      }
+    }
+
+    // Enriquecer asistentes con su estado de acceso a fotos
+    const enriched = attendees.map(a => {
+      const cleanCi = (a.ci || '').replace(/\D/g, '').trim();
+      const log = cleanCi ? logsByCi.get(cleanCi) : null;
+      if (log) {
+        return {
+          ...a,
+          gallery_access_at: log.created_at,
+          gallery_media_auth: Boolean(log.authorized_media)
+        };
+      }
+      return a;
+    });
+
+    res.json({ success: true, attendees: enriched });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -113,6 +194,54 @@ app.get('/api/ticket/:code', (req, res) => {
       return res.status(404).json({ success: false, error: 'Pase de asistencia no encontrado.' });
     }
     res.json({ success: true, attendee });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Registrar acceso y consentimiento de la galería fotográfica con C.I.
+app.post('/api/gallery-access', (req, res) => {
+  try {
+    const { ci, acceptedTerms, authorizedMedia } = req.body;
+    const cleanCi = (ci || '').replace(/\D/g, '').trim();
+
+    if (!cleanCi || cleanCi.length < 9) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Por favor ingrese un número de cédula válido (al menos 9 dígitos).' 
+      });
+    }
+
+    if (!acceptedTerms) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Debe aceptar los términos y condiciones obligatorios para ingresar.' 
+      });
+    }
+
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
+    const userAgent = req.headers['user-agent'] || '';
+
+    const result = recordGalleryAccess({
+      ci: cleanCi,
+      acceptedTerms,
+      authorizedMedia,
+      ip,
+      userAgent
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error('Error al registrar acceso a galería:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Consultar auditoría de accesos a la galería
+app.get('/api/gallery-access-logs', (req, res) => {
+  try {
+    const logs = getGalleryAccessLogs();
+    res.json({ success: true, logs });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

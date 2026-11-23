@@ -137,6 +137,12 @@ function deduplicateAttendeesServer(list) {
     item.checked_in = Boolean(checkedInAt || item.checked_in);
     item.checked_in_at = checkedInAt;
 
+    const galleryMatch = (item.comments || '').match(/\[FOTOS_ACCESO:\s*([^|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+    if (galleryMatch) {
+      item.gallery_access_at = galleryMatch[1].trim();
+      item.gallery_media_auth = galleryMatch[2] ? galleryMatch[2].trim() === 'SI' : false;
+    }
+
     const ciClean = (item.ci || '').replace(/\D/g, '').trim();
     const nameKey = (item.full_name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toUpperCase();
     const emailKey = (item.email || '').trim().toLowerCase();
@@ -192,17 +198,26 @@ function deduplicateAttendeesServer(list) {
         if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
       }
       uniqueList.push(item);
-    } else if (existingItem && item.checked_in && !existingItem.checked_in) {
-      const checkinTime = new Date(item.checked_in_at || 0).getTime();
-      const existingCreatedTime = new Date(existingItem.created_at || 0).getTime();
-      if (checkinTime > existingCreatedTime) {
-        existingItem.checked_in = true;
-        existingItem.checked_in_at = item.checked_in_at;
+    } else if (existingItem) {
+      if (item.checked_in && !existingItem.checked_in) {
+        const checkinTime = new Date(item.checked_in_at || 0).getTime();
+        const existingCreatedTime = new Date(existingItem.created_at || 0).getTime();
+        if (checkinTime > existingCreatedTime) {
+          existingItem.checked_in = true;
+          existingItem.checked_in_at = item.checked_in_at;
+        }
+      }
+      if (item.gallery_access_at && !existingItem.gallery_access_at) {
+        existingItem.gallery_access_at = item.gallery_access_at;
+        existingItem.gallery_media_auth = item.gallery_media_auth;
       }
     }
   }
   return uniqueList;
 }
+
+// Memoria para auditoría de accesos a galería en entornos serverless
+const galleryAccessMemoryLogs = [];
 
 // Caché en memoria para mitigar llamadas lentas a Supabase (1676ms -> <1ms) y soportar alta concurrencia
 let serverAttendeesCache = null;
@@ -237,6 +252,34 @@ app.get('/api/attendees', async (req, res) => {
     if (response.ok) {
       const attendees = await response.json();
       const cleanAttendees = deduplicateAttendeesServer(attendees || []);
+
+      // Enriquecer con logs de galería en memoria
+      for (const log of galleryAccessMemoryLogs) {
+        const logCi = (log.ci || '').replace(/\D/g, '').trim();
+        const matched = cleanAttendees.find(a => (a.ci || '').replace(/\D/g, '').trim() === logCi);
+        if (matched) {
+          if (!matched.gallery_access_at) {
+            matched.gallery_access_at = log.created_at;
+            matched.gallery_media_auth = Boolean(log.authorized_media);
+          }
+        } else {
+          cleanAttendees.push({
+            id: 'gallery-' + (log.attendee_id || Date.now()),
+            full_name: log.full_name || 'Visitante Galería',
+            ci: log.ci,
+            email: `${log.ci}@ingelab.com`,
+            institution: 'Acceso Directo Galería',
+            position: 'Visitante Galería',
+            attending: 'gallery_only',
+            checked_in: false,
+            gallery_access_at: log.created_at,
+            gallery_media_auth: Boolean(log.authorized_media),
+            comments: `[FOTOS_ACCESO: ${log.created_at} | FOTOS_AUTORIZO: ${log.authorized_media ? 'SI' : 'NO'}]`,
+            created_at: log.created_at
+          });
+        }
+      }
+
       serverAttendeesCache = cleanAttendees;
       serverAttendeesCacheTime = now;
       res.setHeader('X-Cache', 'MISS');
@@ -670,6 +713,140 @@ app.post('/api/checkin/:id', async (req, res) => {
   } finally {
     activeCheckinLocks.delete(lockKey);
   }
+});
+
+// Registrar acceso y consentimiento de la galería fotográfica con C.I.
+app.post('/api/gallery-access', async (req, res) => {
+  try {
+    const { ci, acceptedTerms, authorizedMedia } = req.body || {};
+    const cleanCi = (ci || '').replace(/\D/g, '').trim();
+
+    if (!cleanCi || cleanCi.length < 9) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Por favor ingrese un número de cédula válido (al menos 9 dígitos).' 
+      });
+    }
+
+    if (!acceptedTerms) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Debe aceptar los términos y condiciones obligatorios para ingresar.' 
+      });
+    }
+
+    const nowIso = new Date().toISOString();
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
+    const userAgent = req.headers['user-agent'] || '';
+
+    let attendee = null;
+
+    // Buscar en Supabase por C.I.
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3500);
+      const getCiRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?ci=eq.${encodeURIComponent(cleanCi)}&order=id.desc&limit=1`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (getCiRes.ok) {
+        const listCi = await getCiRes.json();
+        if (listCi && listCi.length > 0) attendee = listCi[0];
+      }
+    } catch (e) {}
+
+    const logEntry = {
+      ci: cleanCi,
+      full_name: attendee ? attendee.full_name : 'Invitado Externo / No en lista',
+      attendee_id: attendee ? attendee.id : null,
+      accepted_terms: true,
+      authorized_media: Boolean(authorizedMedia),
+      ip,
+      user_agent: userAgent,
+      created_at: nowIso
+    };
+    galleryAccessMemoryLogs.unshift(logEntry);
+
+    if (attendee) {
+      const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
+      const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
+
+      try {
+        const insController = new AbortController();
+        const insTimeout = setTimeout(() => insController.abort(), 3500);
+        await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${attendee.id}`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ comments: updatedComments }),
+          signal: insController.signal
+        });
+        clearTimeout(insTimeout);
+      } catch (e) {}
+
+      invalidateServerAttendeesCache();
+
+      return res.json({
+        success: true,
+        matched: true,
+        attendee: { id: attendee.id, full_name: attendee.full_name, ci: attendee.ci },
+        authorized_media: Boolean(authorizedMedia),
+        created_at: nowIso,
+        message: '¡Consentimiento y acceso registrados exitosamente!'
+      });
+    } else {
+      // Si la cédula no estaba registrada en la lista de asistencia, se crea un registro de trazabilidad
+      try {
+        const insController = new AbortController();
+        const insTimeout = setTimeout(() => insController.abort(), 3500);
+        await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify([{
+            full_name: 'Visitante Galería (No en lista inicial)',
+            ci: cleanCi,
+            email: 'galeria@ingelab.com',
+            phone: '0000000000',
+            institution: 'Ingelab',
+            position: 'Visitante Galería',
+            attending: 'gallery_only',
+            comments: `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}]`,
+            created_at: nowIso
+          }]),
+          signal: insController.signal
+        });
+        clearTimeout(insTimeout);
+      } catch (e) {}
+
+      invalidateServerAttendeesCache();
+
+      return res.json({
+        success: true,
+        matched: false,
+        attendee: null,
+        ci: cleanCi,
+        authorized_media: Boolean(authorizedMedia),
+        created_at: nowIso,
+        message: '¡Acceso a galería registrado exitosamente!'
+      });
+    }
+  } catch (err) {
+    console.error('Gallery access error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Consultar auditoría de accesos a galería
+app.get('/api/gallery-access-logs', (req, res) => {
+  res.json({ success: true, logs: galleryAccessMemoryLogs });
 });
 
 // Confirmación de Asistencia con Protección Anti-Bot (Honeypot), Rate Limiting e Idempotencia (Upsert)
