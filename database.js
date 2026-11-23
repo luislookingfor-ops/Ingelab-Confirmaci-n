@@ -29,6 +29,18 @@ export function initDB() {
       comments TEXT DEFAULT '',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS gallery_access_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ci TEXT NOT NULL,
+      full_name TEXT DEFAULT '',
+      attendee_id INTEGER DEFAULT NULL,
+      accepted_terms INTEGER DEFAULT 1,
+      authorized_media INTEGER DEFAULT 0,
+      ip TEXT DEFAULT '',
+      user_agent TEXT DEFAULT '',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // Migraciones automáticas por si ya existía la tabla sin las nuevas columnas
@@ -127,4 +139,54 @@ export function getStats() {
     totalExpectedGuests: totalTickets,
     totalTickets: totalTickets
   };
+}
+
+// Registrar acceso y consentimiento de galería de fotos
+export function recordGalleryAccess({ ci, acceptedTerms, authorizedMedia, ip = '', userAgent = '' }) {
+  const cleanCi = (ci || '').replace(/\D/g, '').trim();
+  
+  // Buscar si coincide con un asistente registrado
+  const attendee = db.prepare('SELECT * FROM attendees WHERE ci = ? ORDER BY id DESC LIMIT 1').get(cleanCi);
+  const fullName = attendee ? attendee.full_name : 'Invitado Externo / No en lista';
+  const attendeeId = attendee ? attendee.id : null;
+  const nowIso = new Date().toISOString();
+
+  // Guardar en tabla de auditoría
+  const stmt = db.prepare(`
+    INSERT INTO gallery_access_logs (
+      ci, full_name, attendee_id, accepted_terms, authorized_media, ip, user_agent, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  stmt.run(
+    cleanCi, 
+    fullName, 
+    attendeeId, 
+    acceptedTerms ? 1 : 0, 
+    authorizedMedia ? 1 : 0, 
+    ip, 
+    userAgent, 
+    nowIso
+  );
+
+  // Si existe en attendees, actualizar sus comments con el tag de acceso para visualización en Admin
+  if (attendee) {
+    const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
+    const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
+    db.prepare('UPDATE attendees SET comments = ? WHERE id = ?').run(updatedComments, attendee.id);
+  }
+
+  return {
+    success: true,
+    matched: Boolean(attendee),
+    attendee: attendee ? { id: attendee.id, full_name: attendee.full_name, ci: attendee.ci } : null,
+    ci: cleanCi,
+    authorized_media: Boolean(authorizedMedia),
+    created_at: nowIso
+  };
+}
+
+// Consultar auditoría de accesos a la galería
+export function getGalleryAccessLogs() {
+  const stmt = db.prepare('SELECT * FROM gallery_access_logs ORDER BY id DESC');
+  return stmt.all();
 }

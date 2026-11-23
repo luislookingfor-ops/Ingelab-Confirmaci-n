@@ -1082,6 +1082,10 @@
                 <button type="button" id="tab-filter-all" onclick="setTableFilterTab('all')" class="px-2.5 py-1 rounded-lg bg-white text-slate-800 shadow-xs">Todos</button>
                 <button type="button" id="tab-filter-checked" onclick="setTableFilterTab('checked')" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800">En Sala</button>
                 <button type="button" id="tab-filter-pending" onclick="setTableFilterTab('pending')" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800">Pendientes</button>
+                <button type="button" id="tab-filter-gallery" onclick="setTableFilterTab('gallery')" class="px-2.5 py-1 rounded-lg text-purple-700 hover:text-purple-900 flex items-center gap-1 font-semibold">
+                  <i data-lucide="camera" class="w-3 h-3"></i>
+                  <span>Vieron Fotos</span>
+                </button>
               </div>
             </div>
 
@@ -1201,6 +1205,45 @@
       <!-- Footer con Casillas del Formulario y Botones -->
       <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200/90 space-y-3.5">
         
+        <!-- Campo Cédula de Identidad con Verificación -->
+        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+          <label for="privacy-gallery-ci" class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="id-card" class="w-4 h-4 text-emerald-600"></i>
+              Número de Cédula (C.I.) <span class="text-rose-500">*</span>
+            </span>
+            <span id="privacy-ci-helper" class="text-[10px] text-slate-400 font-mono font-normal">10 dígitos requeridos</span>
+          </label>
+          <div class="relative">
+            <input 
+              type="tel" 
+              id="privacy-gallery-ci" 
+              maxlength="10" 
+              placeholder="Ingrese su cédula para identificarse" 
+              oninput="onGalleryCiInput(this)" 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-800 text-sm font-mono tracking-wider focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all placeholder:text-slate-400 placeholder:font-sans font-semibold"
+              autocomplete="off"
+            >
+          </div>
+          <!-- Badge de Detección de Asistente -->
+          <div id="privacy-ci-attendee-badge" class="hidden p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-2 text-xs text-emerald-900 animate-content-in">
+            <div class="flex items-center gap-2 truncate">
+              <div class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-700 shrink-0">
+                <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+              </div>
+              <div class="truncate">
+                <span class="text-[10px] text-emerald-600 font-mono block leading-none">Asistente en lista:</span>
+                <strong id="privacy-ci-attendee-name" class="font-bold text-emerald-950 text-xs truncate block">-</strong>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200/80 text-emerald-900 shrink-0 font-mono">Verificado</span>
+          </div>
+          <div id="privacy-ci-notfound-badge" class="hidden p-2 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2 text-xs text-slate-600 animate-content-in">
+            <i data-lucide="info" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+            <span class="text-[11px] leading-tight">No encontrado en lista de asistencia inicial; se registrará como nuevo acceso.</span>
+          </div>
+        </div>
+
         <div class="text-[11px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1 mb-1">
           <i data-lucide="check-square" class="w-3.5 h-3.5 text-emerald-600"></i>
           CASILLAS DEL FORMULARIO
@@ -3128,17 +3171,65 @@
       }
     }
 
+    function onGalleryCiInput(input) {
+      input.value = input.value.replace(/\D/g, '').slice(0, 10);
+      const cleanCi = input.value.trim();
+      const badge = document.getElementById('privacy-ci-attendee-badge');
+      const notFoundBadge = document.getElementById('privacy-ci-notfound-badge');
+      const nameEl = document.getElementById('privacy-ci-attendee-name');
+      const helper = document.getElementById('privacy-ci-helper');
+
+      if (helper) {
+        helper.innerText = cleanCi.length > 0 ? `${cleanCi.length}/10 dígitos` : '10 dígitos requeridos';
+        helper.className = cleanCi.length === 10 ? 'text-[10px] text-emerald-600 font-mono font-bold' : 'text-[10px] text-slate-400 font-mono font-normal';
+      }
+
+      if (cleanCi.length >= 9) {
+        const list = (window.allAttendeesCache && Array.isArray(window.allAttendeesCache)) ? window.allAttendeesCache : (typeof getStoredAttendees === 'function' ? getStoredAttendees() : []);
+        const match = list.find(a => (a.ci || '').replace(/\D/g, '').trim() === cleanCi && !isRecordDeleted(a));
+        if (match) {
+          if (badge && nameEl) {
+            nameEl.innerText = match.full_name;
+            badge.classList.remove('hidden');
+            if (window.lucide) lucide.createIcons();
+          }
+          if (notFoundBadge) notFoundBadge.classList.add('hidden');
+        } else {
+          if (badge) badge.classList.add('hidden');
+          if (notFoundBadge && cleanCi.length === 10) notFoundBadge.classList.remove('hidden');
+          else if (notFoundBadge) notFoundBadge.classList.add('hidden');
+        }
+      } else {
+        if (badge) badge.classList.add('hidden');
+        if (notFoundBadge) notFoundBadge.classList.add('hidden');
+      }
+
+      toggleGalleryPrivacyAcceptBtn();
+    }
+
     function openGalleryPrivacyModal() {
       const modal = document.getElementById('gallery-privacy-modal');
+      const ciInput = document.getElementById('privacy-gallery-ci');
       const cb1 = document.getElementById('privacy-gallery-checkbox-1');
       const cb2 = document.getElementById('privacy-gallery-checkbox-2');
       const btn = document.getElementById('btn-accept-gallery-privacy');
+      const badge = document.getElementById('privacy-ci-attendee-badge');
+      const notFoundBadge = document.getElementById('privacy-ci-notfound-badge');
 
+      const savedCi = sessionStorage.getItem('privacy_gallery_ci') || '';
+      if (ciInput) {
+        ciInput.value = savedCi;
+        if (savedCi) onGalleryCiInput(ciInput);
+      }
       if (cb1) cb1.checked = false;
       if (cb2) cb2.checked = false;
+      if (badge && !savedCi) badge.classList.add('hidden');
+      if (notFoundBadge && !savedCi) notFoundBadge.classList.add('hidden');
+
       if (btn) {
         btn.disabled = true;
         btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed';
+        btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i><span>Aceptar y ver galería</span>';
       }
 
       if (modal) {
@@ -3157,12 +3248,17 @@
     }
 
     function toggleGalleryPrivacyAcceptBtn() {
+      const ciInput = document.getElementById('privacy-gallery-ci');
       const cb1 = document.getElementById('privacy-gallery-checkbox-1');
       const btn = document.getElementById('btn-accept-gallery-privacy');
-      if (!cb1 || !btn) return;
+      if (!btn) return;
 
-      // El botón se habilita al marcar la casilla de aceptación obligatoria del aviso
-      if (cb1.checked) {
+      const ciVal = ciInput ? ciInput.value.replace(/\D/g, '').trim() : '';
+      const isCiValid = ciVal.length >= 9;
+      const isAccepted = cb1 && cb1.checked;
+
+      // Se habilita cuando la cédula tiene al menos 9-10 dígitos y se marcó la aceptación obligatoria
+      if (isCiValid && isAccepted) {
         btn.disabled = false;
         btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
       } else {
@@ -3171,16 +3267,63 @@
       }
     }
 
-    function acceptGalleryPrivacy() {
+    async function acceptGalleryPrivacy() {
+      const ciInput = document.getElementById('privacy-gallery-ci');
       const cb1 = document.getElementById('privacy-gallery-checkbox-1');
       const cb2 = document.getElementById('privacy-gallery-checkbox-2');
-      if (!cb1 || !cb1.checked) return;
+      const btn = document.getElementById('btn-accept-gallery-privacy');
+
+      const ciVal = ciInput ? ciInput.value.replace(/\D/g, '').trim() : '';
+      if (!ciVal || ciVal.length < 9) {
+        alert('Por favor ingrese su número de cédula válido para continuar.');
+        if (ciInput) ciInput.focus();
+        return;
+      }
+      if (!cb1 || !cb1.checked) {
+        alert('Debe marcar la casilla obligatoria de aceptación del aviso de privacidad.');
+        return;
+      }
+
+      const authorizedMedia = Boolean(cb2 && cb2.checked);
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Registrando acceso...</span>';
+        if (window.lucide) lucide.createIcons();
+      }
+
+      try {
+        const res = await fetch('/api/gallery-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ci: ciVal,
+            acceptedTerms: true,
+            authorizedMedia: authorizedMedia
+          })
+        });
+        const data = await res.json().catch(() => null);
+
+        // Actualizar en caché local si coincide con un asistente existente
+        if (window.allAttendeesCache && Array.isArray(window.allAttendeesCache)) {
+          const match = window.allAttendeesCache.find(a => (a.ci || '').replace(/\D/g, '').trim() === ciVal);
+          if (match) {
+            match.gallery_access_at = new Date().toISOString();
+            match.gallery_media_auth = authorizedMedia;
+            if (typeof saveStoredAttendees === 'function') saveStoredAttendees(window.allAttendeesCache);
+          }
+        }
+      } catch (err) {
+        console.warn('Error al registrar acceso a galería:', err);
+      }
 
       sessionStorage.setItem('privacy_gallery_accepted_v1', 'true');
-      sessionStorage.setItem('privacy_gallery_authorized_media_v1', cb2 && cb2.checked ? 'true' : 'false');
+      sessionStorage.setItem('privacy_gallery_ci', ciVal);
+      sessionStorage.setItem('privacy_gallery_authorized_media_v1', authorizedMedia ? 'true' : 'false');
+
       closeGalleryPrivacyModal();
-      // Renderizar realmente las fotos en el DOM tras la aceptación
       renderCatalogGrid();
+      if (typeof showToast === 'function') showToast('¡Acceso concedido al catálogo oficial de fotos!');
     }
 
     function exitGalleryPrivacy() {
@@ -4074,7 +4217,13 @@
               const rawComments = d.comments || '';
               const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
               const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
-              const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+              const galleryMatch = rawComments.match(/\[FOTOS_ACCESO:\s*([^|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+              const galleryAccessAt = d.gallery_access_at || (galleryMatch ? galleryMatch[1].trim() : null);
+              const galleryMediaAuth = d.gallery_media_auth || (galleryMatch && galleryMatch[2] ? galleryMatch[2].trim() === 'SI' : false);
+              const cleanComments = rawComments
+                .replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '')
+                .replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '')
+                .trim();
               return {
                 id: d.id,
                 full_name: d.full_name,
@@ -4088,6 +4237,8 @@
                 attending: d.attending || 'yes',
                 checked_in: Boolean(d.checked_in),
                 checked_in_at: d.checked_in_at,
+                gallery_access_at: galleryAccessAt,
+                gallery_media_auth: galleryMediaAuth,
                 comments: cleanComments,
                 created_at: d.created_at
               };
@@ -4120,7 +4271,13 @@
                   const rawComments = d.comments || '';
                   const birthMatch = rawComments.match(/\[F\.Nac:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})\]/);
                   const birthDate = d.birth_date || (birthMatch ? birthMatch[1] : '');
-                  const cleanComments = rawComments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
+                  const galleryMatch = rawComments.match(/\[FOTOS_ACCESO:\s*([^|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+                  const galleryAccessAt = d.gallery_access_at || (galleryMatch ? galleryMatch[1].trim() : null);
+                  const galleryMediaAuth = d.gallery_media_auth || (galleryMatch && galleryMatch[2] ? galleryMatch[2].trim() === 'SI' : false);
+                  const cleanComments = rawComments
+                    .replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '')
+                    .replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '')
+                    .trim();
                   return {
                     id: d.id,
                     full_name: d.full_name,
@@ -4133,6 +4290,8 @@
                     ticket_count: d.ticket_count || 1,
                     attending: d.attending || 'yes',
                     checked_in: Boolean(d.checked_in || (rawComments.match(/\[CHECKIN:\s*[^\]]+\]/))),
+                    gallery_access_at: galleryAccessAt,
+                    gallery_media_auth: galleryMediaAuth,
                     comments: cleanComments,
                     created_at: d.created_at
                   };
@@ -4674,6 +4833,17 @@
                   </button>
                 </div>
               ` : ''}
+              ${a.gallery_access_at ? `
+                <div class="mt-1.5 flex flex-col items-center gap-0.5">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${a.gallery_media_auth ? 'bg-purple-100 border-purple-300 text-purple-800' : 'bg-slate-100 border-slate-300 text-slate-700'} border text-[9px] font-mono font-bold" title="Acceso a fotos: ${new Date(a.gallery_access_at).toLocaleString('es-EC')}">
+                    <i data-lucide="camera" class="w-2.5 h-2.5"></i>
+                    FOTOS: ${a.gallery_media_auth ? 'AUTORIZÓ' : 'SOLO LECTURA'}
+                  </span>
+                  <span class="text-[9px] font-mono text-slate-400">
+                    ${new Date(a.gallery_access_at).toLocaleTimeString('es-EC', {hour:'2-digit', minute:'2-digit'})}
+                  </span>
+                </div>
+              ` : ''}
             </td>
 
             <!-- ACCIONES: CHECK-IN, VER, EDITAR, ELIMINAR -->
@@ -4709,14 +4879,14 @@
 
     function setTableFilterTab(tab) {
       currentTableFilterTab = tab;
-      const tabs = ['all', 'checked', 'pending'];
+      const tabs = ['all', 'checked', 'pending', 'gallery'];
       tabs.forEach(t => {
         const btn = document.getElementById(`tab-filter-${t}`);
         if (btn) {
           if (t === tab) {
             btn.className = 'px-2.5 py-1 rounded-lg bg-white text-slate-800 shadow-xs font-bold';
           } else {
-            btn.className = 'px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800';
+            btn.className = t === 'gallery' ? 'px-2.5 py-1 rounded-lg text-purple-700 hover:text-purple-900 flex items-center gap-1 font-semibold' : 'px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-800';
           }
         }
       });
@@ -4730,6 +4900,7 @@
 
         if (currentTableFilterTab === 'checked' && !item.checked_in) return false;
         if (currentTableFilterTab === 'pending' && item.checked_in) return false;
+        if (currentTableFilterTab === 'gallery' && !item.gallery_access_at) return false;
 
         if (!q) return true;
         return (item.full_name && item.full_name.toLowerCase().includes(q)) ||

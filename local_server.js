@@ -8,7 +8,9 @@ import {
   getAllAttendees, 
   deleteAttendee, 
   getStats,
-  getAttendeeByTicket
+  getAttendeeByTicket,
+  recordGalleryAccess,
+  getGalleryAccessLogs
 } from './database.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -113,6 +115,54 @@ app.get('/api/ticket/:code', (req, res) => {
       return res.status(404).json({ success: false, error: 'Pase de asistencia no encontrado.' });
     }
     res.json({ success: true, attendee });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Registrar acceso y consentimiento de la galería fotográfica con C.I.
+app.post('/api/gallery-access', (req, res) => {
+  try {
+    const { ci, acceptedTerms, authorizedMedia } = req.body;
+    const cleanCi = (ci || '').replace(/\D/g, '').trim();
+
+    if (!cleanCi || cleanCi.length < 9) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Por favor ingrese un número de cédula válido (al menos 9 dígitos).' 
+      });
+    }
+
+    if (!acceptedTerms) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Debe aceptar los términos y condiciones obligatorios para ingresar.' 
+      });
+    }
+
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
+    const userAgent = req.headers['user-agent'] || '';
+
+    const result = recordGalleryAccess({
+      ci: cleanCi,
+      acceptedTerms,
+      authorizedMedia,
+      ip,
+      userAgent
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error('Error al registrar acceso a galería:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Consultar auditoría de accesos a la galería
+app.get('/api/gallery-access-logs', (req, res) => {
+  try {
+    const logs = getGalleryAccessLogs();
+    res.json({ success: true, logs });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
