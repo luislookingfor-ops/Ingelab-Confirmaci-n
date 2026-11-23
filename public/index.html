@@ -1085,6 +1085,7 @@
                 <button type="button" id="tab-filter-gallery" onclick="setTableFilterTab('gallery')" class="px-2.5 py-1 rounded-lg text-purple-700 hover:text-purple-900 flex items-center gap-1 font-semibold">
                   <i data-lucide="camera" class="w-3 h-3"></i>
                   <span>Vieron Fotos</span>
+                  <span id="tab-gallery-counter" class="ml-1 px-1.5 py-0.5 rounded-full text-[9px] bg-purple-200 text-purple-900 font-bold">0</span>
                 </button>
               </div>
             </div>
@@ -3567,6 +3568,12 @@
         item.checked_in = Boolean(checkedInAt || item.checked_in);
         item.checked_in_at = checkedInAt;
 
+        const galleryMatch = (item.comments || '').match(/\[FOTOS_ACCESO:\s*([^|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+        const galleryAt = item.gallery_access_at || (galleryMatch ? galleryMatch[1].trim() : null);
+        const galleryMedia = item.gallery_media_auth !== undefined ? item.gallery_media_auth : (galleryMatch && galleryMatch[2] ? galleryMatch[2].trim() === 'SI' : false);
+        item.gallery_access_at = galleryAt;
+        item.gallery_media_auth = galleryMedia;
+
         const ciClean = (item.ci || '').replace(/\D/g, '').trim();
         const nameKey = normalizeAttendeeStr(item.full_name);
         const emailKey = (item.email || '').trim().toLowerCase();
@@ -3626,9 +3633,15 @@
             if (fallbackKey) seenFallbackKeys.set(fallbackKey, item);
           }
           uniqueList.push(item);
-        } else if (existingItem && item.checked_in && !existingItem.checked_in) {
-          existingItem.checked_in = true;
-          existingItem.checked_in_at = item.checked_in_at;
+        } else if (existingItem) {
+          if (item.checked_in && !existingItem.checked_in) {
+            existingItem.checked_in = true;
+            existingItem.checked_in_at = item.checked_in_at;
+          }
+          if (item.gallery_access_at && !existingItem.gallery_access_at) {
+            existingItem.gallery_access_at = item.gallery_access_at;
+            existingItem.gallery_media_auth = item.gallery_media_auth;
+          }
         }
       }
 
@@ -4308,6 +4321,46 @@
         }
       }
 
+      // 4. Sincronizar logs de auditoría de acceso a fotos
+      try {
+        const logRes = await fetch('/api/gallery-access-logs');
+        if (logRes.ok) {
+          const logData = await logRes.json();
+          if (logData.success && Array.isArray(logData.logs)) {
+            logData.logs.forEach(log => {
+              const logCiClean = (log.ci || '').replace(/\D/g, '').trim();
+              if (!logCiClean) return;
+
+              const matchedAtt = allAttendeesCache.find(a => (a.ci || '').replace(/\D/g, '').trim() === logCiClean);
+              if (matchedAtt) {
+                matchedAtt.gallery_access_at = log.created_at;
+                matchedAtt.gallery_media_auth = Boolean(log.authorized_media);
+              } else {
+                allAttendeesCache.push({
+                  id: 'gallery-' + log.id,
+                  full_name: log.full_name || 'Visitante Galería',
+                  ci: log.ci,
+                  email: 'galeria@ingelab.com',
+                  phone: '0000000000',
+                  institution: 'Ingelab (Acceso Web)',
+                  position: 'Visitante Galería',
+                  attending: 'gallery_only',
+                  checked_in: false,
+                  gallery_access_at: log.created_at,
+                  gallery_media_auth: Boolean(log.authorized_media),
+                  comments: `[FOTOS_ACCESO: ${log.created_at} | FOTOS_AUTORIZO: ${log.authorized_media ? 'SI' : 'NO'}]`,
+                  created_at: log.created_at
+                });
+              }
+            });
+            allAttendeesCache = deduplicateAttendees(allAttendeesCache);
+            saveStoredAttendees(allAttendeesCache);
+          }
+        }
+      } catch (err) {
+        console.warn('Error fetching gallery access logs:', err);
+      }
+
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
       updateCheckinQuickCounters();
@@ -4329,6 +4382,10 @@
       document.getElementById('kpi-total').innerText = total;
       document.getElementById('kpi-confirmed').innerText = confirmed;
       document.getElementById('kpi-declined').innerText = declined;
+
+      const galleryViewers = cleanList.filter(a => a.gallery_access_at).length;
+      const galleryCounterEl = document.getElementById('tab-gallery-counter');
+      if (galleryCounterEl) galleryCounterEl.innerText = galleryViewers;
       const rateElem = document.getElementById('kpi-rate');
       if (rateElem) rateElem.innerText = `${rate}%`;
     }

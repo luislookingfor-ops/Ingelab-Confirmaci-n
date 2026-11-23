@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { 
+  db,
   initDB, 
   createAttendee, 
   getAllAttendees, 
@@ -21,6 +22,59 @@ const PORT = process.env.PORT || 3000;
 
 // Inicializar base de datos SQLite con soporte para C.I. y Boletos
 initDB();
+
+// Sincronización automática de asistentes de Supabase a SQLite local
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://hfxgmeykdxnoapqdspzn.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_cx0IDgIzs4N6hIbhcklc2A_SEh2yPrQ';
+
+async function syncFromSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=*&order=id.desc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) return;
+    const list = await res.json();
+    if (!Array.isArray(list) || list.length === 0) return;
+
+    const stmt = db.prepare(`
+      INSERT OR REPLACE INTO attendees (
+        id, ticket_code, full_name, ci, institution, position, email, phone,
+        ticket_count, ticket_list, attending, companion, companion_name, dietary, comments, created_at
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?, ?, ?
+      )
+    `);
+
+    db.exec('BEGIN TRANSACTION');
+    for (const a of list) {
+      stmt.run(
+        a.id,
+        a.ticket_code || `ING-${a.id}`,
+        a.full_name || '',
+        a.ci || '',
+        a.institution || '',
+        a.position || '',
+        a.email || '',
+        a.phone || '',
+        a.ticket_count || 1,
+        Array.isArray(a.ticket_list) ? a.ticket_list.join(', ') : (a.ticket_list || ''),
+        a.attending || 'yes',
+        a.companion || 'no',
+        a.companion_name || '',
+        Array.isArray(a.dietary) ? a.dietary.join(', ') : (a.dietary || ''),
+        a.comments || '',
+        a.created_at || new Date().toISOString()
+      );
+    }
+    db.exec('COMMIT');
+    console.log(`✅ Sincronizados ${list.length} asistentes de Supabase a SQLite local.`);
+  } catch (err) {
+    console.warn('Sync warning from Supabase:', err.message);
+  }
+}
+syncFromSupabase().catch(() => {});
+
 
 // Middlewares
 app.use(cors());
