@@ -1226,22 +1226,29 @@
               autocomplete="off"
             >
           </div>
-          <!-- Badge de Detección de Asistente -->
+          <!-- Badge de Detección de Asistente Verificado -->
           <div id="privacy-ci-attendee-badge" class="hidden p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-2 text-xs text-emerald-900 animate-content-in">
             <div class="flex items-center gap-2 truncate">
               <div class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-700 shrink-0">
                 <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
               </div>
               <div class="truncate">
-                <span class="text-[10px] text-emerald-600 font-mono block leading-none">Asistente en lista:</span>
+                <span class="text-[10px] text-emerald-600 font-mono block leading-none">Participante Autorizado:</span>
                 <strong id="privacy-ci-attendee-name" class="font-bold text-emerald-950 text-xs truncate block">-</strong>
               </div>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200/80 text-emerald-900 shrink-0 font-mono">Verificado</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200/80 text-emerald-900 shrink-0 font-mono">En Lista</span>
           </div>
-          <div id="privacy-ci-notfound-badge" class="hidden p-2 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2 text-xs text-slate-600 animate-content-in">
-            <i data-lucide="info" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-            <span class="text-[11px] leading-tight">No encontrado en lista de asistencia inicial; se registrará como nuevo acceso.</span>
+
+          <!-- Badge de Cédula No Registrada / Acceso Denegado -->
+          <div id="privacy-ci-notfound-badge" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-2.5 text-xs text-rose-900 animate-content-in">
+            <div class="w-6 h-6 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-600 shrink-0 mt-0.5">
+              <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+            </div>
+            <div class="leading-tight">
+              <strong class="font-bold text-rose-950 text-xs block">Cédula no registrada en el evento</strong>
+              <span class="text-[11px] text-rose-700">El acceso al catálogo de fotos es exclusivo para participantes registrados en la base de datos oficial.</span>
+            </div>
           </div>
         </div>
 
@@ -3172,6 +3179,26 @@
       }
     }
 
+    function findRegisteredAttendeeByCi(ci) {
+      if (!ci) return null;
+      const clean = String(ci).replace(/\D/g, '').trim();
+      if (!clean) return null;
+      const cleanPadded = clean.length === 9 ? '0' + clean : clean;
+      const list = (window.allAttendeesCache && Array.isArray(window.allAttendeesCache)) 
+        ? window.allAttendeesCache 
+        : (typeof getStoredAttendees === 'function' ? getStoredAttendees() : []);
+      
+      return list.find(a => {
+        if (typeof isRecordDeleted === 'function' && isRecordDeleted(a)) return false;
+        const aCi = (a.ci || '').replace(/\D/g, '').trim();
+        if (!aCi) return false;
+        return aCi === clean || 
+               aCi === cleanPadded || 
+               (clean.length === 10 && clean.startsWith('0') && aCi === clean.slice(1)) ||
+               (aCi.length === 10 && aCi.startsWith('0') && clean === aCi.slice(1));
+      }) || null;
+    }
+
     function onGalleryCiInput(input) {
       input.value = input.value.replace(/\D/g, '').slice(0, 10);
       const cleanCi = input.value.trim();
@@ -3186,25 +3213,24 @@
       }
 
       if (cleanCi.length >= 9) {
-        const list = (window.allAttendeesCache && Array.isArray(window.allAttendeesCache)) ? window.allAttendeesCache : (typeof getStoredAttendees === 'function' ? getStoredAttendees() : []);
-        const match = list.find(a => (a.ci || '').replace(/\D/g, '').trim() === cleanCi && !isRecordDeleted(a));
+        const match = findRegisteredAttendeeByCi(cleanCi);
         if (match) {
           if (badge && nameEl) {
             nameEl.innerText = match.full_name;
             badge.classList.remove('hidden');
-            if (window.lucide) lucide.createIcons();
           }
           if (notFoundBadge) notFoundBadge.classList.add('hidden');
         } else {
           if (badge) badge.classList.add('hidden');
-          if (notFoundBadge && cleanCi.length === 10) notFoundBadge.classList.remove('hidden');
-          else if (notFoundBadge) notFoundBadge.classList.add('hidden');
+          // Si tiene 9 o 10 dígitos y no está en la base de datos oficial
+          if (notFoundBadge) notFoundBadge.classList.remove('hidden');
         }
       } else {
         if (badge) badge.classList.add('hidden');
         if (notFoundBadge) notFoundBadge.classList.add('hidden');
       }
 
+      if (window.lucide) lucide.createIcons();
       toggleGalleryPrivacyAcceptBtn();
     }
 
@@ -3216,6 +3242,19 @@
       const btn = document.getElementById('btn-accept-gallery-privacy');
       const badge = document.getElementById('privacy-ci-attendee-badge');
       const notFoundBadge = document.getElementById('privacy-ci-notfound-badge');
+
+      // Garantizar que la lista de asistentes esté cargada para validación
+      if (!window.allAttendeesCache || window.allAttendeesCache.length === 0) {
+        fetch('/api/attendees')
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.success && Array.isArray(data.attendees)) {
+              window.allAttendeesCache = deduplicateAttendees(data.attendees);
+              if (ciInput && ciInput.value) onGalleryCiInput(ciInput);
+            }
+          })
+          .catch(() => {});
+      }
 
       const savedCi = sessionStorage.getItem('privacy_gallery_ci') || '';
       if (ciInput) {
@@ -3229,7 +3268,7 @@
 
       if (btn) {
         btn.disabled = true;
-        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed';
+        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-300 text-slate-500 text-xs sm:text-sm font-bold shadow-none transition-all flex items-center justify-center gap-2 opacity-60 cursor-not-allowed';
         btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i><span>Aceptar y ver galería</span>';
       }
 
@@ -3255,16 +3294,24 @@
       if (!btn) return;
 
       const ciVal = ciInput ? ciInput.value.replace(/\D/g, '').trim() : '';
-      const isCiValid = ciVal.length >= 9;
+      const match = findRegisteredAttendeeByCi(ciVal);
       const isAccepted = cb1 && cb1.checked;
 
-      // Se habilita cuando la cédula tiene al menos 9-10 dígitos y se marcó la aceptación obligatoria
-      if (isCiValid && isAccepted) {
+      // REQUISITO ESTRICTO: ÚNICAMENTE asistentes registrados en la base de datos pueden continuar
+      if (match && isAccepted) {
         btn.disabled = false;
         btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+        btn.title = 'Continuar al catálogo de fotos';
       } else {
         btn.disabled = true;
-        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed';
+        btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-300 text-slate-500 text-xs sm:text-sm font-bold shadow-none transition-all flex items-center justify-center gap-2 opacity-60 cursor-not-allowed';
+        if (!match && ciVal.length >= 9) {
+          btn.title = 'Cédula no encontrada en la base de datos oficial.';
+        } else if (!isAccepted) {
+          btn.title = 'Debe aceptar los términos obligatorios.';
+        } else {
+          btn.title = 'Ingrese su cédula para verificarse.';
+        }
       }
     }
 
@@ -3273,13 +3320,25 @@
       const cb1 = document.getElementById('privacy-gallery-checkbox-1');
       const cb2 = document.getElementById('privacy-gallery-checkbox-2');
       const btn = document.getElementById('btn-accept-gallery-privacy');
+      const notFoundBadge = document.getElementById('privacy-ci-notfound-badge');
 
       const ciVal = ciInput ? ciInput.value.replace(/\D/g, '').trim() : '';
       if (!ciVal || ciVal.length < 9) {
-        alert('Por favor ingrese su número de cédula válido para continuar.');
+        alert('Por favor ingrese su número de cédula para continuar.');
         if (ciInput) ciInput.focus();
         return;
       }
+
+      // Validar registro en base de datos
+      const localMatch = findRegisteredAttendeeByCi(ciVal);
+      if (!localMatch) {
+        if (notFoundBadge) notFoundBadge.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+        alert('Acceso Denegado: La cédula ingresada no se encuentra registrada en la base de datos oficial del evento. El acceso al catálogo de fotos está reservado únicamente para participantes registrados.');
+        if (ciInput) ciInput.focus();
+        return;
+      }
+
       if (!cb1 || !cb1.checked) {
         alert('Debe marcar la casilla obligatoria de aceptación del aviso de privacidad.');
         return;
@@ -3289,7 +3348,7 @@
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Registrando acceso...</span>';
+        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Verificando y registrando acceso...</span>';
         if (window.lucide) lucide.createIcons();
       }
 
@@ -3303,11 +3362,27 @@
             authorizedMedia: authorizedMedia
           })
         });
+
         const data = await res.json().catch(() => null);
+
+        // Si la base de datos o el servidor rechazan el acceso por no estar registrado
+        if (!res.ok || (data && data.success === false)) {
+          const errMsg = (data && data.error) || 'Acceso Denegado: Cédula no registrada en la base de datos oficial.';
+          if (notFoundBadge) notFoundBadge.classList.remove('hidden');
+          if (window.lucide) lucide.createIcons();
+          alert(errMsg);
+          if (btn) {
+            btn.disabled = true;
+            btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-300 text-slate-500 text-xs sm:text-sm font-bold shadow-none transition-all flex items-center justify-center gap-2 opacity-60 cursor-not-allowed';
+            btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i><span>Aceptar y ver galería</span>';
+            if (window.lucide) lucide.createIcons();
+          }
+          return;
+        }
 
         // Actualizar en caché local si coincide con un asistente existente
         if (window.allAttendeesCache && Array.isArray(window.allAttendeesCache)) {
-          const match = window.allAttendeesCache.find(a => (a.ci || '').replace(/\D/g, '').trim() === ciVal);
+          const match = findRegisteredAttendeeByCi(ciVal);
           if (match) {
             match.gallery_access_at = new Date().toISOString();
             match.gallery_media_auth = authorizedMedia;

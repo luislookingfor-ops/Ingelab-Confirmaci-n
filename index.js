@@ -740,12 +740,13 @@ app.post('/api/gallery-access', async (req, res) => {
     const userAgent = req.headers['user-agent'] || '';
 
     let attendee = null;
+    const ciPadded = cleanCi.length === 9 ? '0' + cleanCi : cleanCi;
 
-    // Buscar en Supabase por C.I.
+    // Buscar en Supabase por C.I. (con o sin cero a la izquierda)
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3500);
-      const getCiRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?ci=eq.${encodeURIComponent(cleanCi)}&order=id.desc&limit=1`, {
+      const getCiRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?or=(ci.eq.${encodeURIComponent(cleanCi)},ci.eq.${encodeURIComponent(ciPadded)})&order=id.desc&limit=1`, {
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
         signal: controller.signal
       });
@@ -756,10 +757,19 @@ app.post('/api/gallery-access', async (req, res) => {
       }
     } catch (e) {}
 
+    // REQUISITO ESTRICTO: Únicamente personas que están en la base de datos pueden continuar
+    if (!attendee) {
+      return res.status(403).json({
+        success: false,
+        matched: false,
+        error: 'La cédula ingresada no se encuentra registrada en la base de datos oficial del evento. El acceso al catálogo de fotos está reservado únicamente para participantes registrados.'
+      });
+    }
+
     const logEntry = {
       ci: cleanCi,
-      full_name: attendee ? attendee.full_name : 'Invitado Externo / No en lista',
-      attendee_id: attendee ? attendee.id : null,
+      full_name: attendee.full_name,
+      attendee_id: attendee.id,
       accepted_terms: true,
       authorized_media: Boolean(authorizedMedia),
       ip,
@@ -768,76 +778,35 @@ app.post('/api/gallery-access', async (req, res) => {
     };
     galleryAccessMemoryLogs.unshift(logEntry);
 
-    if (attendee) {
-      const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
-      const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
+    const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
+    const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
 
-      try {
-        const insController = new AbortController();
-        const insTimeout = setTimeout(() => insController.abort(), 3500);
-        await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${attendee.id}`, {
-          method: 'PATCH',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ comments: updatedComments }),
-          signal: insController.signal
-        });
-        clearTimeout(insTimeout);
-      } catch (e) {}
-
-      invalidateServerAttendeesCache();
-
-      return res.json({
-        success: true,
-        matched: true,
-        attendee: { id: attendee.id, full_name: attendee.full_name, ci: attendee.ci },
-        authorized_media: Boolean(authorizedMedia),
-        created_at: nowIso,
-        message: '¡Consentimiento y acceso registrados exitosamente!'
+    try {
+      const insController = new AbortController();
+      const insTimeout = setTimeout(() => insController.abort(), 3500);
+      await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${attendee.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ comments: updatedComments }),
+        signal: insController.signal
       });
-    } else {
-      // Si la cédula no estaba registrada en la lista de asistencia, se crea un registro de trazabilidad
-      try {
-        const insController = new AbortController();
-        const insTimeout = setTimeout(() => insController.abort(), 3500);
-        await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
-          method: 'POST',
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify([{
-            full_name: 'Visitante Galería (No en lista inicial)',
-            ci: cleanCi,
-            email: 'galeria@ingelab.com',
-            phone: '0000000000',
-            institution: 'Ingelab',
-            position: 'Visitante Galería',
-            attending: 'gallery_only',
-            comments: `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}]`,
-            created_at: nowIso
-          }]),
-          signal: insController.signal
-        });
-        clearTimeout(insTimeout);
-      } catch (e) {}
+      clearTimeout(insTimeout);
+    } catch (e) {}
 
-      invalidateServerAttendeesCache();
+    invalidateServerAttendeesCache();
 
-      return res.json({
-        success: true,
-        matched: false,
-        attendee: null,
-        ci: cleanCi,
-        authorized_media: Boolean(authorizedMedia),
-        created_at: nowIso,
-        message: '¡Acceso a galería registrado exitosamente!'
-      });
-    }
+    return res.json({
+      success: true,
+      matched: true,
+      attendee: { id: attendee.id, full_name: attendee.full_name, ci: attendee.ci },
+      authorized_media: Boolean(authorizedMedia),
+      created_at: nowIso,
+      message: '¡Consentimiento y acceso registrados exitosamente!'
+    });
   } catch (err) {
     console.error('Gallery access error:', err);
     res.status(500).json({ success: false, error: err.message });

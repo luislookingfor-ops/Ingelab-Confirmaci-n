@@ -230,6 +230,10 @@ app.post('/api/gallery-access', (req, res) => {
       userAgent
     });
 
+    if (!result.success) {
+      return res.status(403).json(result);
+    }
+
     res.json(result);
   } catch (err) {
     console.error('Error al registrar acceso a galería:', err);
