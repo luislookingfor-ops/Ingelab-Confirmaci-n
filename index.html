@@ -3038,23 +3038,22 @@
     }
 
     function handleImageFallback(img) {
-      if (img.dataset.failed) return;
-      const current = img.getAttribute('src');
-      if (!img.dataset.attempt) {
-        img.dataset.attempt = '1';
-        if (!current.startsWith('public/') && !current.startsWith('/public/')) {
-          img.src = 'public/' + current.replace(/^\//, '');
-          return;
-        } else {
-          img.src = current.replace(/^\/?public\//, '');
-          return;
-        }
-      } else if (img.dataset.attempt === '1') {
-        img.dataset.attempt = '2';
-        img.src = '/' + current.replace(/^\/?(public\/)?/, '');
-        return;
+      if (img.dataset.failed === 'true') return;
+      const current = img.getAttribute('src') || '';
+      const cleanPath = current.replace(/^(\.\/|\/|public\/|\/public\/)+/, '');
+      const attempts = [
+        cleanPath,
+        'public/' + cleanPath,
+        '/' + cleanPath,
+        '/public/' + cleanPath
+      ];
+      const nextIdx = parseInt(img.dataset.attempt || '0', 10);
+      if (nextIdx < attempts.length) {
+        img.dataset.attempt = String(nextIdx + 1);
+        img.src = attempts[nextIdx];
+      } else {
+        img.dataset.failed = 'true';
       }
-      img.dataset.failed = 'true';
     }
 
     function renderCatalogGrid() {
@@ -3095,13 +3094,23 @@
 
       const img = document.getElementById('lightbox-img');
       if (img) {
-        img.src = photo.src;
+        delete img.dataset.attempt;
+        delete img.dataset.failed;
+
+        const gridImgs = document.querySelectorAll('#catalog-grid img');
+        const activeThumb = gridImgs[index];
+        const initialSrc = (activeThumb && activeThumb.currentSrc) ? activeThumb.currentSrc : photo.src;
+
         img.onerror = () => handleImageFallback(img);
+        img.src = initialSrc;
       }
 
       const dl = document.getElementById('lightbox-download');
       if (dl) {
-        dl.href = photo.src;
+        const gridImgs = document.querySelectorAll('#catalog-grid img');
+        const activeThumb = gridImgs[index];
+        const downloadUrl = (activeThumb && activeThumb.currentSrc) ? activeThumb.currentSrc : photo.src;
+        dl.href = downloadUrl;
         dl.setAttribute('download', photo.src.split('/').pop());
       }
 
