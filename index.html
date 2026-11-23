@@ -1161,56 +1161,72 @@
           </div>
           <div>
             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-1">
-              LOPDP • Ecuador
+              LOPDP • ECUADOR
             </span>
             <h3 class="text-base sm:text-lg font-bold font-mono tracking-tight text-white leading-tight">
-              Aviso de Privacidad y Uso de Imágenes
+              AVISO DE PRIVACIDAD Y USO DE IMAGEN – INGELAB S.A.S.
             </h3>
           </div>
         </div>
       </div>
 
       <!-- Cuerpo del Aviso Informativo -->
-      <div class="p-5 sm:p-6 space-y-4 max-h-[60vh] overflow-y-auto text-slate-600 text-xs sm:text-sm leading-relaxed">
+      <div class="p-5 sm:p-6 space-y-4 max-h-[50vh] overflow-y-auto text-slate-600 text-xs sm:text-sm leading-relaxed">
         
-        <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/90 flex items-start gap-3">
-          <i data-lucide="lock" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
-          <p class="text-amber-900 font-medium text-xs leading-relaxed">
-            <strong>Evento Privado:</strong> Las fotografías contenidas en esta galería corresponden exclusivamente al evento corporativo privado <strong>Ingelab Evolution</strong>.
-          </p>
-        </div>
+        <p class="text-slate-700 font-medium">
+          En cumplimiento de la Ley Orgánica de Protección de Datos Personales del Ecuador, INGELAB S.A.S. informa que las fotografías y videos captados durante sus eventos podrán contener datos personales e imágenes de personas identificadas o identificables.
+        </p>
 
-        <div class="space-y-3">
-          <div class="flex items-start gap-2.5">
-            <i data-lucide="scale" class="w-4 h-4 text-ingelab-navy shrink-0 mt-0.5"></i>
+        <p class="text-slate-700">
+          Al marcar la casilla de autorización, usted acepta voluntariamente el tratamiento de su imagen para fines institucionales, corporativos y promocionales, incluyendo su publicación en redes sociales, página web y medios oficiales de INGELAB S.A.S.
+        </p>
+
+        <div class="pt-2 border-t border-slate-100">
+          <h4 class="text-xs sm:text-sm font-bold text-slate-800 tracking-wide uppercase mb-2 flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-4 h-4 text-emerald-600"></i>
+            CONDICIONES DE USO Y DIFUSIÓN:
+          </h4>
+          <div class="space-y-2.5 text-slate-600 pl-1">
             <p>
-              <strong>Protección de Datos Personales:</strong> De conformidad con la Ley Orgánica de Protección de Datos Personales de la República del Ecuador, las imágenes y registros fisionómicos de los asistentes constituyen datos personales protegidos por ley.
+              El material fotográfico compartido es de uso personal y conmemorativo. Queda prohibida su comercialización, manipulación, utilización con fines ofensivos o perjudiciales, o difusión para finalidades no autorizadas, especialmente cuando afecte los derechos, imagen o privacidad de terceros.
             </p>
-          </div>
-
-          <div class="flex items-start gap-2.5">
-            <i data-lucide="ban" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
             <p>
-              <strong>Prohibición de difusión:</strong> Queda estrictamente prohibida la difusión en redes sociales, publicación o redistribución pública de estas fotografías sin la debida autorización de INGELAB y de las personas involucradas.
+              INGELAB S.A.S. no autoriza la utilización del material para fines ajenos a los informados y no será responsable por usos indebidos realizados por terceros sin su autorización, sin perjuicio de las responsabilidades legales que le correspondan.
+            </p>
+            <p>
+              El titular podrá ejercer sus derechos de acceso, rectificación, eliminación, oposición y revocatoria del consentimiento, conforme a la normativa vigente, mediante solicitud dirigida a: <span class="font-semibold text-slate-800">[CORREO INSTITUCIONAL DE INGELAB]</span>.
             </p>
           </div>
         </div>
 
       </div>
 
-      <!-- Footer con Checkbox de Consentimiento y Botones -->
-      <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200/90 space-y-4">
+      <!-- Footer con Casillas del Formulario y Botones -->
+      <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200/90 space-y-3.5">
         
-        <!-- Checkbox Obligatorio (sin marcar por defecto) -->
-        <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
-          <input type="checkbox" id="privacy-gallery-checkbox" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+        <div class="text-[11px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1 mb-1">
+          <i data-lucide="check-square" class="w-3.5 h-3.5 text-emerald-600"></i>
+          CASILLAS DEL FORMULARIO
+        </div>
+
+        <!-- Casilla 1: Obligatoria -->
+        <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
+          <input type="checkbox" id="privacy-gallery-checkbox-1" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer shrink-0">
           <span class="text-xs sm:text-sm text-slate-700 leading-snug font-medium">
-            He leído el Aviso de Privacidad y acepto las condiciones de confidencialidad y no redistribución de las imágenes.
+            He leído y acepto el aviso de privacidad y las condiciones de uso del material fotográfico.
+          </span>
+        </label>
+
+        <!-- Casilla 2: Consentimiento Voluntario -->
+        <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
+          <input type="checkbox" id="privacy-gallery-checkbox-2" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer shrink-0">
+          <span class="text-xs sm:text-sm text-slate-700 leading-snug font-medium">
+            Autorizo voluntariamente a INGELAB S.A.S. a utilizar y publicar mi imagen y/o voz con fines institucionales, corporativos y promocionales en sus canales oficiales.
           </span>
         </label>
 
         <!-- Botones de Acción -->
-        <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5">
+        <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-2">
           <button type="button" onclick="exitGalleryPrivacy()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
             <span>Salir</span>
@@ -2987,10 +3003,12 @@
 
     function openGalleryPrivacyModal() {
       const modal = document.getElementById('gallery-privacy-modal');
-      const checkbox = document.getElementById('privacy-gallery-checkbox');
+      const cb1 = document.getElementById('privacy-gallery-checkbox-1');
+      const cb2 = document.getElementById('privacy-gallery-checkbox-2');
       const btn = document.getElementById('btn-accept-gallery-privacy');
 
-      if (checkbox) checkbox.checked = false;
+      if (cb1) cb1.checked = false;
+      if (cb2) cb2.checked = false;
       if (btn) {
         btn.disabled = true;
         btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed';
@@ -3012,11 +3030,12 @@
     }
 
     function toggleGalleryPrivacyAcceptBtn() {
-      const checkbox = document.getElementById('privacy-gallery-checkbox');
+      const cb1 = document.getElementById('privacy-gallery-checkbox-1');
       const btn = document.getElementById('btn-accept-gallery-privacy');
-      if (!checkbox || !btn) return;
+      if (!cb1 || !btn) return;
 
-      if (checkbox.checked) {
+      // El botón se habilita al marcar la casilla de aceptación obligatoria del aviso
+      if (cb1.checked) {
         btn.disabled = false;
         btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
       } else {
@@ -3026,10 +3045,12 @@
     }
 
     function acceptGalleryPrivacy() {
-      const checkbox = document.getElementById('privacy-gallery-checkbox');
-      if (!checkbox || !checkbox.checked) return;
+      const cb1 = document.getElementById('privacy-gallery-checkbox-1');
+      const cb2 = document.getElementById('privacy-gallery-checkbox-2');
+      if (!cb1 || !cb1.checked) return;
 
       sessionStorage.setItem('privacy_gallery_accepted_v1', 'true');
+      sessionStorage.setItem('privacy_gallery_authorized_media_v1', cb2 && cb2.checked ? 'true' : 'false');
       closeGalleryPrivacyModal();
       // Renderizar realmente las fotos en el DOM tras la aceptación
       renderCatalogGrid();
