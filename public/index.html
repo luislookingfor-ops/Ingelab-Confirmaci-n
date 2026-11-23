@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" class="scroll-smooth h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>INGELAB â€¢ Ingelab Evolution 2026</title>
+  <title>INGELAB • Ingelab Evolution 2026</title>
   
   <link rel="icon" type="image/png" href="ingelab_evolution_logo.png">
 
-  <!-- Conexiones anticipadas prioritarias (Preconnect & DNS-Prefetch para CDNs crÃ­ticos) -->
+  <!-- Conexiones anticipadas prioritarias (Preconnect & DNS-Prefetch para CDNs críticos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="dns-prefetch" href="https://hfxgmeykdxnoapqdspzn.supabase.co">
 
-  <!-- TipografÃ­a: Space Grotesk & Inter con carga asÃ­ncrona no bloqueante -->
+  <!-- Tipografía: Space Grotesk & Inter con carga asíncrona no bloqueante -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
   <noscript>
@@ -26,7 +26,7 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Lucide Icons CDN (Diferido con ejecuciÃ³n segura en DOMContentLoaded) -->
+  <!-- Lucide Icons CDN (Diferido con ejecución segura en DOMContentLoaded) -->
   <script src="https://unpkg.com/lucide@latest" defer></script>
 
   <!-- Canvas Confetti CDN (Diferido) -->
@@ -78,7 +78,7 @@
 
   <style>
     /* ============================================================ */
-    /* CONFIGURACIÃ“N BASE Y FONDO DE PANTALLA ANIMADO               */
+    /* CONFIGURACIÓN BASE Y FONDO DE PANTALLA ANIMADO               */
     /* ============================================================ */
     html {
       height: 100%;
@@ -125,7 +125,7 @@
       }
     }
 
-    /* Renderizado nÃ­tido de imÃ¡genes sin desenfoque */
+    /* Renderizado nítido de imágenes sin desenfoque */
     .logo-sharp {
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
@@ -207,7 +207,7 @@
   <div class="bg bg3"></div>
 
   <!-- ============================================================ -->
-  <!-- SPLASH SCREEN: INTRO ZOOM-IN NÃTIDO CON LOGO OFICIAL         -->
+  <!-- SPLASH SCREEN: INTRO ZOOM-IN NÍTIDO CON LOGO OFICIAL         -->
   <!-- ============================================================ -->
   <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white transition-all duration-700 pointer-events-auto">
     
@@ -221,12 +221,12 @@
       <div class="flex items-center gap-3 text-xs tracking-ultra font-mono uppercase text-arch-subtle mb-2">
         <span class="w-2.5 h-2.5 rounded-full bg-ingelab-green"></span>
         <span class="font-bold text-slate-800">INGELAB EVOLUTION</span>
-        <span class="text-slate-300">â€¢</span>
+        <span class="text-slate-300">•</span>
         <span class="text-ingelab-navy font-black">13.11.2026</span>
       </div>
 
       <p class="text-xs sm:text-sm text-slate-500 font-mono max-w-md mb-2">
-        Una nueva era de Ingelab estÃ¡ por revelarse. SÃ© parte de nuestra evoluciÃ³n.
+        Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
       </p>
 
       <!-- Barra de progreso acelerada por GPU (evita layout reflow) -->
@@ -237,12 +237,12 @@
     </div>
 
     <button onclick="skipIntro()" class="absolute bottom-8 text-[11px] font-mono tracking-widest text-slate-400 hover:text-arch-black transition-colors z-20">
-      [ SALTAR INTRODUCCIÃ“N ]
+      [ SALTAR INTRODUCCIÓN ]
     </button>
   </div>
 
   <!-- ============================================================ -->
-  <!-- APLICACIÃ“N PRINCIPAL                                         -->
+  <!-- APLICACIÓN PRINCIPAL                                         -->
   <!-- ============================================================ -->
   <div id="app-container" class="flex-1 flex flex-col opacity-0 transition-opacity duration-500">
 
@@ -253,21 +253,21 @@
       <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-20 flex items-center justify-between">
         
         <!-- Logo Ingelab Evolution (de INVITACION.png) Arriba a la Izquierda -->
-        <a href="#" onclick="switchView('catalog'); return false;" class="flex items-center py-1 group" title="Ir al CatÃ¡logo de Fotos">
+        <a href="#" onclick="switchView('catalog'); return false;" class="flex items-center py-1 group" title="Ir al Catálogo de Fotos">
           <img src="ingelab_evolution_logo.png" alt="INGELAB EVOLUTION" width="946" height="437" class="h-8 sm:h-12 w-auto object-contain logo-sharp transition-transform group-hover:scale-[1.02]">
         </a>
 
-        <!-- NavegaciÃ³n: Vista Cliente/PÃºblica vs Administrador -->
+        <!-- Navegación: Vista Cliente/Pública vs Administrador -->
         <div class="flex items-center gap-1.5 sm:gap-3">
           
-          <!-- NAVEGACIÃ“N CLIENTE / PÃšBLICA (FOTOS, CHECK-IN, EVENTO, REGISTRAR y ACCESO ADMIN) -->
+          <!-- NAVEGACIÓN CLIENTE / PÚBLICA (FOTOS, CHECK-IN, EVENTO, REGISTRAR y ACCESO ADMIN) -->
           <div id="public-nav-group" class="flex items-center gap-1.5 sm:gap-2.5">
             <div class="inline-flex p-0.5 sm:p-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 text-[11px] sm:text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-catalog-pub" onclick="switchView('catalog')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="CatÃ¡logo de Fotos Oficiales">
+              <button id="nav-btn-catalog-pub" onclick="switchView('catalog')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Catálogo de Fotos Oficiales">
                 <i data-lucide="images" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
                 <span>FOTOS</span>
               </button>
-              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="AcreditaciÃ³n y Check-in">
+              <button id="nav-btn-checkin-pub" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Acreditación y Check-in">
                 <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
                 <span>CHECK-IN</span>
               </button>
@@ -277,27 +277,27 @@
               </button>
             </div>
 
-            <!-- BotÃ³n Registrar Asistencia (Abre Modal de Registro) -->
+            <!-- Botón Registrar Asistencia (Abre Modal de Registro) -->
             <button onclick="openRegistrationModal()" class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-[11px] sm:text-xs tracking-wider shadow-sm hover:shadow-md transition-all">
               <i data-lucide="user-plus" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
               <span>+ REGISTRAR</span>
             </button>
 
-            <!-- BotÃ³n Acceso Admin -->
+            <!-- Botón Acceso Admin -->
             <button onclick="openLoginModal()" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-arch-black text-[11px] sm:text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition-all shadow-xs">
               <i data-lucide="lock" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-ingelab-navy"></i>
               <span class="hidden sm:inline">ACCESO</span> ADMIN
             </button>
           </div>
 
-          <!-- NAVEGACIÃ“N ADMINISTRADOR (Solo visible tras iniciar sesiÃ³n como Admin) -->
+          <!-- NAVEGACIÓN ADMINISTRADOR (Solo visible tras iniciar sesión como Admin) -->
           <div id="admin-nav-group" class="hidden flex items-center gap-1.5 sm:gap-2.5">
             <div class="inline-flex p-0.5 sm:p-1 rounded-xl sm:rounded-2xl bg-white/95 border border-slate-200/90 text-[11px] sm:text-xs font-semibold font-mono shadow-sm">
-              <button id="nav-btn-catalog-adm" onclick="switchView('catalog')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="CatÃ¡logo de Fotos Oficiales">
+              <button id="nav-btn-catalog-adm" onclick="switchView('catalog')" class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 bg-ingelab-navy text-white shadow-sm font-bold" title="Catálogo de Fotos Oficiales">
                 <i data-lucide="images" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400"></i>
                 <span class="hidden xs:inline">FOTOS</span>
               </button>
-              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="AcreditaciÃ³n y Check-in">
+              <button id="nav-btn-checkin-adm" onclick="switchView('checkin')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 text-arch-subtle hover:text-arch-black" title="Acreditación y Check-in">
                 <i data-lucide="scan-line" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400"></i>
                 <span>CHECK-IN</span>
               </button>
@@ -316,14 +316,14 @@
               </button>
             </div>
 
-            <!-- BotÃ³n Registrar Asistencia (Abre Modal de Registro) -->
+            <!-- Botón Registrar Asistencia (Abre Modal de Registro) -->
             <button onclick="openRegistrationModal()" class="hidden sm:inline-flex items-center gap-1 sm:gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs tracking-wider shadow-sm hover:shadow-md transition-all">
               <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
               <span>+ REGISTRAR</span>
             </button>
 
-            <!-- BotÃ³n Cerrar SesiÃ³n Admin -->
-            <button onclick="logoutAdmin()" title="Cerrar SesiÃ³n de Administrador" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition-colors">
+            <!-- Botón Cerrar Sesión Admin -->
+            <button onclick="logoutAdmin()" title="Cerrar Sesión de Administrador" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100 text-xs font-mono font-bold flex items-center gap-1 sm:gap-1.5 transition-colors">
               <i data-lucide="log-out" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
               <span class="hidden md:inline">SALIR</span>
             </button>
@@ -338,34 +338,34 @@
     </header>
 
     <!-- ============================================================ -->
-    <!-- VISTA CATÃLOGO DE FOTOS: INGELAB EVOLUTION                   -->
+    <!-- VISTA CATÁLOGO DE FOTOS: INGELAB EVOLUTION                   -->
     <!-- ============================================================ -->
     <main id="view-catalog" class="flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 w-full animate-content-in">
       
       <!-- GRID DE FOTOS LIMPIO -->
       <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-        <!-- Renderizado dinÃ¡mico vÃ­a JavaScript -->
+        <!-- Renderizado dinámico vía JavaScript -->
       </div>
 
     </main>
 
     <!-- ============================================================ -->
-    <!-- VISTA FORMULARIO: CONFIRMACIÃ“N DE ASISTENCIA                  -->
+    <!-- VISTA FORMULARIO: CONFIRMACIÓN DE ASISTENCIA                  -->
     <!-- ============================================================ -->
     <main id="view-form" class="flex-1 hidden py-4 sm:py-10 px-3 sm:px-6">
       
       <div class="max-w-3xl mx-auto space-y-4 sm:space-y-8">
         
-        <!-- HERO CARD: AFICHE OFICIAL INVITACION1.PNG Y FICHA TÃ‰CNICA -->
+        <!-- HERO CARD: AFICHE OFICIAL INVITACION1.PNG Y FICHA TÉCNICA -->
         <div class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 shadow-xl overflow-hidden relative">
           
           <!-- Afiche Oficial INVITACION1.png con carga diferida -->
-          <div class="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-white mb-4 sm:mb-8 cursor-pointer group" onclick="openInvitationModal()" title="Haga clic para ver invitaciÃ³n completa">
-            <img src="INVITACION1.png" alt="Ingelab Evolution - InvitaciÃ³n Oficial" width="1122" height="1014" loading="lazy" decoding="async" class="w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]">
+          <div class="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 shadow-md bg-white mb-4 sm:mb-8 cursor-pointer group" onclick="openInvitationModal()" title="Haga clic para ver invitación completa">
+            <img src="INVITACION1.png" alt="Ingelab Evolution - Invitación Oficial" width="1122" height="1014" loading="lazy" decoding="async" class="w-full h-auto object-contain mx-auto transition-transform duration-300 group-hover:scale-[1.01]">
           </div>
 
           <!-- ============================================================ -->
-          <!-- FICHA TÃ‰CNICA DEL EVENTO CON TIPOGRAFÃA DESTACADA Y GRANDE   -->
+          <!-- FICHA TÉCNICA DEL EVENTO CON TIPOGRAFÍA DESTACADA Y GRANDE   -->
           <!-- ============================================================ -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             
@@ -398,7 +398,7 @@
               </div>
               <div>
                 <span class="text-xs font-mono font-bold uppercase tracking-widest text-slate-400 block mb-1">03 / LUGAR</span>
-                <span class="text-base sm:text-lg font-bold text-arch-black block leading-tight">HOTEL HILTON COLÃ“N</span>
+                <span class="text-base sm:text-lg font-bold text-arch-black block leading-tight">HOTEL HILTON COLÓN</span>
                 <span class="text-xs sm:text-sm text-slate-600 font-mono block mt-1">Av. Amazonas N19-14 y Av. Patria</span>
               </div>
             </div>
@@ -406,7 +406,7 @@
           </div>
 
           <!-- ============================================================ -->
-          <!-- RELOJ DE CUENTA REGRESIVA CON NÃšMEROS GRANDES Y VISIBLES     -->
+          <!-- RELOJ DE CUENTA REGRESIVA CON NÚMEROS GRANDES Y VISIBLES     -->
           <!-- ============================================================ -->
           <div class="bg-white/95 rounded-2xl border border-slate-200/90 p-6 shadow-sm text-left">
             <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4 text-xs font-mono">
@@ -414,13 +414,13 @@
                 <i data-lucide="timer" class="w-5 h-5 text-ingelab-green"></i>
                 CUENTA REGRESIVA HASTA LA APERTURA
               </span>
-              <span class="text-ingelab-green font-bold text-sm sm:text-base font-mono">13.11.2026 â€¢ 17:00</span>
+              <span class="text-ingelab-green font-bold text-sm sm:text-base font-mono">13.11.2026 • 17:00</span>
             </div>
 
             <div class="grid grid-cols-4 gap-3 sm:gap-4 text-center" id="countdown-timer">
               <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-200/70">
                 <div id="days" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-arch-black tracking-tight">00</div>
-                <div class="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-slate-500 mt-2">DÃAS</div>
+                <div class="text-xs sm:text-sm font-mono font-bold uppercase tracking-wider text-slate-500 mt-2">DÍAS</div>
               </div>
               <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-200/70">
                 <div id="hours" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-arch-black tracking-tight">00</div>
@@ -446,16 +446,16 @@
             <div class="space-y-2">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                Acceso Exclusivo â€¢ Cupos Limitados
+                Acceso Exclusivo • Cupos Limitados
               </div>
-              <h3 class="text-xl sm:text-2xl font-bold font-display text-white">Â¿AsistirÃ¡s a Ingelab Evolution?</h3>
+              <h3 class="text-xl sm:text-2xl font-bold font-display text-white">¿Asistirás a Ingelab Evolution?</h3>
               <p class="text-xs sm:text-sm text-slate-300 font-sans max-w-lg">
-                Haga clic para completar sus datos y obtener su acreditaciÃ³n digital oficial para el lanzamiento de <strong>Ingelab Evolution</strong>.
+                Haga clic para completar sus datos y obtener su acreditación digital oficial para el lanzamiento de <strong>Ingelab Evolution</strong>.
               </p>
             </div>
             <button onclick="openRegistrationModal()" class="w-full sm:w-auto px-6 py-4 rounded-xl bg-gradient-to-r from-ingelab-green to-emerald-600 hover:from-ingelab-green-dark hover:to-emerald-700 text-white font-mono font-bold text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 shrink-0 flex items-center justify-center gap-2.5">
               <i data-lucide="ticket" class="w-5 h-5"></i>
-              <span>CONFIRMAR ASISTENCIA AQUÃ</span>
+              <span>CONFIRMAR ASISTENCIA AQUÍ</span>
             </button>
           </div>
 
@@ -464,14 +464,14 @@
     </main>
 
     <!-- ============================================================ -->
-    <!-- VISTA Ã‰XITO: PANTALLA COMPLETA DE ASISTENCIA CONFIRMADA      -->
+    <!-- VISTA ÉXITO: PANTALLA COMPLETA DE ASISTENCIA CONFIRMADA      -->
     <!-- ============================================================ -->
     <main id="view-success" class="flex-1 hidden py-8 sm:py-12 px-4 sm:px-6">
       <div class="max-w-2xl mx-auto space-y-6">
         
         <div class="glass-panel border border-white/80 rounded-3xl p-6 sm:p-12 shadow-2xl text-center animate-content-in">
           
-          <!-- Ãcono de VerificaciÃ³n en CÃ­rculo Verde Ingelab -->
+          <!-- Ícono de Verificación en Círculo Verde Ingelab -->
           <div class="w-20 h-20 rounded-full bg-emerald-50 border-2 border-emerald-500/30 text-emerald-600 flex items-center justify-center mx-auto mb-6 shadow-inner">
             <i data-lucide="check" class="w-10 h-10 stroke-[2.5]"></i>
           </div>
@@ -481,14 +481,14 @@
           </span>
 
           <h2 class="text-2xl sm:text-4xl font-bold font-display text-arch-black tracking-tight mb-3">
-            Registro realizado con Ã©xito
+            Registro realizado con éxito
           </h2>
 
           <p class="text-sm sm:text-base text-slate-600 max-w-md mx-auto leading-relaxed mb-8">
-            Una nueva era de Ingelab estÃ¡ por revelarse. SÃ© parte de nuestra evoluciÃ³n.
+            Una nueva era de Ingelab está por revelarse. Sé parte de nuestra evolución.
           </p>
 
-          <!-- Comprobante Digital Oficial con QR (SIN CÃ“DIGO DE ACREDITACIÃ“N) -->
+          <!-- Comprobante Digital Oficial con QR (SIN CÓDIGO DE ACREDITACIÓN) -->
           <div class="bg-white rounded-2xl border border-slate-200/90 p-6 text-left shadow-md space-y-5" id="printable-credential">
             
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -510,15 +510,15 @@
                 <span id="success-display-ci" class="font-bold text-slate-800 text-sm block mt-0.5">-</span>
               </div>
               <div>
-                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Correo ElectrÃ³nico:</span>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Correo Electrónico:</span>
                 <span id="success-display-email" class="text-slate-700 block mt-0.5 truncate">-</span>
               </div>
               <div>
-                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">TelÃ©fono MÃ³vil:</span>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Teléfono Móvil:</span>
                 <span id="success-display-phone" class="text-slate-700 block mt-0.5">-</span>
               </div>
               <div>
-                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">InstituciÃ³n / Laboratorio:</span>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Institución / Laboratorio:</span>
                 <span id="success-display-institution" class="text-slate-700 block mt-0.5 truncate">-</span>
               </div>
               <div>
@@ -531,18 +531,18 @@
               </div>
             </div>
 
-            <!-- Resumen de ConfirmaciÃ³n -->
+            <!-- Resumen de Confirmación -->
             <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-ingelab-green"></span>
                 <span class="font-bold text-slate-700">Asistencia Registrada Oficialmente</span>
               </div>
-              <div class="text-slate-600 font-mono">HOTEL HILTON COLÃ“N â€¢ 13 Nov 2026 â€¢ 17:00</div>
+              <div class="text-slate-600 font-mono">HOTEL HILTON COLÓN • 13 Nov 2026 • 17:00</div>
             </div>
 
           </div>
 
-          <!-- Botones de AcciÃ³n -->
+          <!-- Botones de Acción -->
           <div class="flex flex-col sm:flex-row gap-3 mt-8 no-print">
             <button onclick="window.print()" class="flex-1 py-3.5 px-6 rounded-xl bg-white border border-slate-200 text-arch-black hover:bg-slate-50 font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm">
               <i data-lucide="printer" class="w-4 h-4 text-ingelab-navy"></i>
@@ -550,7 +550,7 @@
             </button>
             <button onclick="resetToNewConfirmation()" class="flex-1 py-3.5 px-6 rounded-xl bg-ingelab-green hover:bg-ingelab-green-dark text-white font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md">
               <i data-lucide="plus-circle" class="w-4 h-4"></i>
-              <span>Registrar Otra ConfirmaciÃ³n</span>
+              <span>Registrar Otra Confirmación</span>
             </button>
           </div>
 
@@ -574,10 +574,10 @@
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
               Control de Acceso
             </div>
-            <h2 class="text-base sm:text-xl font-bold font-display text-arch-black">AcreditaciÃ³n y Check-in en Tiempo Real</h2>
+            <h2 class="text-base sm:text-xl font-bold font-display text-arch-black">Acreditación y Check-in en Tiempo Real</h2>
           </div>
 
-          <!-- MÃ©tricas RÃ¡pidas en Puerta (Solo visibles para el Administrador) -->
+          <!-- Métricas Rápidas en Puerta (Solo visibles para el Administrador) -->
           <div id="checkin-stats-bar" class="hidden items-center gap-2 sm:gap-3 font-mono">
             <div class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white border border-slate-200 text-center shadow-xs">
               <span class="text-[9px] sm:text-[10px] text-slate-500 uppercase block font-bold">En Sala</span>
@@ -596,40 +596,40 @@
 
       </div>
 
-      <!-- Contenido de los Modos: Grilla SimÃ©trica y Responsiva -->
+      <!-- Contenido de los Modos: Grilla Simétrica y Responsiva -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 items-stretch">
         
-        <!-- Columna Izquierda: Input de BÃºsqueda por CÃ©dula (5 cols) -->
+        <!-- Columna Izquierda: Input de Búsqueda por Cédula (5 cols) -->
         <div class="lg:col-span-5 flex flex-col h-full">
           
-          <!-- Contenedor BÃºsqueda Directa (CÃ‰DULA EXCLUSIVA) -->
+          <!-- Contenedor Búsqueda Directa (CÉDULA EXCLUSIVA) -->
           <div id="checkin-panel-manual" class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 shadow-lg flex-1 flex flex-col justify-between lg:min-h-[440px] h-full">
             <div class="space-y-3 flex-1 flex flex-col">
               <div>
                 <label class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                  NÃºmero de CÃ©dula de Identidad:
+                  Número de Cédula de Identidad:
                 </label>
                 <div class="relative">
                   <i data-lucide="id-card" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2"></i>
-                  <input type="tel" id="checkin-manual-input" autofocus inputmode="numeric" maxlength="10" oninput="handleManualInput(this.value)" placeholder="10 dÃ­gitos numÃ©ricos..." class="w-full pl-9 sm:pl-11 pr-8 sm:pr-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border-2 border-emerald-500/40 focus:border-emerald-500 bg-white text-sm sm:text-base font-mono font-bold text-slate-800 placeholder-slate-400 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none transition-all shadow-sm">
+                  <input type="tel" id="checkin-manual-input" autofocus inputmode="numeric" maxlength="10" oninput="handleManualInput(this.value)" placeholder="10 dígitos numéricos..." class="w-full pl-9 sm:pl-11 pr-8 sm:pr-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border-2 border-emerald-500/40 focus:border-emerald-500 bg-white text-sm sm:text-base font-mono font-bold text-slate-800 placeholder-slate-400 focus:ring-4 focus:ring-emerald-500/10 focus:outline-none transition-all shadow-sm">
                   <button onclick="clearManualSearch()" class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
                     <i data-lucide="x" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                   </button>
                 </div>
                 <p class="text-[10px] sm:text-[11px] text-slate-500 font-mono mt-1">
-                  Ingrese exactamente los <strong>10 dÃ­gitos</strong> de su cÃ©dula.
+                  Ingrese exactamente los <strong>10 dígitos</strong> de su cédula.
                 </p>
               </div>
 
-              <!-- Contenedor de Estado de VerificaciÃ³n de CÃ©dula -->
+              <!-- Contenedor de Estado de Verificación de Cédula -->
               <div id="checkin-search-results" class="flex-1 flex flex-col justify-center min-h-[90px] sm:min-h-[110px]">
                 <div class="p-3 sm:p-4 text-center text-xs font-mono text-slate-400">
-                  Ingrese su cÃ©dula para autorizar su ingreso...
+                  Ingrese su cédula para autorizar su ingreso...
                 </div>
               </div>
             </div>
 
-            <!-- Redes Sociales Oficiales INGELAB (Anclado al fondo para simetrÃ­a perfecta) -->
+            <!-- Redes Sociales Oficiales INGELAB (Anclado al fondo para simetría perfecta) -->
             <div class="pt-2.5 sm:pt-3.5 border-t border-slate-200/80 mt-3 sm:mt-5 shrink-0">
               <div class="flex items-center justify-between mb-2 px-0.5">
                 <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
@@ -640,10 +640,10 @@
                 </span>
               </div>
               <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
-                <!-- PÃ¡gina Web Oficial -->
+                <!-- Página Web Oficial -->
                 <a href="https://www.ingelabec.com/" target="_blank" rel="noopener noreferrer"
                    class="group flex flex-col items-center justify-center p-1.5 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500 hover:bg-emerald-50/40 shadow-xs hover:shadow-md transition-all duration-200"
-                   title="PÃ¡gina Web Oficial: ingelabec.com">
+                   title="Página Web Oficial: ingelabec.com">
                   <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-50 group-hover:bg-emerald-600 flex items-center justify-center text-slate-700 group-hover:text-white transition-all shadow-xs">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="12" cy="12" r="10"></circle>
@@ -696,11 +696,11 @@
 
         </div>
 
-        <!-- Columna Derecha: Tarjeta de AcreditaciÃ³n / Resultado de Check-in (7 cols) -->
+        <!-- Columna Derecha: Tarjeta de Acreditación / Resultado de Check-in (7 cols) -->
         <div class="lg:col-span-7 flex flex-col h-full">
           <div id="checkin-card-container" class="glass-panel border border-white/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg flex-1 flex flex-col justify-between relative overflow-hidden lg:min-h-[440px] h-full">
             
-            <!-- Estado VacÃ­o (Esperando CÃ©dula) -->
+            <!-- Estado Vacío (Esperando Cédula) -->
             <div id="checkin-empty-state" class="my-auto text-center py-6 sm:py-8 space-y-2 sm:space-y-3">
               <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-inner">
                 <i data-lucide="id-card" class="w-6 h-6 sm:w-8 sm:h-8"></i>
@@ -708,7 +708,7 @@
               <div>
                 <h3 class="text-base sm:text-lg font-bold font-display text-slate-700">Listo para Check-in</h3>
                 <p class="text-[11px] sm:text-xs text-slate-500 font-mono mt-1 max-w-sm mx-auto">
-                  Ingrese su nÃºmero de cÃ©dula para validar su acreditaciÃ³n e ingresar al evento.
+                  Ingrese su número de cédula para validar su acreditación e ingresar al evento.
                 </p>
               </div>
             </div>
@@ -716,7 +716,7 @@
             <!-- Tarjeta de Asistente Seleccionado (Oculta por defecto) -->
             <div id="checkin-attendee-card" class="hidden space-y-3 sm:space-y-4">
               
-              <!-- Vista Segura para Cliente cuando YA INGRESÃ“ (Protege privacidad) -->
+              <!-- Vista Segura para Cliente cuando YA INGRESÓ (Protege privacidad) -->
               <div id="checkin-already-client-panel" class="hidden p-4 sm:p-5 rounded-2xl bg-amber-50/90 border-2 border-amber-400 text-amber-950 text-center space-y-2.5 shadow-sm animate-content-in">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-500 text-white flex items-center justify-center mx-auto shadow-md">
                   <i data-lucide="shield-alert" class="w-5 h-5 sm:w-6 sm:h-6"></i>
@@ -732,19 +732,19 @@
                   </div>
                 </div>
                 <p class="text-[11px] text-amber-800/90 font-sans max-w-xs mx-auto leading-relaxed">
-                  Por polÃ­ticas de confidencialidad y protecciÃ³n de datos, los detalles personales del asistente no son expuestos en esta pantalla pÃºblica.
+                  Por políticas de confidencialidad y protección de datos, los detalles personales del asistente no son expuestos en esta pantalla pública.
                 </p>
                 <div class="pt-1">
                   <button onclick="resetCheckinSelection()" class="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-colors">
                     <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                    <span>Ingresar Otra CÃ©dula</span>
+                    <span>Ingresar Otra Cédula</span>
                   </button>
                 </div>
               </div>
 
-              <!-- Banner de Alerta / Estado (Solo visible para Admin o ingreso vÃ¡lido) -->
+              <!-- Banner de Alerta / Estado (Solo visible para Admin o ingreso válido) -->
               <div id="checkin-status-banner" class="p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-center gap-3">
-                <!-- DinÃ¡mico: verde o rojo/alerta -->
+                <!-- Dinámico: verde o rojo/alerta -->
               </div>
 
               <!-- Ficha de Datos del Asistente -->
@@ -755,7 +755,7 @@
                   </div>
                   <div class="min-w-0 flex-1">
                     <span id="checkin-badge-type" class="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 inline-block mb-0.5">
-                      INVITADO ESPECIAL â€¢ 1 PASE
+                      INVITADO ESPECIAL • 1 PASE
                     </span>
                     <h3 id="checkin-display-name" class="text-base sm:text-lg font-bold font-display text-arch-black truncate">
                       -
@@ -768,7 +768,7 @@
 
                 <div class="grid grid-cols-2 gap-2 sm:gap-2.5 text-xs font-mono">
                   <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">CÃ©dula:</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">Cédula:</span>
                     <span id="checkin-display-ci" class="font-bold text-slate-800 text-xs sm:text-sm">-</span>
                   </div>
                   <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
@@ -776,7 +776,7 @@
                     <span id="checkin-display-position" class="font-bold text-slate-800 text-xs truncate block">-</span>
                   </div>
                   <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">TelÃ©fono:</span>
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase block font-bold">Teléfono:</span>
                     <span id="checkin-display-phone" class="text-slate-700 text-xs block truncate">-</span>
                   </div>
                   <div class="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-slate-50 border border-slate-100">
@@ -786,21 +786,21 @@
                 </div>
               </div>
 
-              <!-- Botones de AcciÃ³n (Confirmar Ingreso / Forzar / Siguiente) -->
+              <!-- Botones de Acción (Confirmar Ingreso / Forzar / Siguiente) -->
               <div id="checkin-actions-container" class="space-y-2 sm:space-y-2.5 pt-1">
-                <!-- BotÃ³n Grande: Confirmar Ingreso -->
+                <!-- Botón Grande: Confirmar Ingreso -->
                 <button id="btn-confirm-entry" onclick="confirmCheckinAction(false)" class="w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-mono font-bold text-sm sm:text-base tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
                   <i data-lucide="check-circle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                   <span>CONFIRMAR INGRESO</span>
                 </button>
 
-                <!-- BotÃ³n Forzar Reingreso (solo visible para admin si ya ingresÃ³) -->
+                <!-- Botón Forzar Reingreso (solo visible para admin si ya ingresó) -->
                 <button id="btn-force-entry" onclick="confirmCheckinAction(true)" class="hidden w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
                   <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                   <span>PERMITIR REINGRESO / SOBREESCRIBIR</span>
                 </button>
 
-                <!-- BotÃ³n Anular Check-in (solo admin) -->
+                <!-- Botón Anular Check-in (solo admin) -->
                 <button id="btn-undo-checkin" onclick="undoCurrentCheckin()" class="hidden w-full py-2 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
                   <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                   <span>ANULAR CHECK-IN (REVERTIR A NO INGRESADO)</span>
@@ -808,7 +808,7 @@
 
                 <button onclick="resetCheckinSelection()" class="w-full py-2 px-3 rounded-lg sm:rounded-xl border border-slate-200 text-slate-600 hover:text-arch-black hover:bg-slate-50 font-mono text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors">
                   <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                  <span>Cancelar / Ingresar Otra CÃ©dula</span>
+                  <span>Cancelar / Ingresar Otra Cédula</span>
                 </button>
               </div>
 
@@ -822,7 +822,7 @@
 
               <div>
                 <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-emerald-100 text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase inline-block mb-1">
-                  ACCESO AUTORIZADO â€¢ INGELAB EVOLUTION
+                  ACCESO AUTORIZADO • INGELAB EVOLUTION
                 </span>
                 <h2 class="text-xl sm:text-2xl font-bold font-display text-white tracking-tight" id="success-screen-name">
                   -
@@ -843,7 +843,7 @@
                 <div class="text-2xl sm:text-3xl font-mono font-bold text-white tracking-wider my-0.5" id="success-screen-time">
                   16:00:00
                 </div>
-                <span class="text-[10px] font-mono text-emerald-200 block">13 de Noviembre de 2026 â€¢ Hilton ColÃ³n</span>
+                <span class="text-[10px] font-mono text-emerald-200 block">13 de Noviembre de 2026 • Hilton Colón</span>
               </div>
 
               <div class="pt-1">
@@ -871,17 +871,17 @@
         <div class="space-y-1">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-xs font-mono font-bold uppercase tracking-wider">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-            SincronizaciÃ³n en Tiempo Real Activa
+            Sincronización en Tiempo Real Activa
           </div>
           <h2 class="text-2xl sm:text-4xl font-bold font-display text-arch-black tracking-tight">
             Monitor de Asistencia en Sala
           </h2>
           <p class="text-xs sm:text-sm text-slate-500 font-mono">
-            INGELAB EVOLUTION â€¢ QUITO â€¢ HOTEL HILTON COLÃ“N
+            INGELAB EVOLUTION • QUITO • HOTEL HILTON COLÓN
           </p>
         </div>
 
-        <!-- Reloj en Vivo y BotÃ³n Pantalla Completa -->
+        <!-- Reloj en Vivo y Botón Pantalla Completa -->
         <div class="flex items-center gap-4">
           <div class="p-3 sm:p-4 rounded-2xl bg-slate-900 text-white font-mono text-right shadow-md border border-slate-800">
             <span class="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">HORA OFICIAL</span>
@@ -907,10 +907,10 @@
           <span class="text-[11px] text-slate-500 font-mono mt-1 block">Base de invitados</span>
         </div>
 
-        <!-- KPI 2: Confirmados (SÃ­ Asisten) -->
+        <!-- KPI 2: Confirmados (Sí Asisten) -->
         <div class="glass-panel border border-white/80 rounded-3xl p-5 sm:p-6 shadow-lg relative overflow-hidden bg-white">
           <div class="flex items-center justify-between text-xs font-mono text-slate-500 uppercase tracking-wider mb-2 font-bold">
-            <span>Confirmados (SÃ)</span>
+            <span>Confirmados (SÍ)</span>
             <i data-lucide="thumbs-up" class="w-5 h-5 text-blue-500"></i>
           </div>
           <div id="dash-kpi-attending" class="text-3xl sm:text-5xl font-mono font-bold text-blue-600">0</div>
@@ -946,14 +946,14 @@
 
       </div>
 
-      <!-- SECCIÃ“N INFERIOR: GRÃFICA DE FLUJO POR HORA + FEED EN VIVO -->
+      <!-- SECCIÓN INFERIOR: GRÁFICA DE FLUJO POR HORA + FEED EN VIVO -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- GrÃ¡fica de Flujo por Hora (7 cols) -->
+        <!-- Gráfica de Flujo por Hora (7 cols) -->
         <div class="lg:col-span-7 glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
           <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
-              <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-600 font-bold block mb-0.5">DINÃMICA DE ENTRADAS</span>
+              <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-600 font-bold block mb-0.5">DINÁMICA DE ENTRADAS</span>
               <h3 class="text-lg font-bold font-display text-arch-black">Flujo de Ingreso por Hora</h3>
             </div>
             <div class="text-xs font-mono text-slate-400">
@@ -963,17 +963,17 @@
 
           <!-- Contenedor de Barras Horarias -->
           <div id="dash-hourly-chart" class="h-64 flex items-end justify-between gap-2 sm:gap-4 pt-8 pb-4 px-2">
-            <!-- Generado dinÃ¡micamente -->
+            <!-- Generado dinámicamente -->
           </div>
         </div>
 
-        <!-- Feed en Vivo de Ãšltimos Asistentes (5 cols) -->
+        <!-- Feed en Vivo de Últimos Asistentes (5 cols) -->
         <div class="lg:col-span-5 glass-panel border border-white/80 rounded-3xl p-6 sm:p-8 shadow-xl space-y-4 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
               <div>
                 <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-600 font-bold block mb-0.5">FEED EN TIEMPO REAL</span>
-                <h3 class="text-lg font-bold font-display text-arch-black">Ãšltimos en Ingresar</h3>
+                <h3 class="text-lg font-bold font-display text-arch-black">Últimos en Ingresar</h3>
               </div>
               <span class="flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 font-bold">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> EN VIVO
@@ -982,12 +982,12 @@
 
             <!-- Lista scrolleable del feed -->
             <div id="dash-recent-feed" class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
-              <!-- Generado dinÃ¡micamente -->
+              <!-- Generado dinámicamente -->
             </div>
           </div>
 
           <div class="pt-4 border-t border-slate-100 text-center">
-            <span class="text-[11px] font-mono text-slate-400">ActualizaciÃ³n en tiempo real â€¢ Intervalo 4s</span>
+            <span class="text-[11px] font-mono text-slate-400">Actualización en tiempo real • Intervalo 4s</span>
           </div>
         </div>
 
@@ -995,7 +995,7 @@
 
     </main>
 
-    <!-- VISTA PANEL ADMINISTRADOR (GESTIÃ“N CRUD COMPLETA)            -->
+    <!-- VISTA PANEL ADMINISTRADOR (GESTIÓN CRUD COMPLETA)            -->
     <!-- ============================================================ -->
     <main id="view-admin" class="flex-1 hidden max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8 w-full">
       
@@ -1009,12 +1009,12 @@
               <h1 class="text-xl sm:text-2xl font-bold font-display text-arch-black">Base de Datos de Participantes</h1>
             </div>
             <p class="text-xs font-mono text-arch-subtle mt-1">
-              INGELAB EVOLUTION â€¢ GESTIÃ“N DE PARTICIPANTES (CREAR, MODIFICAR, ELIMINAR)
+              INGELAB EVOLUTION • GESTIÓN DE PARTICIPANTES (CREAR, MODIFICAR, ELIMINAR)
             </p>
           </div>
 
           <div class="flex flex-wrap items-center gap-2.5">
-            <!-- BotÃ³n Crear Nuevo Registro -->
+            <!-- Botón Crear Nuevo Registro -->
             <button onclick="openCreateModal()" class="px-4 py-2 bg-ingelab-navy hover:bg-slate-900 text-white rounded-lg text-xs font-mono font-bold tracking-wider flex items-center gap-1.5 transition-all shadow-md">
               <i data-lucide="user-plus" class="w-3.5 h-3.5 text-ingelab-green"></i>
               <span>+ NUEVO REGISTRO</span>
@@ -1044,7 +1044,7 @@
           </div>
         </div>
 
-        <!-- KPIs Resumen de GestiÃ³n -->
+        <!-- KPIs Resumen de Gestión -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 my-8">
           
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
@@ -1053,7 +1053,7 @@
           </div>
 
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-green block">CONFIRMADOS (SÃ)</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-ingelab-green block">CONFIRMADOS (SÍ)</span>
             <span id="kpi-confirmed" class="text-3xl font-mono font-bold text-ingelab-green block mt-1">0</span>
           </div>
 
@@ -1069,7 +1069,7 @@
 
         </div>
 
-        <!-- TABLA ADMINISTRATIVA (SIN COLUMNA DE CÃ“DIGO) -->
+        <!-- TABLA ADMINISTRATIVA (SIN COLUMNA DE CÓDIGO) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
           
           <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -1093,14 +1093,14 @@
               <thead>
                 <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-mono text-[11px] uppercase tracking-wider">
                   <th class="py-4 px-6 font-semibold">ASISTENTE (DOC.)</th>
-                  <th class="py-4 px-6 font-semibold">INFORMACIÃ“N DE CONTACTO</th>
-                  <th class="py-4 px-6 font-semibold">INSTITUCIÃ“N / CARGO</th>
+                  <th class="py-4 px-6 font-semibold">INFORMACIÓN DE CONTACTO</th>
+                  <th class="py-4 px-6 font-semibold">INSTITUCIÓN / CARGO</th>
                   <th class="py-4 px-4 font-semibold text-center">ESTADO</th>
                   <th class="py-4 px-4 font-semibold text-center">ACCIONES</th>
                 </tr>
               </thead>
               <tbody id="attendees-table-body" class="divide-y divide-slate-100 text-slate-700">
-                <!-- Se llena dinÃ¡micamente con JavaScript -->
+                <!-- Se llena dinámicamente con JavaScript -->
               </tbody>
             </table>
           </div>
@@ -1114,7 +1114,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MODAL LIGHTBOX PARA EL CATÃLOGO DE FOTOS                     -->
+  <!-- MODAL LIGHTBOX PARA EL CATÁLOGO DE FOTOS                     -->
   <!-- ============================================================ -->
   <div id="catalog-lightbox-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 select-none" onclick="if(event.target === this) closeCatalogLightbox()">
     
@@ -1128,7 +1128,7 @@
       </button>
     </div>
 
-    <!-- BotÃ³n Anterior -->
+    <!-- Botón Anterior -->
     <button onclick="catalogPrevPhoto()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Anterior">
       <i data-lucide="chevron-left" class="w-6 h-6"></i>
     </button>
@@ -1138,7 +1138,7 @@
       <img id="lightbox-img" src="" alt="Foto Oficial Ingelab Evolution" class="max-h-[85vh] max-w-[88vw] w-auto h-auto object-contain select-none block" oncontextmenu="return false;">
     </div>
 
-    <!-- BotÃ³n Siguiente -->
+    <!-- Botón Siguiente -->
     <button onclick="catalogNextPhoto()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white border border-white/20 shadow-xl transition-all" title="Foto Siguiente">
       <i data-lucide="chevron-right" class="w-6 h-6"></i>
     </button>
@@ -1161,10 +1161,10 @@
           </div>
           <div>
             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-1">
-              LOPDP â€¢ ECUADOR
+              LOPDP • ECUADOR
             </span>
             <h3 class="text-base sm:text-lg font-bold font-mono tracking-tight text-white leading-tight">
-              AVISO DE PRIVACIDAD Y USO DE IMAGEN â€“ INGELAB S.A.S.
+              AVISO DE PRIVACIDAD Y USO DE IMAGEN – INGELAB S.A.S.
             </h3>
           </div>
         </div>
@@ -1174,27 +1174,27 @@
       <div class="p-5 sm:p-6 space-y-4 max-h-[50vh] overflow-y-auto text-slate-600 text-xs sm:text-sm leading-relaxed">
         
         <p class="text-slate-700 font-medium">
-          En cumplimiento de la Ley OrgÃ¡nica de ProtecciÃ³n de Datos Personales del Ecuador, INGELAB S.A.S. informa que las fotografÃ­as y videos captados durante sus eventos podrÃ¡n contener datos personales e imÃ¡genes de personas identificadas o identificables.
+          En cumplimiento de la Ley Orgánica de Protección de Datos Personales del Ecuador, INGELAB S.A.S. informa que las fotografías y videos captados durante sus eventos podrán contener datos personales e imágenes de personas identificadas o identificables.
         </p>
 
         <p class="text-slate-700">
-          Al marcar la casilla de autorizaciÃ³n, usted acepta voluntariamente el tratamiento de su imagen para fines institucionales, corporativos y promocionales, incluyendo su publicaciÃ³n en redes sociales, pÃ¡gina web y medios oficiales de INGELAB S.A.S.
+          Al marcar la casilla de autorización, usted acepta voluntariamente el tratamiento de su imagen para fines institucionales, corporativos y promocionales, incluyendo su publicación en redes sociales, página web y medios oficiales de INGELAB S.A.S.
         </p>
 
         <div class="pt-2 border-t border-slate-100">
           <h4 class="text-xs sm:text-sm font-bold text-slate-800 tracking-wide uppercase mb-2 flex items-center gap-1.5">
             <i data-lucide="file-text" class="w-4 h-4 text-emerald-600"></i>
-            CONDICIONES DE USO Y DIFUSIÃ“N:
+            CONDICIONES DE USO Y DIFUSIÓN:
           </h4>
           <div class="space-y-2.5 text-slate-600 pl-1">
             <p>
-              El material fotogrÃ¡fico compartido es de uso personal y conmemorativo. Queda prohibida su comercializaciÃ³n, manipulaciÃ³n, utilizaciÃ³n con fines ofensivos o perjudiciales, o difusiÃ³n para finalidades no autorizadas, especialmente cuando afecte los derechos, imagen o privacidad de terceros.
+              El material fotográfico compartido es de uso personal y conmemorativo. Queda prohibida su comercialización, manipulación, utilización con fines ofensivos o perjudiciales, o difusión para finalidades no autorizadas, especialmente cuando afecte los derechos, imagen o privacidad de terceros.
             </p>
             <p>
-              INGELAB S.A.S. no autoriza la utilizaciÃ³n del material para fines ajenos a los informados y no serÃ¡ responsable por usos indebidos realizados por terceros sin su autorizaciÃ³n, sin perjuicio de las responsabilidades legales que le correspondan.
+              INGELAB S.A.S. no autoriza la utilización del material para fines ajenos a los informados y no será responsable por usos indebidos realizados por terceros sin su autorización, sin perjuicio de las responsabilidades legales que le correspondan.
             </p>
             <p>
-              El titular podrÃ¡ ejercer sus derechos de acceso, rectificaciÃ³n, eliminaciÃ³n, oposiciÃ³n y revocatoria del consentimiento, conforme a la normativa vigente, mediante solicitud dirigida a: <span class="font-semibold text-slate-800">[CORREO INSTITUCIONAL DE INGELAB]</span>.
+              El titular podrá ejercer sus derechos de acceso, rectificación, eliminación, oposición y revocatoria del consentimiento, conforme a la normativa vigente, mediante solicitud dirigida a: <span class="font-semibold text-slate-800">[CORREO INSTITUCIONAL DE INGELAB]</span>.
             </p>
           </div>
         </div>
@@ -1213,7 +1213,7 @@
         <label class="flex items-start gap-3 p-3 rounded-2xl bg-white border border-slate-200 shadow-xs cursor-pointer select-none hover:border-emerald-500/50 transition-colors">
           <input type="checkbox" id="privacy-gallery-checkbox-1" onchange="toggleGalleryPrivacyAcceptBtn()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer shrink-0">
           <span class="text-xs sm:text-sm text-slate-700 leading-snug font-medium">
-            He leÃ­do y acepto el aviso de privacidad y las condiciones de uso del material fotogrÃ¡fico.
+            He leído y acepto el aviso de privacidad y las condiciones de uso del material fotográfico.
           </span>
         </label>
 
@@ -1225,7 +1225,7 @@
           </span>
         </label>
 
-        <!-- Botones de AcciÃ³n -->
+        <!-- Botones de Acción -->
         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-2">
           <button type="button" onclick="exitGalleryPrivacy()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -1233,7 +1233,7 @@
           </button>
           <button type="button" id="btn-accept-gallery-privacy" disabled onclick="acceptGalleryPrivacy()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
             <i data-lucide="check-circle" class="w-4 h-4"></i>
-            <span>Aceptar y ver galerÃ­a</span>
+            <span>Aceptar y ver galería</span>
           </button>
         </div>
 
@@ -1244,7 +1244,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MODAL DE CONFIRMACIÃ“N / REGISTRO DE ASISTENCIA               -->
+  <!-- MODAL DE CONFIRMACIÓN / REGISTRO DE ASISTENCIA               -->
   <!-- ============================================================ -->
   <div id="registration-modal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto" onclick="if(event.target === this) closeRegistrationModal()">
     <div class="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full p-4 sm:p-8 border border-slate-200/90 shadow-2xl space-y-4 sm:space-y-6 max-h-[92vh] overflow-y-auto my-auto relative animate-content-in">
@@ -1256,8 +1256,8 @@
             <i data-lucide="ticket" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-base sm:text-lg font-bold text-slate-900 font-display">Confirmar Asistencia â€¢ Registro</h3>
-            <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION â€¢ ACREDITACIÃ“N DIGITAL</p>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 font-display">Confirmar Asistencia • Registro</h3>
+            <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION • ACREDITACIÓN DIGITAL</p>
           </div>
         </div>
         <button onclick="closeRegistrationModal()" class="text-slate-400 hover:text-slate-800 p-2 rounded-xl hover:bg-slate-100 transition-all">
@@ -1274,11 +1274,11 @@
           <input type="text" id="website_url_hp" name="website_url_hp" tabindex="-1" autocomplete="off">
         </div>
         
-        <!-- SECCIÃ“N 01: INFORMACIÃ“N DEL ASISTENTE -->
+        <!-- SECCIÓN 01: INFORMACIÓN DEL ASISTENTE -->
         <div>
           <div class="flex items-center gap-2.5 mb-4">
             <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">01</span>
-            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">InformaciÃ³n del Asistente</h4>
+            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información del Asistente</h4>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1288,22 +1288,22 @@
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="fullName">
                 Nombre y Apellidos completos <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
               </label>
-              <input type="text" id="fullName" name="fullName" required placeholder="Ej: Dr. Juan Carlos PÃ©rez" 
+              <input type="text" id="fullName" name="fullName" required placeholder="Ej: Dr. Juan Carlos Pérez" 
                 oninput="this.value = this.value.replace(/[0-9]/g, '')"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
 
-            <!-- CÃ©dula de Identidad (C.I.) (OBLIGATORIO - EXACTAMENTE 10 DÃGITOS) -->
+            <!-- Cédula de Identidad (C.I.) (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="ci">
-                C.I. / Documento de Identidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dÃ­gitos)</span>
+                C.I. / Documento de Identidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
               </label>
-              <input type="text" id="ci" name="ci" required maxlength="10" inputmode="numeric" placeholder="10 dÃ­gitos numÃ©ricos (Ej: 1712345678)" 
+              <input type="text" id="ci" name="ci" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 1712345678)" 
                 oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
             </div>
 
-            <!-- Fecha de Nacimiento (ÃšNICO CAMPO NO OBLIGATORIO - FECHA REAL NO FICTICIA NI LEJANA) -->
+            <!-- Fecha de Nacimiento (ÚNICO CAMPO NO OBLIGATORIO - FECHA REAL NO FICTICIA NI LEJANA) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="birthDate">
                 Fecha de Nacimiento <span class="text-slate-400 font-normal lowercase">(opcional - fecha real)</span>
@@ -1312,21 +1312,21 @@
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono text-slate-700">
             </div>
 
-            <!-- Correo ElectrÃ³nico (OBLIGATORIO) -->
+            <!-- Correo Electrónico (OBLIGATORIO) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="email">
-                Correo ElectrÃ³nico <span class="text-rose-500 font-bold">*</span>
+                Correo Electrónico <span class="text-rose-500 font-bold">*</span>
               </label>
               <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com" 
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
 
-            <!-- TelÃ©fono / WhatsApp (OBLIGATORIO - EXACTAMENTE 10 DÃGITOS) -->
+            <!-- Teléfono / WhatsApp (OBLIGATORIO - EXACTAMENTE 10 DÍGITOS) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="phone">
-                TelÃ©fono MÃ³vil / WhatsApp <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dÃ­gitos)</span>
+                Teléfono Móvil / WhatsApp <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(10 dígitos)</span>
               </label>
-              <input type="tel" id="phone" name="phone" required maxlength="10" inputmode="numeric" placeholder="10 dÃ­gitos numÃ©ricos (Ej: 0991234567)" 
+              <input type="tel" id="phone" name="phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos (Ej: 0991234567)" 
                 oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm font-mono">
             </div>
@@ -1334,21 +1334,21 @@
           </div>
         </div>
 
-        <!-- SECCIÃ“N 02: INFORMACIÃ“N PROFESIONAL (OBLIGATORIA - SOLO TEXTO) -->
+        <!-- SECCIÓN 02: INFORMACIÓN PROFESIONAL (OBLIGATORIA - SOLO TEXTO) -->
         <div class="pt-5 border-t border-slate-200/80">
           <div class="flex items-center gap-2.5 mb-4">
             <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">02</span>
-            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">InformaciÃ³n Profesional</h4>
+            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Información Profesional</h4>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
-            <!-- InstituciÃ³n / Laboratorio (OBLIGATORIO - SOLO TEXTO) -->
+            <!-- Institución / Laboratorio (OBLIGATORIO - SOLO TEXTO) -->
             <div>
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="institution">
-                InstituciÃ³n o Laboratorio ClÃ­nico <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
+                Institución o Laboratorio Clínico <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
               </label>
-              <input type="text" id="institution" name="institution" required placeholder="Ej: Hospital Metropolitano / Lab. ClÃ­nico" 
+              <input type="text" id="institution" name="institution" required placeholder="Ej: Hospital Metropolitano / Lab. Clínico" 
                 oninput="this.value = this.value.replace(/[0-9]/g, '')"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
@@ -1358,7 +1358,7 @@
               <label class="block text-xs font-mono uppercase tracking-wider text-arch-subtle mb-1.5" for="position">
                 Cargo o Especialidad <span class="text-rose-500 font-bold">*</span> <span class="text-slate-400 font-normal lowercase">(solo texto)</span>
               </label>
-              <input type="text" id="position" name="position" required placeholder="Ej: Director TÃ©cnico / BioquÃ­mico" 
+              <input type="text" id="position" name="position" required placeholder="Ej: Director Técnico / Bioquímico" 
                 oninput="this.value = this.value.replace(/[0-9]/g, '')"
                 class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ingelab-green focus:border-transparent transition-all shadow-sm">
             </div>
@@ -1366,11 +1366,11 @@
           </div>
         </div>
 
-        <!-- SECCIÃ“N 03: CONFIRMACIÃ“N DE ASISTENCIA (OBLIGATORIA) -->
+        <!-- SECCIÓN 03: CONFIRMACIÓN DE ASISTENCIA (OBLIGATORIA) -->
         <div class="pt-5 border-t border-slate-200/80">
           <div class="flex items-center gap-2.5 mb-4">
             <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-ingelab-navy text-white">03</span>
-            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">ConfirmaciÃ³n de Asistencia <span class="text-rose-500 font-bold">*</span></h4>
+            <h4 class="text-xs font-mono uppercase tracking-wider font-bold text-arch-black">Confirmación de Asistencia <span class="text-rose-500 font-bold">*</span></h4>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1379,22 +1379,22 @@
               <input type="radio" name="attending" value="yes" checked class="w-4 h-4 text-ingelab-green focus:ring-ingelab-green border-slate-300">
               <div class="ml-3">
                 <span class="block text-sm font-bold text-arch-black">Confirmo mi Asistencia</span>
-                <span class="block text-xs text-arch-subtle">AcreditaciÃ³n personal confirmada</span>
+                <span class="block text-xs text-arch-subtle">Acreditación personal confirmada</span>
               </div>
             </label>
 
             <label class="relative flex items-center p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-slate-400 bg-white has-[:checked]:border-slate-400 has-[:checked]:bg-slate-100 shadow-sm">
               <input type="radio" name="attending" value="no" class="w-4 h-4 text-slate-600 focus:ring-slate-500 border-slate-300">
               <div class="ml-3">
-                <span class="block text-sm font-bold text-arch-black">No podrÃ© asistir</span>
-                <span class="block text-xs text-arch-subtle">NotificaciÃ³n al comitÃ© de INGELAB</span>
+                <span class="block text-sm font-bold text-arch-black">No podré asistir</span>
+                <span class="block text-xs text-arch-subtle">Notificación al comité de INGELAB</span>
               </div>
             </label>
 
           </div>
         </div>
 
-        <!-- BOTÃ“N DE ENVÃO -->
+        <!-- BOTÓN DE ENVÍO -->
         <div class="pt-2">
           <button type="submit" id="submit-btn" 
             class="w-full py-4 px-8 rounded-xl bg-gradient-to-r from-ingelab-green to-ingelab-green-dark hover:from-ingelab-green-dark hover:to-ingelab-navy text-white font-mono font-bold text-xs uppercase tracking-ultra transition-all shadow-lg shadow-ingelab-green/20 flex items-center justify-center gap-3">
@@ -1404,7 +1404,7 @@
 
           <div class="flex items-center justify-center gap-2 text-[11px] font-mono text-arch-subtle mt-4">
             <i data-lucide="shield" class="w-3.5 h-3.5 text-ingelab-green"></i>
-            <span>REGISTRO OFICIAL Y ENCRIPTADO â€¢ SISTEMA DE ASISTENCIA INGELAB</span>
+            <span>REGISTRO OFICIAL Y ENCRIPTADO • SISTEMA DE ASISTENCIA INGELAB</span>
           </div>
         </div>
 
@@ -1414,14 +1414,14 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MODAL VER INVITACIÃ“N OFICIAL                                 -->
+  <!-- MODAL VER INVITACIÓN OFICIAL                                 -->
   <!-- ============================================================ -->
   <div id="invitation-modal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 border border-slate-200 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
-          <h3 class="text-base font-bold text-slate-900 font-display">InvitaciÃ³n Oficial</h3>
-          <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION â€¢ 13 NOVIEMBRE 2026</p>
+          <h3 class="text-base font-bold text-slate-900 font-display">Invitación Oficial</h3>
+          <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION • 13 NOVIEMBRE 2026</p>
         </div>
         <button onclick="closeInvitationModal()" class="text-slate-400 hover:text-slate-800 p-1.5 rounded-lg hover:bg-slate-100">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -1429,7 +1429,7 @@
       </div>
 
       <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-50">
-        <img src="INVITACION.png" alt="InvitaciÃ³n Oficial Ingelab Evolution" width="1122" height="1402" loading="lazy" decoding="async" class="w-full h-auto object-contain">
+        <img src="INVITACION.png" alt="Invitación Oficial Ingelab Evolution" width="1122" height="1402" loading="lazy" decoding="async" class="w-full h-auto object-contain">
       </div>
 
       <div class="pt-1">
@@ -1470,27 +1470,27 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">C.I. / Documento *</label>
-            <input type="text" id="create-ci" required maxlength="10" inputmode="numeric" placeholder="10 dÃ­gitos numÃ©ricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="create-ci" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">TelÃ©fono MÃ³vil *</label>
-            <input type="tel" id="create-phone" required maxlength="10" inputmode="numeric" placeholder="10 dÃ­gitos numÃ©ricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
+            <input type="tel" id="create-phone" required maxlength="10" inputmode="numeric" placeholder="10 dígitos numéricos" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Correo ElectrÃ³nico *</label>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
           <input type="email" id="create-email" required placeholder="correo@institucional.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">InstituciÃ³n / Empresa *</label>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa *</label>
             <input type="text" id="create-institution" required placeholder="Hospital / Laboratorio" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
             <label class="block font-bold text-slate-700 uppercase mb-1">Cargo / Especialidad *</label>
-            <input type="text" id="create-position" required placeholder="BioquÃ­mico / Director" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
+            <input type="text" id="create-position" required placeholder="Bioquímico / Director" oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
@@ -1538,7 +1538,7 @@
           </div>
           <div>
             <h3 class="text-base font-bold text-slate-900 font-display">Modificar Asistente</h3>
-            <p class="text-[11px] text-slate-500 font-mono">EDICIÃ“N DE DATOS EN BASE DE DATOS</p>
+            <p class="text-[11px] text-slate-500 font-mono">EDICIÓN DE DATOS EN BASE DE DATOS</p>
           </div>
         </div>
         <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100">
@@ -1560,19 +1560,19 @@
             <input type="text" id="edit-ci" required maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">TelÃ©fono MÃ³vil *</label>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Teléfono Móvil *</label>
             <input type="tel" id="edit-phone" required maxlength="10" inputmode="numeric" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Correo ElectrÃ³nico *</label>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
           <input type="email" id="edit-email" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 uppercase mb-1">InstituciÃ³n / Empresa *</label>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Institución / Empresa *</label>
             <input type="text" id="edit-institution" required oninput="this.value = this.value.replace(/[0-9]/g, '')" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-ingelab-green text-xs font-mono">
           </div>
           <div>
@@ -1625,7 +1625,7 @@
           </div>
           <div>
             <h3 class="text-base font-bold text-slate-900 font-display">Acceso Administrativo</h3>
-            <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION â€¢ GESTIÃ“N</p>
+            <p class="text-[11px] text-slate-500 font-mono">INGELAB EVOLUTION • GESTIÓN</p>
           </div>
         </div>
         <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-800 p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
@@ -1636,7 +1636,7 @@
       <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs font-mono">
         
         <div id="login-error-msg" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-sans">
-          Credenciales incorrectas. Verifique el usuario y la contraseÃ±a.
+          Credenciales incorrectas. Verifique el usuario y la contraseña.
         </div>
 
         <div>
@@ -1649,10 +1649,10 @@
 
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1.5" for="admin-password">
-            ContraseÃ±a
+            Contraseña
           </label>
           <div class="relative">
-            <input type="password" id="admin-password" required placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" autocomplete="current-password"
+            <input type="password" id="admin-password" required placeholder="••••••••••••" autocomplete="current-password"
               class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-ingelab-green pr-10">
             <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
               <i data-lucide="eye" id="pwd-eye-icon" class="w-4 h-4"></i>
@@ -1676,7 +1676,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MODAL CONEXIÃ“N SUPABASE                                      -->
+  <!-- MODAL CONEXIÓN SUPABASE                                      -->
   <!-- ============================================================ -->
   <div id="supabase-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-8 border border-slate-200 shadow-2xl space-y-6">
@@ -1685,7 +1685,7 @@
           <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-sm">S</div>
           <div>
             <h3 class="text-base font-bold text-slate-900 font-display">Conectar Base de Datos Supabase</h3>
-            <p class="text-xs text-slate-500 font-mono">SINCRONIZACIÃ“N EN TIEMPO REAL EN LA NUBE</p>
+            <p class="text-xs text-slate-500 font-mono">SINCRONIZACIÓN EN TIEMPO REAL EN LA NUBE</p>
           </div>
         </div>
         <button onclick="closeSupabaseModal()" class="text-slate-400 hover:text-slate-800 p-1">
@@ -1705,7 +1705,7 @@
         </div>
 
         <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-100 text-[11px] text-emerald-800 space-y-1 font-sans">
-          <span class="font-bold block">ConexiÃ³n activa:</span>
+          <span class="font-bold block">Conexión activa:</span>
           <span>Las confirmaciones de asistencia se guardan directamente en tiempo real en la base de datos PostgreSQL de Supabase.</span>
         </div>
       </div>
@@ -1721,7 +1721,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: LÃ“GICA COMPLETA, XLSX NATIVO Y GESTIÃ“N CRUD -->
+  <!-- JAVASCRIPT: LÓGICA COMPLETA, XLSX NATIVO Y GESTIÓN CRUD -->
   <script>
     if (typeof lucide !== 'undefined' && lucide.createIcons) {
       lucide.createIcons();
@@ -1844,7 +1844,7 @@
           await fetchAttendeeFromApiByCi(parsed.ci);
         } else {
           playSound('duplicate');
-          alert(`CÃ³digo QR leÃ­do: "${text}". No se encontrÃ³ ningÃºn asistente registrado con esos datos.`);
+          alert(`Código QR leído: "${text}". No se encontró ningún asistente registrado con esos datos.`);
         }
       }
     }
@@ -1864,7 +1864,7 @@
           }
         }
         playSound('duplicate');
-        alert(`No se encontrÃ³ ningÃºn registro para la CÃ©dula: ${ci}`);
+        alert(`No se encontró ningún registro para la Cédula: ${ci}`);
       } catch (e) {
         alert('Error al consultar datos del asistente: ' + e.message);
       }
@@ -1873,7 +1873,7 @@
     let checkinAutoResetTimer = null;
 
     function handleManualInput(val) {
-      // 1. Limpieza estricta: solo dÃ­gitos numÃ©ricos, mÃ¡ximo 10 dÃ­gitos de cÃ©dula
+      // 1. Limpieza estricta: solo dígitos numéricos, máximo 10 dígitos de cédula
       const cleanDigits = (val || '').replace(/\D/g, '').slice(0, 10);
       const inputEl = document.getElementById('checkin-manual-input');
       if (inputEl && inputEl.value !== cleanDigits) {
@@ -1890,7 +1890,7 @@
       const card = document.getElementById('checkin-attendee-card');
       const successScreen = document.getElementById('checkin-success-screen');
 
-      // Mientras tenga menos de 10 dÃ­gitos:
+      // Mientras tenga menos de 10 dígitos:
       if (cleanDigits.length < 10) {
         if (card) card.classList.add('hidden');
         if (successScreen) successScreen.classList.add('hidden');
@@ -1900,14 +1900,14 @@
           if (cleanDigits.length === 0) {
             container.innerHTML = `
               <div class="p-3 sm:p-4 text-center text-xs font-mono text-slate-400">
-                Ingrese su cÃ©dula para autorizar su ingreso...
+                Ingrese su cédula para autorizar su ingreso...
               </div>
             `;
           } else {
             container.innerHTML = `
               <div class="p-2.5 sm:p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-center space-y-1.5 animate-content-in">
                 <div class="flex items-center justify-between text-xs font-mono">
-                  <span class="text-slate-500 font-bold">CÃ©dula:</span>
+                  <span class="text-slate-500 font-bold">Cédula:</span>
                   <span class="font-bold text-emerald-700 tracking-wider font-mono text-sm">${cleanDigits}</span>
                   <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold font-mono">
                     ${cleanDigits.length} / 10
@@ -1917,7 +1917,7 @@
                   <div class="bg-emerald-500 h-full transition-all duration-200" style="width: ${(cleanDigits.length / 10) * 100}%"></div>
                 </div>
                 <p class="text-[10px] sm:text-[11px] font-mono text-slate-400">
-                  ${10 - cleanDigits.length === 1 ? 'Falta 1 dÃ­gito numÃ©rico...' : `Faltan ${10 - cleanDigits.length} dÃ­gitos numÃ©ricos...`}
+                  ${10 - cleanDigits.length === 1 ? 'Falta 1 dígito numérico...' : `Faltan ${10 - cleanDigits.length} dígitos numéricos...`}
                 </p>
               </div>
             `;
@@ -1927,7 +1927,7 @@
         return;
       }
 
-      // Exactamente 10 dÃ­gitos: bÃºsqueda atÃ³mica por C.I.
+      // Exactamente 10 dígitos: búsqueda atómica por C.I.
       if (cleanDigits.length === 10) {
         const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
         const match = allAttendeesCache.find(a => (a.ci || '').trim() === cleanDigits && !isRecordDeleted(a));
@@ -1941,12 +1941,12 @@
           return;
         }
 
-        // Si no estÃ¡ en cachÃ© local, consultar al servidor por sincronizaciÃ³n entre dispositivos
+        // Si no está en caché local, consultar al servidor por sincronización entre dispositivos
         if (container) {
           container.innerHTML = `
             <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center flex items-center justify-center gap-2 text-xs font-mono text-slate-500 animate-content-in">
               <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-600"></i>
-              <span>Verificando cÃ©dula en el sistema...</span>
+              <span>Verificando cédula en el sistema...</span>
             </div>
           `;
           lucide.createIcons();
@@ -1982,7 +1982,7 @@
         container.innerHTML = `
           <div class="p-2 sm:p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-center space-y-0.5 animate-content-in">
             <span class="text-xs font-mono font-bold text-emerald-800 flex items-center justify-center gap-1.5">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> CÃ©dula Encontrada
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> Cédula Encontrada
             </span>
             <span class="text-[10px] font-mono text-emerald-700 block">Pase verificado en el sistema</span>
           </div>
@@ -2007,13 +2007,13 @@
         container.innerHTML = `
           <div class="p-3 rounded-xl bg-rose-50 border border-rose-300 text-center space-y-1 animate-content-in">
             <span class="text-xs font-mono font-bold text-rose-800 flex items-center justify-center gap-1.5">
-              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i> CÃ©dula No Encontrada
+              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i> Cédula No Encontrada
             </span>
             <p class="text-[11px] font-mono text-rose-700">
-              No se encontrÃ³ ningÃºn registro para <strong>${escapeHtml(digits)}</strong>.
+              No se encontró ningún registro para <strong>${escapeHtml(digits)}</strong>.
             </p>
             <p class="text-[10px] font-mono text-slate-500">
-              Verifique los nÃºmeros o acÃ©rquese a la mesa de soporte.
+              Verifique los números o acérquese a la mesa de soporte.
             </p>
           </div>
         `;
@@ -2052,12 +2052,12 @@
 
       const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
 
-      // 1. CASO ASISTENTE YA INGRESÃ“ (CHECK-IN PREVIO)
+      // 1. CASO ASISTENTE YA INGRESÓ (CHECK-IN PREVIO)
       if (attendee.checked_in) {
         if (!isAdmin) {
-          // EXCLUSIVAMENTE SI YA SE REGISTRÃ“ EN EL CHECK-IN:
-          // Para el cliente/participante sale como NO ENCONTRADO, sin revelar que ya estÃ¡ registrado
-          // para garantizar que no haya duplicados ni filtraciÃ³n de informaciÃ³n.
+          // EXCLUSIVAMENTE SI YA SE REGISTRÓ EN EL CHECK-IN:
+          // Para el cliente/participante sale como NO ENCONTRADO, sin revelar que ya está registrado
+          // para garantizar que no haya duplicados ni filtración de información.
           renderNotFound(attendee.ci || '');
           return;
         }
@@ -2067,7 +2067,7 @@
 
         const entryTime = attendee.checked_in_at ? new Date(attendee.checked_in_at).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }) : 'Hora previa';
 
-        // MODO ADMINISTRADOR: El admin sÃ­ puede ver detalles completos y opciones de forzar/anular
+        // MODO ADMINISTRADOR: El admin sí puede ver detalles completos y opciones de forzar/anular
         if (emptyState) emptyState.classList.add('hidden');
         if (successScreen) successScreen.classList.add('hidden');
         if (card) card.classList.remove('hidden');
@@ -2082,7 +2082,7 @@
             <i data-lucide="alert-triangle" class="w-5 h-5"></i>
           </div>
           <div>
-            <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">âš ï¸ ASISTENTE YA INGRESÃ“</span>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider block text-rose-700">⚠️ ASISTENTE YA INGRESÓ</span>
             <span class="text-xs font-bold font-mono">Hora de ingreso: ${entryTime}</span>
           </div>
         `;
@@ -2094,7 +2094,7 @@
         if (btnUndo) btnUndo.classList.remove('hidden');
         return;
       } else {
-        // 2. CASO ASISTENTE PENDIENTE DE INGRESO (VÃLIDO PARA AUTORIZAR)
+        // 2. CASO ASISTENTE PENDIENTE DE INGRESO (VÁLIDO PARA AUTORIZAR)
         playSound('success');
         if (emptyState) emptyState.classList.add('hidden');
         if (successScreen) successScreen.classList.add('hidden');
@@ -2111,7 +2111,7 @@
           </div>
           <div>
             <span class="text-xs font-mono font-bold uppercase tracking-wider block text-emerald-700">ASISTENTE PRE-REGISTRADO</span>
-            <span class="text-xs font-bold">Pase vÃ¡lido â€¢ Listo para autorizar ingreso</span>
+            <span class="text-xs font-bold">Pase válido • Listo para autorizar ingreso</span>
           </div>
         `;
 
@@ -2143,7 +2143,7 @@
       if (ciEl) ciEl.textContent = attendee.ci || 'No registrada';
       if (posEl) posEl.textContent = (attendee.position && attendee.position !== 'Particular') ? attendee.position : (attendee.position || 'Profesional');
       
-      // Ofuscar telÃ©fono en pantalla pÃºblica si no es admin, o mostrar "No registrado" si no se ingresÃ³
+      // Ofuscar teléfono en pantalla pública si no es admin, o mostrar "No registrado" si no se ingresó
       const isAdmin = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
       if (phoneEl) {
         if (!attendee.phone || attendee.phone === '0000000000') {
@@ -2212,14 +2212,14 @@
             return;
           }
           selectAttendeeForCheckin(attendee);
-          showToast(data.message || 'El asistente ya habÃ­a ingresado previamente');
+          showToast(data.message || 'El asistente ya había ingresado previamente');
           return;
         } else {
-          // Si el servidor devolviÃ³ otra respuesta, activar confirmaciÃ³n local para no trabar la puerta
+          // Si el servidor devolvió otra respuesta, activar confirmación local para no trabar la puerta
           success = true;
         }
       } catch (err) {
-        console.warn('ConexiÃ³n con servidor lenta o interrumpida, aplicando check-in local garantizado:', err);
+        console.warn('Conexión con servidor lenta o interrumpida, aplicando check-in local garantizado:', err);
         success = true;
       } finally {
         // Garantizar que NUNCA se quede en estado PROCESANDO
@@ -2239,7 +2239,7 @@
         attendee.checked_in = true;
         attendee.checked_in_at = checkinTimestamp;
 
-        // Actualizar en cachÃ© y almacenamiento local
+        // Actualizar en caché y almacenamiento local
         const idx = allAttendeesCache.findIndex(a => 
           (a.id && attendee.id && String(a.id) === String(attendee.id)) ||
           (a.ci && attendee.ci && a.ci.trim() === attendee.ci.trim())
@@ -2264,7 +2264,7 @@
           const elTime = document.getElementById('success-screen-time');
 
           if (elName) elName.textContent = attendee.full_name || 'Asistente';
-          if (elInst) elInst.textContent = (attendee.institution || 'Particular') + ' â€¢ ' + (attendee.position || 'Profesional');
+          if (elInst) elInst.textContent = (attendee.institution || 'Particular') + ' • ' + (attendee.position || 'Profesional');
           if (elCi) elCi.textContent = attendee.ci || 'N/A';
           const exactTime = new Date(checkinTimestamp).toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           if (elTime) elTime.textContent = exactTime;
@@ -2325,7 +2325,7 @@
       if (container) {
         container.innerHTML = `
           <div class="p-3 sm:p-4 text-center text-xs font-mono text-slate-400">
-            Ingrese su cÃ©dula para autorizar su ingreso...
+            Ingrese su cédula para autorizar su ingreso...
           </div>
         `;
       }
@@ -2336,7 +2336,7 @@
       const clean = deduplicateAttendees(allAttendeesCache.filter(a => !isRecordDeleted(a)));
       const totalRegistered = clean.length;
       const checked = clean.filter(a => a.checked_in).length;
-      // El aforo total se ajusta dinÃ¡micamente segÃºn la cantidad de registrados
+      // El aforo total se ajusta dinámicamente según la cantidad de registrados
       const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
       const pct = dynamicCapacity > 0 ? Math.round((checked / dynamicCapacity) * 100) : 0;
 
@@ -2394,7 +2394,7 @@
       const elBar = document.getElementById('dash-progress-bar');
 
       const checked = stats.totalCheckedIn || 0;
-      // Capacidad dinÃ¡mica de aforo adaptada a los registrados
+      // Capacidad dinámica de aforo adaptada a los registrados
       const totalRegistered = stats.totalRegistered || (allAttendeesCache || []).length || 0;
       const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
       const ratePct = dynamicCapacity > 0 ? Math.round((checked / dynamicCapacity) * 100) : 0;
@@ -2413,7 +2413,7 @@
     function renderDashboardLocalFallback() {
       const clean = deduplicateAttendees(allAttendeesCache.filter(a => !isRecordDeleted(a)));
       const totalRegistered = clean.length;
-      // Capacidad dinÃ¡mica ajustada a registrados
+      // Capacidad dinámica ajustada a registrados
       const dynamicCapacity = totalRegistered > 0 ? totalRegistered : 0;
       const totalAttending = clean.filter(a => a.attending === 'yes').length;
       const checkedInList = clean.filter(a => a.checked_in);
@@ -2488,7 +2488,7 @@
       if (!recentEntries || recentEntries.length === 0) {
         container.innerHTML = `
           <div class="p-8 text-center text-xs font-mono text-slate-400">
-            AÃºn no hay ingresos registrados en sala.
+            Aún no hay ingresos registrados en sala.
           </div>
         `;
         return;
@@ -2529,7 +2529,7 @@
     }
 
     // ============================================================
-    // 1. CONFIGURACIÃ“N Y CLIENTE DE SUPABASE
+    // 1. CONFIGURACIÓN Y CLIENTE DE SUPABASE
     // ============================================================
     const DEFAULT_SUPABASE_URL = 'https://hfxgmeykdxnoapqdspzn.supabase.co';
     const DEFAULT_SUPABASE_KEY = 'sb_publishable_cx0IDgIzs4N6hIbhcklc2A_SEh2yPrQ';
@@ -2582,7 +2582,7 @@
     }
 
     // ============================================================
-    // 2. MODAL INVITACIÃ“N OFICIAL
+    // 2. MODAL INVITACIÓN OFICIAL
     // ============================================================
     function openInvitationModal() {
       document.getElementById('invitation-modal').classList.remove('hidden');
@@ -2594,7 +2594,7 @@
     }
 
     // ============================================================
-    // 3. AUTENTICACIÃ“N Y ROLES: PÃšBLICO VS ADMINISTRADOR
+    // 3. AUTENTICACIÓN Y ROLES: PÚBLICO VS ADMINISTRADOR
     // ============================================================
     const ADMIN_USER = 'pasante@ingelabcorp.com';
     const ADMIN_PASS = 'Jco13855182';
@@ -2634,7 +2634,7 @@
         closeLoginModal();
         updateAuthUi();
         switchView('admin');
-        showToast('Bienvenido al Panel de AdministraciÃ³n');
+        showToast('Bienvenido al Panel de Administración');
       } else {
         errorBox.classList.remove('hidden');
       }
@@ -2644,7 +2644,7 @@
       sessionStorage.removeItem('ingelab_admin_logged_in');
       updateAuthUi();
       switchView('catalog');
-      showToast('SesiÃ³n de administrador cerrada');
+      showToast('Sesión de administrador cerrada');
     }
 
     function updateAuthUi() {
@@ -2653,7 +2653,7 @@
       const publicNavGroup = document.getElementById('public-nav-group');
       const statsBar = document.getElementById('checkin-stats-bar');
 
-      // Solo el Administrador puede ver las mÃ©tricas de En Sala / Aforo
+      // Solo el Administrador puede ver las métricas de En Sala / Aforo
       if (statsBar) {
         if (isLoggedIn) {
           statsBar.classList.remove('hidden');
@@ -2672,7 +2672,7 @@
         if (publicNavGroup) publicNavGroup.classList.remove('hidden');
         const adminView = document.getElementById('view-admin');
         const dashboardView = document.getElementById('view-dashboard');
-        // Si no estÃ¡ logueado y estaba en una vista protegida, volver a checkin
+        // Si no está logueado y estaba en una vista protegida, volver a checkin
         if ((adminView && !adminView.classList.contains('hidden')) || (dashboardView && !dashboardView.classList.contains('hidden'))) {
           switchView('checkin');
         }
@@ -2708,14 +2708,14 @@
       const adminView = document.getElementById('view-admin');
       const checkinSuccessScreen = document.getElementById('checkin-success-screen');
 
-      // ProtecciÃ³n estricta: Dashboard y Base de Datos son exclusivos para Administradores
+      // Protección estricta: Dashboard y Base de Datos son exclusivos para Administradores
       const isLoggedIn = sessionStorage.getItem('ingelab_admin_logged_in') === 'true';
       if ((view === 'dashboard' || view === 'admin') && !isLoggedIn) {
         openLoginModal();
         return;
       }
 
-      // Ocultar todas las vistas principales y pantallas de Ã©xito
+      // Ocultar todas las vistas principales y pantallas de éxito
       if (catalogView) catalogView.classList.add('hidden');
       if (landingView) landingView.classList.add('hidden');
       if (successView) successView.classList.add('hidden');
@@ -2724,7 +2724,7 @@
       if (adminView) adminView.classList.add('hidden');
       if (checkinSuccessScreen) checkinSuccessScreen.classList.add('hidden');
 
-      // Actualizar estado visual de los botones de navegaciÃ³n en ambos grupos
+      // Actualizar estado visual de los botones de navegación en ambos grupos
       const navButtons = [
         { ids: ['nav-btn-catalog-pub', 'nav-btn-catalog-adm'], active: view === 'catalog' },
         { ids: ['nav-btn-checkin-pub', 'nav-btn-checkin-adm'], active: view === 'checkin' },
@@ -2763,7 +2763,7 @@
         initDashboardView();
       } else if (view === 'admin') {
         if (adminView) adminView.classList.remove('hidden');
-        resetCheckinSelection(); // Limpiar y garantizar que nunca se muestre la confirmaciÃ³n del Ãºltimo ingresado en admin
+        resetCheckinSelection(); // Limpiar y garantizar que nunca se muestre la confirmación del último ingresado en admin
         loadAdminData();
       } else if (view === 'success') {
         if (successView) successView.classList.remove('hidden');
@@ -2783,7 +2783,7 @@
     }
 
     // ============================================================
-    // CATÃLOGO FOTOGRÃFICO OFICIAL
+    // CATÁLOGO FOTOGRÁFICO OFICIAL
     // ============================================================
     const CATALOG_PHOTOS = [
       { id: 1, src: "wetransfer_img_0056-jpeg_2026-11-19_1727/IMG_0052.jpeg" },
@@ -3091,16 +3091,15 @@
       { id: 303, src: "fotos130/IMG_9173.jpeg" },
       { id: 304, src: "fotos130/IMG_9174.jpeg" },
       { id: 305, src: "fotos130/IMG_9175.jpeg" }
-
     ];
 
     let currentLightboxIndex = 0;
 
     function initCatalogView() {
-      // Requisito 4: Metaetiqueta noindex, nofollow para la vista de la galerÃ­a privada
+      // Requisito 4: Metaetiqueta noindex, nofollow para la vista de la galería privada
       setNoIndexMeta(true);
 
-      // Requisito 1 y 2: Bloqueo real en DOM y apertura automÃ¡tica si no hay aceptaciÃ³n previa en sessionStorage
+      // Requisito 1 y 2: Bloqueo real en DOM y apertura automática si no hay aceptación previa en sessionStorage
       const isAccepted = sessionStorage.getItem('privacy_gallery_accepted_v1') === 'true';
       if (!isAccepted) {
         clearCatalogGridForPrivacy();
@@ -3118,9 +3117,9 @@
             <div class="w-16 h-16 rounded-3xl bg-emerald-50 border border-emerald-200 text-emerald-600 mx-auto flex items-center justify-center mb-4 shadow-sm">
               <i data-lucide="shield-lock" class="w-8 h-8"></i>
             </div>
-            <h3 class="text-base sm:text-lg font-bold font-mono text-slate-800">GalerÃ­a Privada Protegida</h3>
+            <h3 class="text-base sm:text-lg font-bold font-mono text-slate-800">Galería Privada Protegida</h3>
             <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
-              El acceso a las fotografÃ­as del evento corporativo privado estÃ¡ restringido conforme a la Ley OrgÃ¡nica de ProtecciÃ³n de Datos Personales (LOPDP Ecuador).
+              El acceso a las fotografías del evento corporativo privado está restringido conforme a la Ley Orgánica de Protección de Datos Personales (LOPDP Ecuador).
             </p>
             <button onclick="openGalleryPrivacyModal()" class="mt-5 px-5 py-2.5 rounded-xl bg-ingelab-navy text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition-all shadow-md inline-flex items-center gap-2">
               <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-400"></i>
@@ -3165,7 +3164,7 @@
       const btn = document.getElementById('btn-accept-gallery-privacy');
       if (!cb1 || !btn) return;
 
-      // El botÃ³n se habilita al marcar la casilla de aceptaciÃ³n obligatoria del aviso
+      // El botón se habilita al marcar la casilla de aceptación obligatoria del aviso
       if (cb1.checked) {
         btn.disabled = false;
         btn.className = 'w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
@@ -3183,7 +3182,7 @@
       sessionStorage.setItem('privacy_gallery_accepted_v1', 'true');
       sessionStorage.setItem('privacy_gallery_authorized_media_v1', cb2 && cb2.checked ? 'true' : 'false');
       closeGalleryPrivacyModal();
-      // Renderizar realmente las fotos en el DOM tras la aceptaciÃ³n
+      // Renderizar realmente las fotos en el DOM tras la aceptación
       renderCatalogGrid();
     }
 
@@ -3226,7 +3225,7 @@
     }
 
     function renderCatalogGrid() {
-      // Bloqueo real: verificar aceptaciÃ³n antes de insertar fotos en el DOM
+      // Bloqueo real: verificar aceptación antes de insertar fotos en el DOM
       if (sessionStorage.getItem('privacy_gallery_accepted_v1') !== 'true') {
         clearCatalogGridForPrivacy();
         openGalleryPrivacyModal();
@@ -3312,7 +3311,7 @@
     }
 
     // ============================================================
-    // 5. GESTIÃ“N DIRECTA DE REGISTROS (SIN BLOQUEO DE REGISTROS NUEVOS)
+    // 5. GESTIÓN DIRECTA DE REGISTROS (SIN BLOQUEO DE REGISTROS NUEVOS)
     // ============================================================
     try {
       localStorage.removeItem('ingelab_deleted_registry_v1');
@@ -3321,7 +3320,7 @@
     } catch (e) {}
 
     // ============================================================
-    // GESTIÃ“N ROBUSTA DE REGISTROS ELIMINADOS DEFINITIVAMENTE (TOMBSTONES)
+    // GESTIÓN ROBUSTA DE REGISTROS ELIMINADOS DEFINITIVAMENTE (TOMBSTONES)
     // ============================================================
     function getDeletedTombstones() {
       try {
@@ -3388,7 +3387,7 @@
 
         if (matchId || matchName || matchEmail || matchCi) {
           // Si el registro fue creado antes o durante el momento de borrado, se considera eliminado
-          // Si fue creado despuÃ©s, es un nuevo registro legÃ­timo y no se oculta
+          // Si fue creado después, es un nuevo registro legítimo y no se oculta
           if (!recordTime || recordTime <= t.timestamp + 1000) {
             return true;
           }
@@ -3398,7 +3397,7 @@
     }
 
     // ============================================================
-    // DEDUPLICACIÃ“N ESTRICTA: UN SOLO REGISTRO POR ASISTENTE (EL ÃšLTIMO)
+    // DEDUPLICACIÓN ESTRICTA: UN SOLO REGISTRO POR ASISTENTE (EL ÚLTIMO)
     // ============================================================
     function normalizeAttendeeStr(str) {
       return (str || '')
@@ -3432,7 +3431,7 @@
         const nameKey = normalizeAttendeeStr(item.full_name);
         const emailKey = (item.email || '').trim().toLowerCase();
 
-        // Si el Ãºltimo estado registrado es eliminaciÃ³n (tombstone), se descarta de la lista visible
+        // Si el último estado registrado es eliminación (tombstone), se descarta de la lista visible
         // y se registra su clave para bloquear registros anteriores de esa persona
         const isDeleted = item.attending === 'deleted' || 
                           String(item.comments || '').includes('[DELETED]') ||
@@ -3451,13 +3450,13 @@
         let isDuplicate = false;
         let existingItem = null;
 
-        // 1. Clave Principal Ãšnica: CÃ©dula de Identidad (C.I.)
+        // 1. Clave Principal Única: Cédula de Identidad (C.I.)
         if (ciClean && ciClean.length >= 8) {
           if (seenCis.has(ciClean)) {
             isDuplicate = true;
             existingItem = seenCis.get(ciClean);
           } else {
-            // Chequear si existe un registro previo con el mismo nombre y C.I. casi idÃ©ntica (ej. 9 vs 10 dÃ­gitos por tipeo)
+            // Chequear si existe un registro previo con el mismo nombre y C.I. casi idéntica (ej. 9 vs 10 dígitos por tipeo)
             for (const [sCi, sItem] of seenCis.entries()) {
               const sName = normalizeAttendeeStr(sItem.full_name);
               if (sName === nameKey && (sCi.startsWith(ciClean) || ciClean.startsWith(sCi))) {
@@ -3468,7 +3467,7 @@
             }
           }
         } else {
-          // 2. Solo si no tiene C.I. vÃ¡lida de al menos 8 dÃ­gitos se usa email o nombre como fallback
+          // 2. Solo si no tiene C.I. válida de al menos 8 dígitos se usa email o nombre como fallback
           const fallbackKey = (emailKey && !emailKey.endsWith('@ingelab.com')) 
             ? ('email:' + emailKey) 
             : (nameKey && nameKey.length >= 5 ? ('name:' + nameKey) : null);
@@ -3515,7 +3514,7 @@
     let allAttendeesCache = getStoredAttendees();
 
     // ============================================================
-    // 6. INTRO ZOOM-IN NÃTIDO
+    // 6. INTRO ZOOM-IN NÍTIDO
     // ============================================================
     function runIntro() {
       document.body.classList.add('intro-lock');
@@ -3572,7 +3571,7 @@
     }
 
     // ============================================================
-    // 7. CUENTA REGRESIVA AL EVENTO (13 NOV 2026 â€¢ 17:00)
+    // 7. CUENTA REGRESIVA AL EVENTO (13 NOV 2026 • 17:00)
     // ============================================================
     function initCountdown() {
       const eventDate = new Date('2026-11-13T17:00:00').getTime();
@@ -3602,13 +3601,13 @@
     }
 
     // ============================================================
-    // 8. ENVÃO Y CONFIRMACIÃ“N DE ASISTENCIA PÃšBLICA
+    // 8. ENVÍO Y CONFIRMACIÓN DE ASISTENCIA PÚBLICA
     // ============================================================
     // ============================================================
-    // VALIDACIÃ“N ESTRICTA DE CAMPOS OBLIGATORIOS Y FECHA REAL
+    // VALIDACIÓN ESTRICTA DE CAMPOS OBLIGATORIOS Y FECHA REAL
     // ============================================================
     function validateBirthDateReal(dateStr) {
-      if (!dateStr) return true; // Es el Ãºnico campo NO obligatorio
+      if (!dateStr) return true; // Es el único campo NO obligatorio
       const regex = /^\d{4}-\d{2}-\d{2}$/;
       if (!regex.test(dateStr)) return false;
 
@@ -3625,7 +3624,7 @@
       const now = new Date();
       if (d > now) return false; // No puede ser fecha futura
 
-      // Fechas reales, no ficticias ni muy lejanas (aÃ±o entre 1935 y 2008: 18 a 91 aÃ±os)
+      // Fechas reales, no ficticias ni muy lejanas (año entre 1935 y 2008: 18 a 91 años)
       if (year < 1935 || year > 2008) {
         return false;
       }
@@ -3651,16 +3650,16 @@
       const form = e.target;
       const formData = new FormData(form);
 
-      // 1. DetecciÃ³n Anti-Bot Honeypot
+      // 1. Detección Anti-Bot Honeypot
       const hp = (formData.get('website_url_hp') || '').trim();
       if (hp.length > 0) {
         console.warn('Bot detectado por Honeypot. Registro descartado.');
         form.reset();
-        showSuccessScreen({ full_name: 'ConfirmaciÃ³n Procesada' });
+        showSuccessScreen({ full_name: 'Confirmación Procesada' });
         return;
       }
 
-      // 2. VALIDACIÃ“N ESTRICTA: TODOS LOS CAMPOS SON OBLIGATORIOS EXCEPTO FECHA DE NACIMIENTO
+      // 2. VALIDACIÓN ESTRICTA: TODOS LOS CAMPOS SON OBLIGATORIOS EXCEPTO FECHA DE NACIMIENTO
       const fullName = (formData.get('fullName') || '').trim();
       const ciRaw = (formData.get('ci') || '').trim();
       const email = (formData.get('email') || '').trim();
@@ -3670,60 +3669,60 @@
       const birthDate = (formData.get('birth_date') || '').trim();
       const attending = formData.get('attending') || 'yes';
 
-      // 2.1 Nombre y apellidos: OBLIGATORIO y solo texto (no nÃºmeros)
+      // 2.1 Nombre y apellidos: OBLIGATORIO y solo texto (no números)
       if (!fullName || fullName.length < 3) {
         markInputError('fullName', 'Por favor ingrese su Nombre y Apellidos completos (*)');
         return;
       }
       if (/[0-9]/.test(fullName)) {
-        markInputError('fullName', 'El Nombre y Apellidos solo debe contener texto, no nÃºmeros (*)');
+        markInputError('fullName', 'El Nombre y Apellidos solo debe contener texto, no números (*)');
         return;
       }
 
-      // 2.2 CÃ©dula de Identidad: OBLIGATORIO, solo dÃ­gitos, exactamente 10 dÃ­gitos numÃ©ricos
+      // 2.2 Cédula de Identidad: OBLIGATORIO, solo dígitos, exactamente 10 dígitos numéricos
       const ci = ciRaw.replace(/\D/g, '');
       if (!ci || ci.length !== 10 || !/^\d{10}$/.test(ci)) {
-        markInputError('ci', 'La CÃ©dula de Identidad debe tener exactamente 10 dÃ­gitos numÃ©ricos (*)');
+        markInputError('ci', 'La Cédula de Identidad debe tener exactamente 10 dígitos numéricos (*)');
         return;
       }
 
-      // 2.3 Correo ElectrÃ³nico: OBLIGATORIO y formato vÃ¡lido
+      // 2.3 Correo Electrónico: OBLIGATORIO y formato válido
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!email || !emailRegex.test(email)) {
-        markInputError('email', 'Por favor ingrese un Correo ElectrÃ³nico vÃ¡lido (*)');
+        markInputError('email', 'Por favor ingrese un Correo Electrónico válido (*)');
         return;
       }
 
-      // 2.4 TelÃ©fono MÃ³vil: OBLIGATORIO, solo dÃ­gitos, exactamente 10 dÃ­gitos numÃ©ricos
+      // 2.4 Teléfono Móvil: OBLIGATORIO, solo dígitos, exactamente 10 dígitos numéricos
       const phone = phoneRaw.replace(/\D/g, '');
       if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
-        markInputError('phone', 'El TelÃ©fono mÃ³vil debe tener exactamente 10 dÃ­gitos numÃ©ricos (*)');
+        markInputError('phone', 'El Teléfono móvil debe tener exactamente 10 dígitos numéricos (*)');
         return;
       }
 
-      // 2.5 InstituciÃ³n o Laboratorio ClÃ­nico: OBLIGATORIO y solo texto (no nÃºmeros)
+      // 2.5 Institución o Laboratorio Clínico: OBLIGATORIO y solo texto (no números)
       if (!institution) {
-        markInputError('institution', 'Por favor ingrese su InstituciÃ³n o Laboratorio ClÃ­nico (*)');
+        markInputError('institution', 'Por favor ingrese su Institución o Laboratorio Clínico (*)');
         return;
       }
       if (/[0-9]/.test(institution)) {
-        markInputError('institution', 'La InstituciÃ³n o Laboratorio solo debe contener texto, no nÃºmeros (*)');
+        markInputError('institution', 'La Institución o Laboratorio solo debe contener texto, no números (*)');
         return;
       }
 
-      // 2.6 Cargo o Especialidad: OBLIGATORIO y solo texto (no nÃºmeros)
+      // 2.6 Cargo o Especialidad: OBLIGATORIO y solo texto (no números)
       if (!position) {
         markInputError('position', 'Por favor ingrese su Cargo o Especialidad (*)');
         return;
       }
       if (/[0-9]/.test(position)) {
-        markInputError('position', 'El Cargo o Especialidad solo debe contener texto, no nÃºmeros (*)');
+        markInputError('position', 'El Cargo o Especialidad solo debe contener texto, no números (*)');
         return;
       }
 
-      // 2.7 Fecha de Nacimiento (Ãšnico campo NO obligatorio, pero si se ingresa debe ser real, no ficticia ni muy lejana)
+      // 2.7 Fecha de Nacimiento (Único campo NO obligatorio, pero si se ingresa debe ser real, no ficticia ni muy lejana)
       if (birthDate && !validateBirthDateReal(birthDate)) {
-        markInputError('birthDate', 'Fecha de nacimiento no vÃ¡lida. Ingrese una fecha real y no ficticia (aÃ±o entre 1935 y 2008)');
+        markInputError('birthDate', 'Fecha de nacimiento no válida. Ingrese una fecha real y no ficticia (año entre 1935 y 2008)');
         return;
       }
 
@@ -3758,13 +3757,13 @@
         const newNameNorm = normalizeAttendeeStr(newRecord.full_name);
         const newEmailNorm = (newRecord.email || '').trim().toLowerCase();
 
-        // Solo es el mismo asistente si coincide su CÃ‰DULA (o nombre exacto con cÃ©dula coincidente)
+        // Solo es el mismo asistente si coincide su CÉDULA (o nombre exacto con cédula coincidente)
         const existingIdx = allAttendeesCache.findIndex(a => {
           const aCi = (a.ci || '').replace(/\D/g, '').trim();
           if (newCiClean && aCi && newCiClean.length >= 8 && aCi.length >= 8) {
             return aCi === newCiClean || (normalizeAttendeeStr(a.full_name) === newNameNorm && (aCi.startsWith(newCiClean) || newCiClean.startsWith(aCi)));
           }
-          // Si alguno no tiene cÃ©dula vÃ¡lida, evaluar email real o nombre exacto
+          // Si alguno no tiene cédula válida, evaluar email real o nombre exacto
           const aName = normalizeAttendeeStr(a.full_name);
           const aEmail = (a.email || '').trim().toLowerCase();
           const emailMatches = newEmailNorm && !newEmailNorm.endsWith('@ingelab.com') && aEmail === newEmailNorm;
@@ -3822,7 +3821,7 @@
         if (isAdmin) {
           form.reset();
           loadAdminData();
-          showToast('Asistente registrado en cachÃ© local');
+          showToast('Asistente registrado en caché local');
         } else {
           showSuccessScreen(newRecord);
         }
@@ -3849,7 +3848,7 @@
     }
 
     // ============================================================
-    // COLA DE SINCRONIZACIÃ“N OFFLINE (RESILIENCIA ANTE FALLOS DE RED)
+    // COLA DE SINCRONIZACIÓN OFFLINE (RESILIENCIA ANTE FALLOS DE RED)
     // ============================================================
     function queueOfflineRecord(record) {
       try {
@@ -3873,7 +3872,7 @@
         }
         localStorage.setItem('ingelab_offline_queue_v1', JSON.stringify(remaining));
         if (remaining.length === 0 && queue.length > 0) {
-          showToast('SincronizaciÃ³n en lÃ­nea completada');
+          showToast('Sincronización en línea completada');
           if (typeof loadAdminData === 'function') loadAdminData();
         }
       } catch (e) {}
@@ -3883,7 +3882,7 @@
     window.addEventListener('load', () => setTimeout(syncOfflineQueue, 2000));
 
     // ============================================================
-    // INSERCIÃ“N IDEMPOTENTE CON RESOLUCIÃ“N DE CONFLICTOS (UPSERT)
+    // INSERCIÓN IDEMPOTENTE CON RESOLUCIÓN DE CONFLICTOS (UPSERT)
     // ============================================================
     async function saveRecordToCloud(record, allowQueue = true) {
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
@@ -3926,7 +3925,7 @@
             }
           }
 
-          // Solo si NO tiene cÃ©dula vÃ¡lida de al menos 8 dÃ­gitos se busca por email o nombre
+          // Solo si NO tiene cédula válida de al menos 8 dígitos se busca por email o nombre
           if (!existingId && (!ciClean || ciClean.length < 8)) {
             if (record.email && !record.email.endsWith('@ingelab.com')) {
               const checkEmail = await fetch(`${url}/rest/v1/attendees?email=eq.${encodeURIComponent(record.email)}&order=id.desc&limit=1`, {
@@ -3969,7 +3968,7 @@
                 saveStoredAttendees(allAttendeesCache);
                 return true;
               }
-              // Si patchData estÃ¡ vacÃ­o ([]), RLS bloqueÃ³ el UPDATE: procedemos a insertar el registro
+              // Si patchData está vacío ([]), RLS bloqueó el UPDATE: procedemos a insertar el registro
             }
           }
         } catch (e) {
@@ -3977,7 +3976,7 @@
         }
       }
 
-      // 2. InserciÃ³n directa en Supabase (POST siempre permitido con HTTP 201)
+      // 2. Inserción directa en Supabase (POST siempre permitido con HTTP 201)
       if (!saved && url && key) {
         for (let attempt = 1; attempt <= 2 && !saved; attempt++) {
           try {
@@ -4048,7 +4047,7 @@
         }
       }
 
-      // 4. Si todo fallÃ³ por problemas de red, encolar para sincronizar cuando vuelva la conexiÃ³n
+      // 4. Si todo falló por problemas de red, encolar para sincronizar cuando vuelva la conexión
       if (!saved && allowQueue) {
         queueOfflineRecord(record);
       }
@@ -4057,17 +4056,17 @@
     }
 
     // ============================================================
-    // 9. PANEL ADMINISTRADOR: CRUD Y EXPORTACIÃ“N .XLSX
+    // 9. PANEL ADMINISTRADOR: CRUD Y EXPORTACIÓN .XLSX
     // ============================================================
     async function loadAdminData() {
-      // 1. Mostrar cachÃ© local de inmediato (0ms de espera)
+      // 1. Mostrar caché local de inmediato (0ms de espera)
       allAttendeesCache = getStoredAttendees();
       updateKpis(allAttendeesCache);
       renderTable(allAttendeesCache);
 
       let cloudLoaded = false;
 
-      // 2. Priorizar consulta al backend /api/attendees (con cachÃ© de alta velocidad <5ms y pooling)
+      // 2. Priorizar consulta al backend /api/attendees (con caché de alta velocidad <5ms y pooling)
       try {
         const res = await fetch('/api/attendees');
         if (res.ok) {
@@ -4104,7 +4103,7 @@
         }
       } catch (err) {}
 
-      // 3. Fallback directo a Supabase REST (por si se despliega en host estÃ¡tico sin backend)
+      // 3. Fallback directo a Supabase REST (por si se despliega en host estático sin backend)
       if (!cloudLoaded) {
         const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
         const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
@@ -4219,16 +4218,16 @@
       const comments = document.getElementById('create-comments') ? document.getElementById('create-comments').value.trim() : '';
 
       if (!fullName || fullName.length < 3) { alert('Por favor ingrese el Nombre y Apellidos completos.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(fullName)) { alert('El Nombre Completo no puede contener nÃºmeros, solo texto.'); if (btn) btn.disabled = false; return; }
-      if (!/^\d{10}$/.test(ci)) { alert('La CÃ©dula de Identidad debe tener exactamente 10 dÃ­gitos numÃ©ricos.'); if (btn) btn.disabled = false; return; }
-      if (!/^\d{10}$/.test(phone)) { alert('El TelÃ©fono mÃ³vil debe tener exactamente 10 dÃ­gitos numÃ©ricos.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(fullName)) { alert('El Nombre Completo no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(ci)) { alert('La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email || !emailRegex.test(email)) { alert('El Correo ElectrÃ³nico ingresado no es vÃ¡lido.'); if (btn) btn.disabled = false; return; }
-      if (!institution) { alert('La InstituciÃ³n es obligatoria.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(institution)) { alert('La InstituciÃ³n no puede contener nÃºmeros, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (!email || !emailRegex.test(email)) { alert('El Correo Electrónico ingresado no es válido.'); if (btn) btn.disabled = false; return; }
+      if (!institution) { alert('La Institución es obligatoria.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(institution)) { alert('La Institución no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
       if (!position) { alert('El Cargo o Especialidad es obligatorio.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener nÃºmeros, solo texto.'); if (btn) btn.disabled = false; return; }
-      if (birthDate && !validateBirthDateReal(birthDate)) { alert('La Fecha de Nacimiento debe ser real y coherente (aÃ±o 1935 a 2008).'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (birthDate && !validateBirthDateReal(birthDate)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
 
       const newRecord = {
         id: Date.now(),
@@ -4249,13 +4248,13 @@
       const newNameNorm = normalizeAttendeeStr(newRecord.full_name);
       const newEmailNorm = (newRecord.email || '').trim().toLowerCase();
 
-      // Solo es el mismo asistente si coincide su CÃ‰DULA (o nombre exacto con cÃ©dula coincidente)
+      // Solo es el mismo asistente si coincide su CÉDULA (o nombre exacto con cédula coincidente)
       const existingIdx = allAttendeesCache.findIndex(a => {
         const aCi = (a.ci || '').replace(/\D/g, '').trim();
         if (newCiClean && aCi && newCiClean.length >= 8 && aCi.length >= 8) {
           return aCi === newCiClean || (normalizeAttendeeStr(a.full_name) === newNameNorm && (aCi.startsWith(newCiClean) || newCiClean.startsWith(aCi)));
         }
-        // Si alguno no tiene cÃ©dula vÃ¡lida, evaluar email real o nombre exacto
+        // Si alguno no tiene cédula válida, evaluar email real o nombre exacto
         const aName = normalizeAttendeeStr(a.full_name);
         const aEmail = (a.email || '').trim().toLowerCase();
         const emailMatches = newEmailNorm && !newEmailNorm.endsWith('@ingelab.com') && aEmail === newEmailNorm;
@@ -4364,16 +4363,16 @@
       const comments = document.getElementById('edit-comments').value.trim();
 
       if (!full_name || full_name.length < 3) { alert('El Nombre Completo es obligatorio.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(full_name)) { alert('El Nombre Completo no puede contener nÃºmeros, solo texto.'); if (btn) btn.disabled = false; return; }
-      if (!/^\d{10}$/.test(ci)) { alert('La CÃ©dula de Identidad debe tener exactamente 10 dÃ­gitos numÃ©ricos.'); if (btn) btn.disabled = false; return; }
-      if (!/^\d{10}$/.test(phone)) { alert('El TelÃ©fono mÃ³vil debe tener exactamente 10 dÃ­gitos numÃ©ricos.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(full_name)) { alert('El Nombre Completo no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(ci)) { alert('La Cédula de Identidad debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
+      if (!/^\d{10}$/.test(phone)) { alert('El Teléfono móvil debe tener exactamente 10 dígitos numéricos.'); if (btn) btn.disabled = false; return; }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email || !emailRegex.test(email)) { alert('El Correo ElectrÃ³nico ingresado no es vÃ¡lido.'); if (btn) btn.disabled = false; return; }
-      if (!institution) { alert('La InstituciÃ³n es obligatoria.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(institution)) { alert('La InstituciÃ³n no puede contener nÃºmeros, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (!email || !emailRegex.test(email)) { alert('El Correo Electrónico ingresado no es válido.'); if (btn) btn.disabled = false; return; }
+      if (!institution) { alert('La Institución es obligatoria.'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(institution)) { alert('La Institución no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
       if (!position) { alert('El Cargo o Especialidad es obligatorio.'); if (btn) btn.disabled = false; return; }
-      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener nÃºmeros, solo texto.'); if (btn) btn.disabled = false; return; }
-      if (birth_date && !validateBirthDateReal(birth_date)) { alert('La Fecha de Nacimiento debe ser real y coherente (aÃ±o 1935 a 2008).'); if (btn) btn.disabled = false; return; }
+      if (/[0-9]/.test(position)) { alert('El Cargo o Especialidad no puede contener números, solo texto.'); if (btn) btn.disabled = false; return; }
+      if (birth_date && !validateBirthDateReal(birth_date)) { alert('La Fecha de Nacimiento debe ser real y coherente (año 1935 a 2008).'); if (btn) btn.disabled = false; return; }
 
       const nowIso = new Date().toISOString();
       const cleanComments = comments.replace(/\[F\.Nac:\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\]\s*/g, '').trim();
@@ -4392,7 +4391,7 @@
         created_at: nowIso
       };
 
-      // 1. Actualizar en cachÃ© local inmediatamente con la fecha mÃ¡s reciente (gana en deduplicaciÃ³n)
+      // 1. Actualizar en caché local inmediatamente con la fecha más reciente (gana en deduplicación)
       const idx = allAttendeesCache.findIndex(a => 
         String(a.id) === String(id) ||
         (a.email && a.email.toLowerCase() === email.toLowerCase()) ||
@@ -4430,7 +4429,7 @@
 
       let cloudSaved = false;
 
-      // 2.1 Intentar PATCH si el ID es numÃ©rico
+      // 2.1 Intentar PATCH si el ID es numérico
       if (url && key && !isNaN(Number(id)) && Number(id) < 1000000000) {
         try {
           const patchRes = await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
@@ -4452,7 +4451,7 @@
         } catch(err) {}
       }
 
-      // 2.2 Si el PATCH no actualizÃ³ filas (por RLS en Supabase o ID nuevo), INSERTAR el registro con estado actualizado
+      // 2.2 Si el PATCH no actualizó filas (por RLS en Supabase o ID nuevo), INSERTAR el registro con estado actualizado
       if (!cloudSaved && url && key) {
         try {
           const insRes = await fetch(`${url}/rest/v1/attendees`, {
@@ -4485,7 +4484,7 @@
         } catch(err) {}
       }
 
-      // 2.3 SincronizaciÃ³n secundaria vÃ­a backend Express
+      // 2.3 Sincronización secundaria vía backend Express
       try {
         await fetch(`/api/attendees/${id}`, {
           method: 'PUT',
@@ -4510,7 +4509,7 @@
       const name = item ? item.full_name : '';
       const email = item ? item.email : '';
       const ci = item ? item.ci : '';
-      if (!confirm(`Â¿EstÃ¡ seguro de eliminar a "${name || 'este registro'}" de la lista oficial de participantes? Esta acciÃ³n no se puede deshacer.`)) {
+      if (!confirm(`¿Está seguro de eliminar a "${name || 'este registro'}" de la lista oficial de participantes? Esta acción no se puede deshacer.`)) {
         return;
       }
 
@@ -4519,7 +4518,7 @@
         addDeletedTombstone(item);
       }
 
-      // 2. Remover de cachÃ© local y actualizar interfaz de inmediato (0ms latencia)
+      // 2. Remover de caché local y actualizar interfaz de inmediato (0ms latencia)
       allAttendeesCache = allAttendeesCache.filter(a => {
         if (String(a.id) === String(id)) return false;
         if (name && a.full_name && normalizeAttendeeStr(a.full_name) === normalizeAttendeeStr(name)) return false;
@@ -4532,7 +4531,7 @@
       renderTable(allAttendeesCache);
       showToast('Asistente eliminado definitivamente');
 
-      // 3. Persistir la eliminaciÃ³n definitiva en Supabase Cloud
+      // 3. Persistir la eliminación definitiva en Supabase Cloud
       const url = localStorage.getItem('ingelab_supabase_url') || DEFAULT_SUPABASE_URL;
       const key = localStorage.getItem('ingelab_supabase_key') || DEFAULT_SUPABASE_KEY;
 
@@ -4552,7 +4551,7 @@
       };
 
       if (url && key) {
-        // 3.1 Insertar registro con estado 'deleted' para sobreescribir cronolÃ³gicamente cualquier registro anterior en toda la nube
+        // 3.1 Insertar registro con estado 'deleted' para sobreescribir cronológicamente cualquier registro anterior en toda la nube
         try {
           await fetch(`${url}/rest/v1/attendees`, {
             method: 'POST',
@@ -4565,10 +4564,10 @@
             body: JSON.stringify([deletionPayload])
           });
         } catch (e) {
-          console.warn('Error al registrar eliminaciÃ³n en Supabase:', e);
+          console.warn('Error al registrar eliminación en Supabase:', e);
         }
 
-        // 3.2 Intentar ademÃ¡s DELETE fÃ­sico de filas en Supabase
+        // 3.2 Intentar además DELETE físico de filas en Supabase
         try {
           await fetch(`${url}/rest/v1/attendees?id=eq.${id}`, {
             method: 'DELETE',
@@ -4607,7 +4606,7 @@
     }
 
     // ============================================================
-    // 10. RENDERIZADO DE TABLA (SIN COLUMNA DE CÃ“DIGO)
+    // 10. RENDERIZADO DE TABLA (SIN COLUMNA DE CÓDIGO)
     // ============================================================
     function renderTable(list) {
       const tableBody = document.getElementById('attendees-table-body');
@@ -4638,7 +4637,7 @@
               ${a.ci ? `<span class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-600 border border-slate-200">C.I: ${escapeHtml(a.ci)}</span>` : ''}
             </td>
 
-            <!-- INFORMACIÃ“N DE CONTACTO -->
+            <!-- INFORMACIÓN DE CONTACTO -->
             <td class="py-4 px-6 align-middle space-y-1">
               <div class="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
                 <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
@@ -4646,11 +4645,11 @@
               </div>
               <div class="flex items-center gap-1.5 text-slate-600 font-mono text-[11px]">
                 <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                <span>${(a.phone && a.phone !== '0000000000') ? escapeHtml(a.phone) : '<span class="text-slate-400 italic">Sin telÃ©fono</span>'}</span>
+                <span>${(a.phone && a.phone !== '0000000000') ? escapeHtml(a.phone) : '<span class="text-slate-400 italic">Sin teléfono</span>'}</span>
               </div>
             </td>
 
-            <!-- INSTITUCIÃ“N / CARGO -->
+            <!-- INSTITUCIÓN / CARGO -->
             <td class="py-4 px-6 align-middle">
               <span class="font-semibold text-slate-800 block text-xs">${escapeHtml(a.institution || 'Particular')}</span>
               <span class="text-slate-400 block text-[11px] font-mono">${(a.position && a.position !== 'Particular') ? escapeHtml(a.position) : (a.position || 'Profesional')}</span>
@@ -4751,7 +4750,7 @@
     async function undoCheckin(id) {
       const item = allAttendeesCache.find(a => a.id === id || String(a.id) === String(id));
       const name = item ? item.full_name : 'este asistente';
-      if (!confirm(`Â¿EstÃ¡ seguro de anular el check-in de "${name}" y regresarlo a estado "Pendiente de ingreso"?`)) {
+      if (!confirm(`¿Está seguro de anular el check-in de "${name}" y regresarlo a estado "Pendiente de ingreso"?`)) {
         return;
       }
       try {
@@ -4770,7 +4769,7 @@
           updateKpis(allAttendeesCache);
           filterTable();
           updateCheckinQuickCounters();
-          showToast(data.message || 'Check-in anulado con Ã©xito');
+          showToast(data.message || 'Check-in anulado con éxito');
         } else {
           alert(data.error || 'Error al anular check-in.');
         }
@@ -4784,7 +4783,7 @@
       if (!currentCheckinAttendee) return;
       const id = currentCheckinAttendee.id;
       const item = currentCheckinAttendee;
-      if (!confirm(`Â¿EstÃ¡ seguro de anular el check-in de "${item.full_name}" y regresarlo a estado "Pendiente de ingreso"?`)) {
+      if (!confirm(`¿Está seguro de anular el check-in de "${item.full_name}" y regresarlo a estado "Pendiente de ingreso"?`)) {
         return;
       }
       try {
@@ -4816,7 +4815,7 @@
 
     // RESTABLECER TODOS LOS CHECK-INS DE PRUEBA A 0
     async function resetAllTestCheckins() {
-      if (!confirm('Â¿Desea restablecer todos los check-ins de prueba para dejar el aforo en sala limpio (0 personas) antes del evento?')) {
+      if (!confirm('¿Desea restablecer todos los check-ins de prueba para dejar el aforo en sala limpio (0 personas) antes del evento?')) {
         return;
       }
       try {
@@ -4841,11 +4840,11 @@
     }
 
     // ============================================================
-    // 11. EXPORTACIÃ“N A EXCEL NATIVO FORMATO .XLSX (SHEETJS)
+    // 11. EXPORTACIÓN A EXCEL NATIVO FORMATO .XLSX (SHEETJS)
     // ============================================================
     async function exportToExcel() {
       if (!window.XLSX) {
-        showToast('Descargando mÃ³dulo de exportaciÃ³n Excel...');
+        showToast('Descargando módulo de exportación Excel...');
         try {
           await new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -4855,7 +4854,7 @@
             document.head.appendChild(script);
           });
         } catch (e) {
-          alert('No se pudo descargar la librerÃ­a de exportaciÃ³n. Verifique su conexiÃ³n.');
+          alert('No se pudo descargar la librería de exportación. Verifique su conexión.');
           return;
         }
       }
@@ -4868,12 +4867,12 @@
       }
 
       const data = cleanList.map((a, index) => ({
-        'NÂ°': index + 1,
+        'N°': index + 1,
         'ASISTENTE': a.full_name || '',
         'C.I. / DOCUMENTO': a.ci || '',
-        'CORREO ELECTRÃ“NICO': (a.email && !a.email.toLowerCase().endsWith('@ingelab.com')) ? a.email : 'No registrado',
-        'TELÃ‰FONO': (a.phone && a.phone !== '0000000000') ? a.phone : 'No registrado',
-        'INSTITUCIÃ“N / EMPRESA': a.institution || 'Particular',
+        'CORREO ELECTRÓNICO': (a.email && !a.email.toLowerCase().endsWith('@ingelab.com')) ? a.email : 'No registrado',
+        'TELÉFONO': (a.phone && a.phone !== '0000000000') ? a.phone : 'No registrado',
+        'INSTITUCIÓN / EMPRESA': a.institution || 'Particular',
         'CARGO / ESPECIALIDAD': (a.position && a.position !== 'Particular') ? a.position : (a.position || 'No especificado'),
         'FECHA DE NACIMIENTO': a.birth_date || 'No especificada',
         'ESTADO': a.attending === 'yes' ? 'CONFIRMADO' : 'NO ASISTE',
@@ -4903,7 +4902,7 @@
 
       // Descargar archivo .xlsx nativo
       XLSX.writeFile(workbook, `Asistentes_INGELAB_EVOLUTION_${new Date().toISOString().slice(0,10)}.xlsx`);
-      showToast('Archivo Excel (.xlsx) generado con Ã©xito');
+      showToast('Archivo Excel (.xlsx) generado con éxito');
     }
 
     // TOAST NOTIFICATION
@@ -4935,7 +4934,7 @@
         .replace(/'/g, '&#039;');
     }
 
-    // InicializaciÃ³n al cargar la pÃ¡gina
+    // Inicialización al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof lucide !== 'undefined' && lucide.createIcons) {
         lucide.createIcons();
@@ -4944,7 +4943,7 @@
       loadAdminData();
       updateAuthUi();
 
-      // Auto-detecciÃ³n de vistas por URL (Por defecto: CHECK-IN EN PUERTA)
+      // Auto-detección de vistas por URL (Por defecto: CHECK-IN EN PUERTA)
       const hash = window.location.hash.toLowerCase();
       const params = new URLSearchParams(window.location.search);
       if (hash === '#checkin' || params.get('checkin') === '1') {
@@ -4961,10 +4960,10 @@
       } else if (hash === '#fotos' || hash === '#catalogo' || hash === '#gallery' || params.get('gallery') === '1') {
         switchView('catalog');
       } else {
-        // VISTA POR DEFECTO AL INICIO: CATÃLOGO DE FOTOS OFICIAL
+        // VISTA POR DEFECTO AL INICIO: CATÁLOGO DE FOTOS OFICIAL
         switchView('catalog');
       }
-      // Cerrar modales con tecla Escape y navegaciÃ³n de fotos
+      // Cerrar modales con tecla Escape y navegación de fotos
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           // Requisito 2: El modal de privacidad LOPDP es bloqueante y NO se cierra con tecla Escape
