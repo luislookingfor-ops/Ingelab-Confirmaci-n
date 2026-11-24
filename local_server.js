@@ -181,11 +181,13 @@ app.get('/api/attendees', (req, res) => {
     const attendees = getAllAttendees();
     const logs = getGalleryAccessLogs();
     
-    // Mapear logs de auditoría por C.I.
+    // Mapear logs de auditoría por C.I. (el más reciente por CI)
     const logsByCi = new Map();
     for (const log of logs) {
       const clean = (log.ci || '').replace(/\D/g, '').trim();
-      if (clean && !logsByCi.has(clean)) {
+      if (!clean) continue;
+      const existing = logsByCi.get(clean);
+      if (!existing || new Date(log.created_at) > new Date(existing.created_at)) {
         logsByCi.set(clean, log);
       }
     }
@@ -194,17 +196,56 @@ app.get('/api/attendees', (req, res) => {
     const enriched = attendees.map(a => {
       const cleanCi = (a.ci || '').replace(/\D/g, '').trim();
       const log = cleanCi ? logsByCi.get(cleanCi) : null;
+      // También verificar tag en comments si no hay log
+      const galleryMatch = (a.comments || '').match(/\[FOTOS_ACCESO:\s*([^\|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+      const galleryAtFromComments = galleryMatch ? galleryMatch[1].trim() : null;
+      const galleryAuthFromComments = galleryMatch && galleryMatch[2] ? galleryMatch[2].trim() === 'SI' : false;
+      
       if (log) {
         return {
           ...a,
           gallery_access_at: log.created_at,
           gallery_media_auth: Boolean(log.authorized_media)
         };
+      } else if (galleryAtFromComments) {
+        return {
+          ...a,
+          gallery_access_at: galleryAtFromComments,
+          gallery_media_auth: galleryAuthFromComments
+        };
       }
       return a;
     });
 
-    res.json({ success: true, attendees: enriched });
+    // Deduplicar por CI en el servidor: por cada CI, quedarse con el registro
+    // que tenga gallery_access_at, o el de mayor ID si ninguno lo tiene.
+    const byCi = new Map();
+    const noCI = [];
+    for (const a of enriched) {
+      const cleanCi = (a.ci || '').replace(/\D/g, '').trim();
+      if (!cleanCi) { noCI.push(a); continue; }
+      const existing = byCi.get(cleanCi);
+      if (!existing) {
+        byCi.set(cleanCi, a);
+      } else {
+        // Preferir el que tiene gallery_access_at; si ambos o ninguno, el de mayor ID
+        const aHasGallery = Boolean(a.gallery_access_at);
+        const exHasGallery = Boolean(existing.gallery_access_at);
+        if (aHasGallery && !exHasGallery) {
+          byCi.set(cleanCi, a);
+        } else if (!aHasGallery && exHasGallery) {
+          // keep existing
+        } else {
+          // Ambos o ninguno: quedarse con el de mayor ID (más reciente en Supabase)
+          if (Number(a.id) > Number(existing.id)) {
+            byCi.set(cleanCi, { ...a, gallery_access_at: a.gallery_access_at || existing.gallery_access_at, gallery_media_auth: a.gallery_media_auth || existing.gallery_media_auth });
+          }
+        }
+      }
+    }
+    const deduped = [...byCi.values(), ...noCI];
+
+    res.json({ success: true, attendees: deduped });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
