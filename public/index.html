@@ -3713,9 +3713,11 @@
             existingItem.checked_in = true;
             existingItem.checked_in_at = item.checked_in_at;
           }
-          if (item.gallery_access_at && !existingItem.gallery_access_at) {
-            existingItem.gallery_access_at = item.gallery_access_at;
-            existingItem.gallery_media_auth = item.gallery_media_auth;
+          if (item.gallery_access_at) {
+            if (!existingItem.gallery_access_at || new Date(item.gallery_access_at) > new Date(existingItem.gallery_access_at)) {
+              existingItem.gallery_access_at = item.gallery_access_at;
+              existingItem.gallery_media_auth = item.gallery_media_auth;
+            }
           }
         }
       }

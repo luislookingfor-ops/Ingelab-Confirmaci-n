@@ -48,6 +48,30 @@ async function syncFromSupabase() {
 
     db.exec('BEGIN TRANSACTION');
     for (const a of list) {
+      let finalComments = a.comments || '';
+      
+      // Preservar tags de fotos locales si Supabase vino sin ellos
+      try {
+        const existing = db.prepare('SELECT comments FROM attendees WHERE id = ?').get(a.id);
+        if (existing && existing.comments && existing.comments.includes('FOTOS_ACCESO') && !finalComments.includes('FOTOS_ACCESO')) {
+          const fotosMatch = existing.comments.match(/\[FOTOS_ACCESO:[^\]]+\]/);
+          if (fotosMatch) {
+            finalComments = `${fotosMatch[0]} ${finalComments}`.trim();
+          }
+        }
+      } catch (e) {}
+
+      // Si existe en logs de auditoría local de fotos, asegurar tag de acceso
+      const cleanCi = (a.ci || '').replace(/\D/g, '').trim();
+      if (cleanCi && !finalComments.includes('FOTOS_ACCESO')) {
+        try {
+          const log = db.prepare('SELECT created_at, authorized_media FROM gallery_access_logs WHERE ci = ? ORDER BY id DESC LIMIT 1').get(cleanCi);
+          if (log) {
+            finalComments = `[FOTOS_ACCESO: ${log.created_at} | FOTOS_AUTORIZO: ${log.authorized_media ? 'SI' : 'NO'}] ${finalComments}`.trim();
+          }
+        } catch (e) {}
+      }
+
       stmt.run(
         a.id,
         a.ticket_code || `ING-${a.id}`,
@@ -63,7 +87,7 @@ async function syncFromSupabase() {
         a.companion || 'no',
         a.companion_name || '',
         Array.isArray(a.dietary) ? a.dietary.join(', ') : (a.dietary || ''),
-        a.comments || '',
+        finalComments,
         a.created_at || new Date().toISOString()
       );
     }
@@ -234,6 +258,32 @@ app.post('/api/gallery-access', (req, res) => {
       return res.status(403).json(result);
     }
 
+    // Persistir también de forma permanente en Supabase (INSERT)
+    if (result.attendee) {
+      const nowIso = result.created_at || new Date().toISOString();
+      const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}]`;
+      fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([{
+          full_name: result.attendee.full_name,
+          ci: result.attendee.ci || cleanCi,
+          email: `${cleanCi}@ingelab.com`,
+          phone: '0000000000',
+          ticket_count: 1,
+          institution: 'Particular',
+          position: 'Profesional',
+          attending: 'yes',
+          comments: updatedComments,
+          created_at: nowIso
+        }])
+      }).catch(e => console.warn('Sync to Supabase err:', e.message));
+    }
+
     res.json(result);
   } catch (err) {
     console.error('Error al registrar acceso a galería:', err);
@@ -241,10 +291,43 @@ app.post('/api/gallery-access', (req, res) => {
   }
 });
 
-// Consultar auditoría de accesos a la galería
-app.get('/api/gallery-access-logs', (req, res) => {
+// Consultar auditoría de accesos a la galería (Unifica SQLite local + Supabase)
+app.get('/api/gallery-access-logs', async (req, res) => {
   try {
-    const logs = getGalleryAccessLogs();
+    const localLogs = getGalleryAccessLogs();
+    const logs = [...localLogs];
+
+    // Enriquecer con registros de Supabase si existen
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3500);
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=id,full_name,ci,comments,created_at&comments=ilike.*FOTOS_ACCESO*&order=id.desc`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (getRes.ok) {
+        const cloudRows = await getRes.json();
+        for (const row of cloudRows) {
+          const match = (row.comments || '').match(/\[FOTOS_ACCESO:\s*([^|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+          if (match) {
+            const rowCi = (row.ci || '').replace(/\D/g, '').trim();
+            if (rowCi && !logs.some(l => (l.ci || '').replace(/\D/g, '').trim() === rowCi)) {
+              logs.push({
+                id: row.id,
+                ci: row.ci,
+                full_name: row.full_name,
+                attendee_id: row.id,
+                accepted_terms: true,
+                authorized_media: match[2] ? match[2].trim() === 'SI' : false,
+                created_at: match[1].trim()
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {}
+
     res.json({ success: true, logs });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

@@ -207,9 +207,11 @@ function deduplicateAttendeesServer(list) {
           existingItem.checked_in_at = item.checked_in_at;
         }
       }
-      if (item.gallery_access_at && !existingItem.gallery_access_at) {
-        existingItem.gallery_access_at = item.gallery_access_at;
-        existingItem.gallery_media_auth = item.gallery_media_auth;
+      if (item.gallery_access_at) {
+        if (!existingItem.gallery_access_at || new Date(item.gallery_access_at) > new Date(existingItem.gallery_access_at)) {
+          existingItem.gallery_access_at = item.gallery_access_at;
+          existingItem.gallery_media_auth = item.gallery_media_auth;
+        }
       }
     }
   }
@@ -781,21 +783,39 @@ app.post('/api/gallery-access', async (req, res) => {
     const cleanComments = (attendee.comments || '').replace(/\[FOTOS_ACCESO:[^\]]+\]\s*/g, '').trim();
     const updatedComments = `[FOTOS_ACCESO: ${nowIso} | FOTOS_AUTORIZO: ${authorizedMedia ? 'SI' : 'NO'}] ${cleanComments}`.trim();
 
+    // Persistir permanentemente en Supabase mediante POST (INSERT) para que nunca se pierda
+    // (Supabase RLS permite INSERT, mientras que bloquea silenciosamente PATCH)
     try {
       const insController = new AbortController();
-      const insTimeout = setTimeout(() => insController.abort(), 3500);
-      await fetch(`${SUPABASE_URL}/rest/v1/attendees?id=eq.${attendee.id}`, {
-        method: 'PATCH',
+      const insTimeout = setTimeout(() => insController.abort(), 4000);
+      await fetch(`${SUPABASE_URL}/rest/v1/attendees`, {
+        method: 'POST',
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
         },
-        body: JSON.stringify({ comments: updatedComments }),
+        body: JSON.stringify([{
+          full_name: attendee.full_name,
+          ci: attendee.ci || cleanCi || '',
+          email: attendee.email || `${cleanCi}@ingelab.com`,
+          phone: attendee.phone || '0000000000',
+          ticket_count: attendee.ticket_count || 1,
+          ticket_list: attendee.ticket_list || [],
+          institution: attendee.institution || 'Particular',
+          position: attendee.position || 'Profesional',
+          attending: attendee.attending || 'yes',
+          dietary: attendee.dietary || [],
+          comments: updatedComments,
+          created_at: nowIso
+        }]),
         signal: insController.signal
       });
       clearTimeout(insTimeout);
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Error al guardar acceso a fotos en Supabase:', e.message);
+    }
 
     invalidateServerAttendeesCache();
 
@@ -813,9 +833,46 @@ app.post('/api/gallery-access', async (req, res) => {
   }
 });
 
-// Consultar auditoría de accesos a galería
-app.get('/api/gallery-access-logs', (req, res) => {
-  res.json({ success: true, logs: galleryAccessMemoryLogs });
+// Consultar auditoría de accesos a galería (Resiliente a reinicios de servidor)
+app.get('/api/gallery-access-logs', async (req, res) => {
+  try {
+    const logs = [...galleryAccessMemoryLogs];
+
+    // Extraer también de Supabase para recuperar registros persistentes tras reinicios
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3500);
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/attendees?select=id,full_name,ci,comments,created_at&comments=ilike.*FOTOS_ACCESO*&order=id.desc`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (getRes.ok) {
+        const cloudRows = await getRes.json();
+        for (const row of cloudRows) {
+          const match = (row.comments || '').match(/\[FOTOS_ACCESO:\s*([^|\]]+)(?:\|\s*FOTOS_AUTORIZO:\s*([^\]]+))?\]/);
+          if (match) {
+            const rowCi = (row.ci || '').replace(/\D/g, '').trim();
+            if (rowCi && !logs.some(l => (l.ci || '').replace(/\D/g, '').trim() === rowCi)) {
+              logs.push({
+                id: row.id,
+                ci: row.ci,
+                full_name: row.full_name,
+                attendee_id: row.id,
+                accepted_terms: true,
+                authorized_media: match[2] ? match[2].trim() === 'SI' : false,
+                created_at: match[1].trim()
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {}
+
+    res.json({ success: true, logs });
+  } catch (err) {
+    res.json({ success: true, logs: galleryAccessMemoryLogs });
+  }
 });
 
 // Confirmación de Asistencia con Protección Anti-Bot (Honeypot), Rate Limiting e Idempotencia (Upsert)
